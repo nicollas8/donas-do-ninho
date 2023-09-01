@@ -95,3 +95,29 @@ function registrar () {
 function recoverySenha () {
     window.location.href = "telaRecuperarSenha.html"
 }
+
+// validação cadastro 
+
+const form = document.getElementById ('formEmail')
+const campos = document.querySelectorAll('.requerido')
+const spans = document.querySelectorAll('.span-required')
+const emailRegex = /\S+@\S+\.\S+/
+
+function setError(index) {
+    campos[index].style.border = '2px solid #e63636'
+    spans[index].style.display = 'block'
+}
+
+function removeError (index) {
+    campos[index].style.border = ''
+    spans[index].style.display = 'none'
+}
+
+function emailValidateCadastro() {
+    if (!emailRegex.test(campos[1].value))
+    {
+        setError(1);
+    } else {
+        removeError(1);
+    }
+}
