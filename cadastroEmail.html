@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/script.js"></script>
     <title>Donas do Ninho</title>
 </head>
 
@@ -16,15 +17,18 @@
         <form action="" method="post" class="formEmail">
             <div class="inputGroup">
                 <label for="newEmail"> Email </label>
-                <input type="email" name="newEmail" id="newEmail" placeholder="Digite seu email" required>
+                <input type="email" name="newEmail" id="newEmail" placeholder="Digite seu email" class="required" oninput="emailValidateCadastro()">
+                <span class="span-required"> Digite um email válido </span>
             </div>
             <div class="inputGroup">
                 <label for="newSenha"> Nova Senha </label>
-                <input type="password" name="newSenha" id="newSenha" placeholder="Digite sua senha" required>
+                <input type="password" name="newSenha" id="newSenha" placeholder="Digite sua senha" class="required" required>
+                <span class="span-required">Digite uma senha de 8 caracteres </span>
             </div>
             <div class="inputGroup">
                 <label for="cofirmSenha"> Confirmars Senha </label>
-                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" required>
+                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" class="required" required>
+                <span class="span-required"> As senhas devem coincidirem </span>
             </div>
         </form>
     </main>
