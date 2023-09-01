@@ -53,9 +53,9 @@ form .inputGroup {
     margin: 3px 0 0 1px;
     color: red;
     font-size: 12px;
-    display: none;
+    display: block;
 }
-
+    
 #btnCadastro, #btnCadInfo, #btnLogin, #btnRecuperarSenha, #btnTelaBemVindo{
     margin-top: 2rem;
     background: #EE7F7FE2;
