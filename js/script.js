@@ -99,7 +99,7 @@ function recoverySenha () {
 // validação cadastro 
    
 const formEMailCadastro = document.getElementById ('formEmail');
-const campos = document.querySelectorAll('.requerido');
+const campos = document.querySelectorAll('.required');
 const spans = document.querySelectorAll('.span-required');
 const emailRegex = /\S+@\S+\.\S+/;
 
