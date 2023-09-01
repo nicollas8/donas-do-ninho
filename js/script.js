@@ -103,12 +103,6 @@ const campos = document.querySelectorAll('.requerido');
 const spans = document.querySelectorAll('.span-required');
 const emailRegex = /\S+@\S+\.\S+/;
 
-formEMailCadastro.addEventListener('submit', (event) => {
-    event.preventDefault();
-    emailValidateCadastro();
-    mainPasswordValidate();
-    comparePassword();    
-});
 
 function setError(index) {
     campos[index].style.border = '2px solid #e63636';
