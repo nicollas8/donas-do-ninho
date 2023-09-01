@@ -14,7 +14,7 @@
         <img src="./img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
     </header>
     <main>
-        <form action="" method="post" class="formEmail">
+        <form action="" method="post" id="formEmail">
             <div class="inputGroup">
                 <label for="newEmail"> Email </label>
                 <input type="email" name="newEmail" id="newEmail" placeholder="Digite seu email" class="required" oninput="emailValidateCadastro()">
@@ -26,7 +26,7 @@
                 <span class="span-required">Digite uma senha de 8 caracteres </span>
             </div>
             <div class="inputGroup">
-                <label for="cofirmSenha"> Confirmars Senha </label>
+                <label for="cofirmSenha"> Confirmar Senha </label>
                 <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" class="required" oninput="comparePassword()">
                 <span class="span-required"> As senhas devem coincidirem </span>
             </div>
@@ -36,47 +36,4 @@
         <button type="submit" id="btnCadastro">Cadastrar-se</button>
     </footer>
 </body>
-
-<script>
-    const formEMailCadastro = document.getElementById ('formEmail');
-    const campos = document.querySelectorAll('.required');
-    const spans = document.querySelectorAll('.span-required');
-    const emailRegex = /\S+@\S+\.\S+/;
-    
-    function setError(index) {
-        campos[index].style.border = '2px solid #e63636';
-        spans[index].style.display = 'block';
-    }
-    
-    function removeError (index) {
-        campos[index].style.border = '';
-        spans[index].style.display = 'none';
-    }
-    
-    function emailValidateCadastro() {
-        if (!emailRegex.test(campos[0].value))
-        {
-            setError(0);
-        } else {
-            removeError(0);
-        }
-    }
-    
-    function mainPasswordValidate() {
-        if(campos[1].value.length < 8) {
-            setError(1);
-        } else {
-            removeError(1);
-            comparePassword ();
-        }
-    }
-    
-    function comparePassword () {
-        if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
-            removeError (2);
-        } else {
-            setError(2)
-        }
-    }
-</script>
 </html>
