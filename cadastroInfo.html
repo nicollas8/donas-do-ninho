@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Donas do Ninho</title>
+</head>
+
+<body>
+    <header>
+        <img src="./img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+    </header>
+    <main>
+        <form action="cadastroEmail.html" method="post" id="formCadastro">
+            <div class="inputGroup">
+                <label for="nome" style="display: block;"> Nome </label>
+                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" required>
+            </div>
+            <div class="inputGroup">
+                <label for="sobrenome"> Sobrenome </label>
+                <input type="text" name="sobrenome" id="sobrenome" placeholder="Digite seu Sobrenome" required>
+            </div>
+            <div class="inputGroup">
+                <label for="dataNascimento"> Data de nascimento </label>
+                <input type="date" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" required>
+            </div>
+            <div class="inputGroup">
+                <label for="selecione"> Selecione </label>
+                <select name="tipoMãe">
+                    <option value="mãe">Mãe</option>
+                    <option value="gestante">Gestante</option>
+                    <option value="nãoSouMãe">Não sou mãe</option>
+                </select>
+            </div>
+        </form>
+    </main>
+    <footer>
+        <button type="submit" id="btnCadInfo" onclick="window.location.href = 'cadastroEmail.html'">Cadastrar-se</button>
+    </footer>
+</body>
+
+</html>
