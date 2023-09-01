@@ -99,9 +99,9 @@ function recoverySenha () {
 // validação cadastro 
 
 const form = document.getElementById ('formEmail')
-const campos = document.querySelectorAll('.required')
+const campos = document.querySelectorAll('.requerido')
 const spans = document.querySelectorAll('.span-required')
-const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/
+const emailRegex = /\S+@\S+\.\S+/
 
 function setError(index) {
     campos[index].style.border = '2px solid #e63636'
@@ -114,7 +114,7 @@ function removeError (index) {
 }
 
 function emailValidateCadastro() {
-    if (emailRegex.test(campos[0].value))
+    if (!emailRegex.test(campos[1].value))
     {
         setError(1);
     } else {
