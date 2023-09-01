@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/style.css">
+    <!-- <script src="./js/script.js"></script> -->
     <title>Donas do Ninho</title>
 </head>
 
@@ -16,15 +17,18 @@
         <form action="" method="post" class="formEmail">
             <div class="inputGroup">
                 <label for="newEmail"> Email </label>
-                <input type="email" name="newEmail" id="newEmail" placeholder="Digite seu email" required>
+                <input type="email" name="newEmail" id="newEmail" placeholder="Digite seu email" class="requerido" oninput="emailValidateCadastro()">
+                <span class="span-required"> Digite um email válido </span>
             </div>
             <div class="inputGroup">
                 <label for="newSenha"> Nova Senha </label>
-                <input type="password" name="newSenha" id="newSenha" placeholder="Digite sua senha" required>
+                <input type="password" name="newSenha" id="newSenha" placeholder="Digite sua senha" class="requerido" required>
+                <span class="span-required">Digite uma senha de 8 caracteres </span>
             </div>
             <div class="inputGroup">
                 <label for="cofirmSenha"> Confirmars Senha </label>
-                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" required>
+                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" class="requerido" required>
+                <span class="span-required"> As senhas devem coincidirem </span>
             </div>
         </form>
     </main>
@@ -32,5 +36,30 @@
         <button type="submit" id="btnCadastro" onclick="window.location.href = 'telaBoasVindas.html'">Cadastrar-se</button>
     </footer>
 </body>
+<script>
+    
+const form = document.getElementById ('formEmail');
+const campos = document.querySelectorAll('.requerido');
+const spans = document.querySelectorAll('.span-required');
+const emailRegex = /\S+@\S+\.\S+/;
 
+function setError(index) {
+    campos[index].style.border = '2px solid #e63636';
+    spans[index].style.display = 'block';
+}
+
+function removeError (index) {
+    campos[index].style.border = '';
+    spans[index].style.display = 'none';
+}
+
+function emailValidateCadastro() {
+    if (!emailRegex.test(campos[1].value))
+    {
+        setError(1);
+    } else {
+        removeError(1);
+    }
+}
+</script>
 </html>
