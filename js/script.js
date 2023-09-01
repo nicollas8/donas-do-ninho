@@ -97,27 +97,51 @@ function recoverySenha () {
 }
 
 // validação cadastro 
+   
+const formEMailCadastro = document.getElementById ('formEmail');
+const campos = document.querySelectorAll('.requerido');
+const spans = document.querySelectorAll('.span-required');
+const emailRegex = /\S+@\S+\.\S+/;
 
-const form = document.getElementById ('formEmail')
-const campos = document.querySelectorAll('.requerido')
-const spans = document.querySelectorAll('.span-required')
-const emailRegex = /\S+@\S+\.\S+/
+formEMailCadastro.addEventListener('submit', (event) => {
+    event.preventDefault();
+    emailValidateCadastro();
+    mainPasswordValidate();
+    comparePassword();    
+});
 
 function setError(index) {
-    campos[index].style.border = '2px solid #e63636'
-    spans[index].style.display = 'block'
+    campos[index].style.border = '2px solid #e63636';
+    spans[index].style.display = 'block';
 }
 
 function removeError (index) {
-    campos[index].style.border = ''
-    spans[index].style.display = 'none'
+    campos[index].style.border = '';
+    spans[index].style.display = 'none';
 }
 
 function emailValidateCadastro() {
-    if (!emailRegex.test(campos[1].value))
+    if (!emailRegex.test(campos[0].value))
     {
+        setError(0);
+    } else {
+        removeError(0);
+    }
+}
+
+function mainPasswordValidate() {
+    if(campos[1].value.length < 8) {
         setError(1);
     } else {
         removeError(1);
+        comparePassword ();
+    }
+}
+
+function comparePassword () {
+    if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
+        removeError (2);
+    } else {
+        setError(2)
     }
 }
