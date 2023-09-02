@@ -36,8 +36,7 @@ form .inputGroup {
   width: 90vw;
 }
 
-.inputGroup input,
-select {
+.inputGroup input {
   padding: 0.7rem;
   border: none;
   border-radius: 1.5rem;
@@ -46,6 +45,10 @@ select {
 
 .inputGroup select,
 input[type="date"] {
+  padding: 0.7rem;
+  border: none;
+  border-radius: 1.5rem;
+  margin-bottom: 1rem;
   background-color: #fff;
   width: 90vw;
 }
