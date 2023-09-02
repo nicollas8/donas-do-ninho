@@ -44,6 +44,11 @@ form .inputGroup {
     margin-bottom: 1rem;
 }
 
+.inputGroup select, input[type='date'] {
+    background-color: #fff;
+    width: 90vw;
+}
+
 .inputGroup label {
    margin-bottom: 0.3rem;
    margin-left: 0.3rem;
