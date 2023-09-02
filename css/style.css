@@ -1,124 +1,129 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
 }
 
 body {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background: #FFEDE2;
-    
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffede2;
 }
 
 header img {
-    width: 80vw;
+  width: 80vw;
 }
 
 form {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 form .inputGroup {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .inputGroup {
-    margin-top: 1rem;
-    width: 90vw;
+  margin-top: 1rem;
+  width: 90vw;
 }
 
-.inputGroup input, select {
-    padding: 0.7rem;
-    border: none;
-    border-radius: 1.5rem;
-    margin-bottom: 1rem;
+.inputGroup input,
+select {
+  padding: 0.7rem;
+  border: none;
+  border-radius: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.inputGroup select, input[type='date'] {
-    background-color: #fff;
-    width: 90vw;
+.inputGroup select,
+input[type="date"] {
+  background-color: #fff;
+  width: 90vw;
 }
 
 .inputGroup label {
-   margin-bottom: 0.3rem;
-   margin-left: 0.3rem;
+  margin-bottom: 0.3rem;
+  margin-left: 0.3rem;
 }
 
 .span-required {
-    display: none;
-    margin: 2px 0 0 2px;
-    font-size: 12px;
-    color: #db5a5a;
+  display: none;
+  margin: 2px 0 0 2px;
+  font-size: 12px;
+  color: #db5a5a;
 }
 
-#btnCadastro, #btnCadInfo, #btnLogin, #btnRecuperarSenha, #btnTelaBemVindo{
-    margin-top: 2rem;
-    background: #EE7F7FE2;
-    border-radius: 2rem;
-    color: black;
-    margin-bottom: 1rem;
-    padding: 1.2rem 1.6rem;
+#btnCadastro,
+#btnCadInfo,
+#btnLogin,
+#btnRecuperarSenha,
+#btnTelaBemVindo {
+  margin-top: 2rem;
+  background: #ee7f7fe2;
+  border-radius: 2rem;
+  color: black;
+  margin-bottom: 1rem;
+  padding: 1.2rem 1.6rem;
 }
 
 .btnRecSenha {
-    width: 40vw;
+  width: 40vw;
 }
 
 /* tela login  */
 
 .error {
-    font-size: 0.9rem;
-    margin-left: 1rem;
-    display: none;
+  font-size: 0.9rem;
+  margin-left: 1rem;
+  display: none;
 }
 
 #group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-#group button{
-    border: none;
-    background-color: transparent;
-    margin: 0.2rem 0rem;
+#group button {
+  border: none;
+  background-color: transparent;
+  margin: 0.2rem 0rem;
 }
 
 /* Tela recuperar senha */
 
 .formRecSenha {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 /* tela de boas vindas  */
 
 .telaBoasvindas {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #msgBemVinda {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .telaBoasvindas p {
-    padding: 1rem;
+  padding: 1rem;
 }
 
 #imgCoruja {
-    width: 60vw;
-    margin: 2rem 0rem;
-    border-radius: 2rem;
+  width: 60vw;
+  margin: 2rem 0rem;
+  border-radius: 2rem;
 }
