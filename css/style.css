@@ -1,5 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap");
 
+:root {
+  --cor-logo: #ee7f7f;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -71,7 +75,7 @@ input[type="date"] {
 #btnRecuperarSenha,
 #btnTelaBemVindo {
   margin-top: 2rem;
-  background: #ee7f7fe2;
+  background: var(--cor-logo);
   border-radius: 2rem;
   color: black;
   margin-bottom: 1rem;
@@ -111,22 +115,50 @@ input[type="date"] {
 
 /* tela de boas vindas  */
 
-.telaBoasvindas {
+#telaBoasVindas {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+#imgBoasVindas {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+}
+
+#imgBoasVindas img {
+  height: 45vh;
+}
+
+#containerBemVindo {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
+  height: 50vh;
+  width: 100vw;
+  background-color: var(--cor-logo);
+  border-radius: 2rem 2rem 0rem 0rem ;
 }
 
-#msgBemVinda {
-  font-size: 1.5rem;
+#containerBemVindo h2, p {
+  margin: 1rem;
+  color: whitesmoke;
+  text-align: center;
 }
 
-.telaBoasvindas p {
-  padding: 1rem;
+#containerBemVindo p {
+  font-size: 1.1rem;
 }
 
-#imgCoruja {
-  width: 60vw;
-  margin: 2rem 0rem;
+#btnboasVindas {
+  margin-top: 2rem;
+  border: none;
+  background: whitesmoke;
   border-radius: 2rem;
+  color: #e65858;
+  margin-bottom: 1rem;
+  padding: 1.2rem 1.6rem;
+  font-size: 0.9rem;
 }
