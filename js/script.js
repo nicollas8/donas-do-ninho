@@ -147,7 +147,7 @@ function removeErrorInfo (index) {
 }
 
 function nomeValidation () {
-  if (nome.value.length > 120) {
+  if (campoInfo[0].value.length > 120) {
     setErrorInfo(0)
   } else {
     removeErrorInfo(0);
