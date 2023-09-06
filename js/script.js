@@ -147,7 +147,7 @@ function removeErrorInfo (index) {
 }
 
 function nomeValidation () {
-  if (campoInfo[0].value.length > 120) {
+  if (campoInfo[0].value.length > 100) {
     setErrorInfo(0)
   } else {
     removeErrorInfo(0);
@@ -155,8 +155,9 @@ function nomeValidation () {
 }
 
 function dataValidation () {
-  const date = document.getElementById('dataNascimento').value;
-  const dataArray = date.split("/");
+  let date = document.getElementById('dataNascimento').value;
+  date = date.replace(/\//g, "-");
+  let dataArray = date.split("-");
 
   if (dataArray[0] < 1900) {
     setErrorInfo(1);
