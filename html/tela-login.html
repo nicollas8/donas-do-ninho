@@ -4,11 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/style.css">
-    <script type="text/javascript" src="./js/script.js"></script>
+    <link rel="stylesheet" href="../css/style.css">
     <title>Donas do Ninho</title>
 </head>
-
 <body>
     <header>
         <img src="./img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
@@ -18,19 +16,19 @@
             <div class="inputGroup">
                 <label for="newEmail"> Email </label>
                 <input type="email" name="email" onchange="onChangeEmail()" id="email" placeholder="Digite seu email"
-                    required>
+                required>
                 <p class="error" id="erroEmailRequired">Email Obrigatório</p>
                 <p class="error" id="erroEmailInvalid">Email inválido</p>
             </div>
             <div class="inputGroup">
                 <label for="cofirmSenha"> Senha </label>
                 <input type="password" onchange="onChangeSenha()" name="senha" id="senha" placeholder="Digite sua senha"
-                    required>
+                required>
                 <p class="error" id="erroSenhaRequired">Senha Obrigatória</p>
             </div>
             <div id="group">
                 <button type="button" class="btnCadSenha" disabled id="btnRecuperarSenha"
-                    onclick="recoverySenha()"> Esqueci minha senha </button>
+                onclick="recoverySenha()"> Esqueci minha senha </button>
                 <button type="button" class="btnCadSenha" onclick="registrar()">Cadastrar-se</button>
             </div>
         </form>
@@ -39,8 +37,9 @@
         <button type="button" class="btnPadrão" id="btnLogin" onclick="login()" disabled>Entrar</button>
     </footer>
 </body>
+<script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
-<script src="./js/firebase-init.js"></script>
+<script src="../js/firebase-init.js"></script>
 </html>

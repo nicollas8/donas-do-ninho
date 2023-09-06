@@ -62,7 +62,7 @@ function login() {
     .auth()
     .signInWithEmailAndPassword(form.email().value, form.senha().value)
     .then((response) => {
-      window.location.href = "telaInicio.html";
+      window.location.href = "tela-inicio.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
@@ -84,19 +84,11 @@ function recoverPassword() {
     .sendPasswordResetEmail(form.email().value)
     .then(() => {
       alert("E-mail enviado com sucesso");
-      window.location.href = "telaLogin.html";
+      window.location.href = "tela-login.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
     });
-}
-
-function registrar() {
-  window.location.href = "cadastroInfo.html";
-}
-
-function recoverySenha() {
-  window.location.href = "telaRecuperarSenha.html";
 }
 
 // validação cadastro
@@ -138,5 +130,37 @@ function comparePassword() {
     removeError(2);
   } else {
     setError(2);
+  }
+}
+
+const campoInfo = document.querySelectorAll(".requiredInfo");
+const span = document.querySelectorAll(".span-info");
+
+function setErrorInfo (index) {
+  campoInfo[index].style.border = "2px solid #e63636";
+  span[index].style.display = "block";
+}
+
+function removeErrorInfo (index) {
+  campoInfo[index].style.border = "2px solid #5af25f";
+  span[index].style.display = "none";
+}
+
+function nomeValidation () {
+  if (nome.value.length > 120) {
+    setErrorInfo(0)
+  } else {
+    removeErrorInfo(0);
+  }
+}
+
+function dataValidation () {
+  const date = document.getElementById('dataNascimento').value;
+  const dataArray = date.split("/");
+
+  if (dataArray[0] < 1900) {
+    setErrorInfo(1);
+  } else {
+    removeErrorInfo(1);
   }
 }

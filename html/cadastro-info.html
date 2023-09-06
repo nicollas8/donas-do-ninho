@@ -4,28 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./js/script.js"></script>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <title>Donas do Ninho</title>
 </head>
 
 <body>
     <header>
-        <img src="./img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+        <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
     </header>
     <main>
-        <form action="cadastroEmail.html" method="post" id="formCadastro">
+        <form action="cadastro-email.html" method="post" id="formCadastro">
             <div class="inputGroup">
-                <label for="nome"> Nome </label>
-                <input type="text" name="nome" id="nome" placeholder="Digite seu nome">
-            </div>
-            <div class="inputGroup">
-                <label for="sobrenome"> Sobrenome </label>
-                <input type="text" name="sobrenome" id="sobrenome" placeholder="Digite seu Sobrenome">
+                <label for="nome"> Nome </label> 
+                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" oninput="nomeValidation()" class="requiredInfo">
+                <span class="span-required span-info">Limite de 200 caracteres</span>
             </div>
             <div class="inputGroup">
                 <label for="dataNascimento"> Data de nascimento </label>
-                <input type="date" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa">
+                <input type="date" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="requiredInfo">
+                <span class="span-required span-info">Informe uma data acima de 1900</span>
             </div>
             <div class="inputGroup">
                 <label for="selecione"> Selecione </label>
@@ -41,5 +38,6 @@
         <button type="submit" id="btnCadInfo">Avançar</button>
     </footer>
 </body>
+<script src="../js/script.js"></script>
 
 </html>
