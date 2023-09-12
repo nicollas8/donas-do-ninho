@@ -92,35 +92,33 @@ function recoverPassword() {
 }
 
 // cadastro com banco
-const newForm = {
-  newEmail: () => document.getElementById('newEmail'),
-  newSenha: () => document.getElementById('newSenha'),
-  btnCadastro: () => document.getElementById("btnCadastro"),
-}
 
 function cadastro() {
-  const email = newForm.newEmail().value;
-
-  if (comparePassword()) {  
-    var password = newForm.newSenha().value;
-  } else {
-    console.log('erro');
-  }
-  
-    firebase.auth().createUserWithEmailAndPassword (
-        email, password
-    ).then (() => {
-      window.location.href = "../html/tela-inicio.html"
-    }).catch (error => {
-      alert (getErrorMessage (error));
+  if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
+    const newForm = {
+      newEmail: () => document.getElementById("newEmail"),
+      newSenha: () => document.getElementById("newSenha"),
+    };
+    const email = newForm.newEmail().value;
+    const password = newForm.newSenha().value;
+    firebase
+    .auth()
+    .createUserWithEmailAndPassword(email, password)
+    .then(() => {
+      window.location.href = "../html/tela-inicio.html";
     })
+    .catch((error) => {
+      alert(getErrorMessage(error));
+    });
+  } else {
+    console.log('erro')
   }
+}
 
-  function getErrorMessage(error) {
-    return error.message;
-  
-  }
-  
+function getErrorMessage(error) {
+  return error.message;
+}
+
 // validação cadastro
 
 const formEMailCadastro = document.getElementById("formEmail");
@@ -162,30 +160,29 @@ function comparePassword() {
     setError(2);
   }
 }
-
 const campoInfo = document.querySelectorAll(".requiredInfo");
 const span = document.querySelectorAll(".span-info");
 
-function setErrorInfo (index) {
+function setErrorInfo(index) {
   campoInfo[index].style.border = "2px solid #e63636";
   span[index].style.display = "block";
 }
 
-function removeErrorInfo (index) {
+function removeErrorInfo(index) {
   campoInfo[index].style.border = "2px solid #5af25f";
   span[index].style.display = "none";
 }
 
-function nomeValidation () {
+function nomeValidation() {
   if (campoInfo[0].value.length > 100) {
-    setErrorInfo(0)
+    setErrorInfo(0);
   } else {
     removeErrorInfo(0);
   }
 }
 
-function dataValidation () {
-  let date = document.getElementById('dataNascimento').value;
+function dataValidation() {
+  let date = document.getElementById("dataNascimento").value;
   date = date.replace(/\//g, "-");
   let dataArray = date.split("-");
 
