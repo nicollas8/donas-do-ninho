@@ -92,10 +92,21 @@ function recoverPassword() {
 }
 
 // cadastro com banco
+const newForm = {
+  newEmail: () => document.getElementById('newEmail'),
+  newSenha: () => document.getElementById('newSenha'),
+  btnCadastro: () => document.getElementById("btnCadastro"),
+}
 
 function cadastro() {
-  const email = form.email().value;
-  const password = form.password().value;
+  const email = newForm.newEmail().value;
+
+  if (comparePassword()) {  
+    var password = newForm.newSenha().value;
+  } else {
+    console.log('erro');
+  }
+  
     firebase.auth().createUserWithEmailAndPassword (
         email, password
     ).then (() => {
@@ -110,7 +121,6 @@ function cadastro() {
   
   }
   
-
 // validação cadastro
 
 const formEMailCadastro = document.getElementById("formEmail");
