@@ -1,3 +1,5 @@
+// TELA LOGIN
+
 function onChangeEmail() {
   toggleBtnDisabled();
   toggleEmailErrors();
@@ -84,14 +86,14 @@ function recoverPassword() {
     .sendPasswordResetEmail(form.email().value)
     .then(() => {
       alert("E-mail enviado com sucesso");
-      window.location.href = "tela-login.html";
+      window.location.href = "../html/tela-login.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
     });
 }
 
-// cadastro com banco
+// TELA CADASTRO
 
 function cadastro() {
   if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
@@ -102,16 +104,16 @@ function cadastro() {
     const email = newForm.newEmail().value;
     const password = newForm.newSenha().value;
     firebase
-    .auth()
-    .createUserWithEmailAndPassword(email, password)
-    .then(() => {
-      window.location.href = "../html/tela-inicio.html";
-    })
-    .catch((error) => {
-      alert(getErrorMessage(error));
-    });
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        window.location.href = "../html/boas-vindas.html";
+      })
+      .catch((error) => {
+        alert(getErrorMessage(error));
+      });
   } else {
-    console.log('erro')
+    console.log("erro");
   }
 }
 
@@ -119,7 +121,7 @@ function getErrorMessage(error) {
   return error.message;
 }
 
-// validação cadastro
+// VALIDAÇÃO CADASTRO
 
 const formEMailCadastro = document.getElementById("formEmail");
 const campos = document.querySelectorAll(".required");
@@ -160,6 +162,7 @@ function comparePassword() {
     setError(2);
   }
 }
+
 const campoInfo = document.querySelectorAll(".requiredInfo");
 const span = document.querySelectorAll(".span-info");
 
