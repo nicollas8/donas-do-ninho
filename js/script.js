@@ -117,9 +117,13 @@ function cadastro() {
   }
 }
 
-function getErrorMessage(error) {
-  return error.message;
+  function getErrorMessage (error) {
+    if (error.code == "auth/email-already-in-use") {
+      return "O e-mail já está cadastrado em outra conta";
+    }
+    return error.message;
 }
+
 
 // VALIDAÇÃO CADASTRO
 
