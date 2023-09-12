@@ -91,6 +91,26 @@ function recoverPassword() {
     });
 }
 
+// cadastro com banco
+
+function cadastro() {
+  const email = form.email().value;
+  const password = form.password().value;
+    firebase.auth().createUserWithEmailAndPassword (
+        email, password
+    ).then (() => {
+      window.location.href = "../html/tela-inicio.html"
+    }).catch (error => {
+      alert (getErrorMessage (error));
+    })
+  }
+
+  function getErrorMessage(error) {
+    return error.message;
+  
+  }
+  
+
 // validação cadastro
 
 const formEMailCadastro = document.getElementById("formEmail");
