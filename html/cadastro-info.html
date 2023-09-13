@@ -16,13 +16,13 @@
         <form action="cadastro-email.html" method="post" id="formCadastro">
             <div class="inputGroup">
                 <label for="nome"> Nome </label> 
-                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" oninput="nomeValidation()" class="requiredInfo">
-                <span class="span-required span-info">Limite de 200 caracteres</span>
+                <input type="text" name="nome" id="nome" placeholder="Digite seu nome" oninput="nomeValidation()" class="required">
+                <span class="span-required">Limite de 200 caracteres</span>
             </div>
             <div class="inputGroup">
                 <label for="dataNascimento"> Data de nascimento </label>
-                <input type="date" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="requiredInfo">
-                <span class="span-required span-info">Informe uma data acima de 1900</span>
+                <input type="date" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="required">
+                <span class="span-required">Informe uma data acima de 1900</span>
             </div>
             <div class="inputGroup">
                 <label for="selecione"> Selecione </label>
@@ -32,6 +32,21 @@
                     <option value="nãoSouMãe">Não sou mãe</option>
                 </select>
             </div>
+            <div class="inputGroup">
+                <label for="newEmail"> Email </label>
+                <input type="email" name="newEmail" id="newEmail" placeholder="exemplo@email.com"  class="required" oninput="emailValidateCadastro()"/>
+                <span class="span-required">Email inválido</span>
+              </div>
+              <div class="inputGroup">
+                <label for="newSenha"> Nova Senha </label>
+                <input type="password" name="newSenha" id="newSenha" placeholder="Digite sua senha" class="required" oninput="mainPasswordValidate()">
+                <span class="span-required">A senha deve conter no minímo 8 caracteres</span>
+              </div>
+              <div class="inputGroup">
+                <label for="cofirmSenha"> Confirmar Senha </label>
+                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" class="required" oninput="comparePassword()"/>
+                <span class="span-required">As senhas devem ser as mesmas</span>
+              </div>
         </form>
     </main>
     <footer>
@@ -39,5 +54,8 @@
     </footer>
 </body>
 <script src="../js/script.js"></script>
-
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
 </html>

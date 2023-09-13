@@ -80,6 +80,10 @@ function getErrorMessage(error) {
   return error.message;
 }
 
+function recoverySenha() {
+  window.location.href = '../html/recuperar-senha.html'
+}
+
 function recoverPassword() {
   firebase
     .auth()
@@ -94,108 +98,93 @@ function recoverPassword() {
 }
 
 // TELA CADASTRO
-
-function cadastro() {
-  if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
-    const newForm = {
-      newEmail: () => document.getElementById("newEmail"),
-      newSenha: () => document.getElementById("newSenha"),
-    };
-    const email = newForm.newEmail().value;
-    const password = newForm.newSenha().value;
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        window.location.href = "../html/boas-vindas.html";
-      })
-      .catch((error) => {
-        alert(getErrorMessage(error));
+const buttonCreateAccount = document.getElementById('btnCadInfo');
+buttonCreateAccount.addEventListener('click', () => {
+  const formData = {
+    nome: document.getElementById('nome').value,
+    data: document.getElementById('dataNascimento').value,
+    tipoMom: document.querySelector('select[name=tipoMãe').value,
+    email: document.getElementById('newEmail').value,
+    senha: document.getElementById('newSenha').value
+  };
+  firebase.auth().createUserWithEmailAndPassword(formData.email, formData.senha)
+    .then(data => {
+      const uid = data.user.uid;
+    
+      const users = firebase.firestore().collection('usuarios');
+      users.doc(uid).set({
+        nome: formData.nome, dataNascimento: formData.data, tipoMom: formData.tipoMom
       });
-  } else {
-    console.log("erro");
-  }
-}
 
-  function getErrorMessage (error) {
-    if (error.code == "auth/email-already-in-use") {
-      return "O e-mail já está cadastrado em outra conta";
+      alert('conta criada com sucesso');
+    })
+    .catch (error => {
+      if (error.code == 'auth/email-already-in-use') {
+        alert('Esse e-mail já está em uso por outro usuário')
+      } else {
+        alert(error.message)
+      }
+      console.log(error)
+    });
+});
+
+  // VALIDAÇÃO CADASTRO
+
+  const formEMailCadastro = document.getElementById("formEmail");
+  const campos = document.querySelectorAll(".required");
+  const spans = document.querySelectorAll(".span-required");
+  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+
+  function setError(index) {
+    campos[index].style.border = "2px solid #e63636";
+    spans[index].style.display = "block";
+  }
+
+  function removeError(index) {
+    campos[index].style.border = "2px solid #5af25f";
+    spans[index].style.display = "none";
+  }
+  
+    function nomeValidation() {
+      if (campos[0].value.length > 100) {
+        setError(0);
+      } else {
+        removeError(0);
+      }
     }
-    return error.message;
-}
-
-
-// VALIDAÇÃO CADASTRO
-
-const formEMailCadastro = document.getElementById("formEmail");
-const campos = document.querySelectorAll(".required");
-const spans = document.querySelectorAll(".span-required");
-const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-function setError(index) {
-  campos[index].style.border = "2px solid #e63636";
-  spans[index].style.display = "block";
-}
-
-function removeError(index) {
-  campos[index].style.border = "2px solid #5af25f";
-  spans[index].style.display = "none";
-}
-
-function emailValidateCadastro() {
-  if (!emailRegex.test(campos[0].value)) {
-    setError(0);
-  } else {
-    removeError(0);
+  
+  function dataValidation() {
+    let date = document.getElementById("dataNascimento").value;
+    date = date.replace(/\//g, "-");
+    let dataArray = date.split("-");
+    
+    if (dataArray[0] < 1900) {
+      setError(1);
+    } else {
+      removeError(1);
+    }
   }
-}
-
-function mainPasswordValidate() {
-  if (campos[1].value.length < 8) {
-    setError(1);
-  } else {
-    removeError(1);
-    comparePassword();
-  }
-}
-
-function comparePassword() {
-  if (campos[1].value == campos[2].value && campos[2].value.length >= 8) {
-    removeError(2);
-  } else {
-    setError(2);
-  }
-}
-
-const campoInfo = document.querySelectorAll(".requiredInfo");
-const span = document.querySelectorAll(".span-info");
-
-function setErrorInfo(index) {
-  campoInfo[index].style.border = "2px solid #e63636";
-  span[index].style.display = "block";
-}
-
-function removeErrorInfo(index) {
-  campoInfo[index].style.border = "2px solid #5af25f";
-  span[index].style.display = "none";
-}
-
-function nomeValidation() {
-  if (campoInfo[0].value.length > 100) {
-    setErrorInfo(0);
-  } else {
-    removeErrorInfo(0);
-  }
-}
-
-function dataValidation() {
-  let date = document.getElementById("dataNascimento").value;
-  date = date.replace(/\//g, "-");
-  let dataArray = date.split("-");
-
-  if (dataArray[0] < 1900) {
-    setErrorInfo(1);
-  } else {
-    removeErrorInfo(1);
-  }
-}
+    function emailValidateCadastro() {
+      if (!emailRegex.test(campos[2].value)) {
+        setError(2);
+      } else {
+        removeError(2);
+      }
+    }
+  
+    function mainPasswordValidate() {
+      if (campos[3].value.length < 8) {
+        setError(3);
+      } else {
+        removeError(3);
+        comparePassword();
+      }
+    }
+  
+    function comparePassword() {
+      if (campos[3].value == campos[4].value && campos[4].value.length >= 8) {
+        removeError(4);
+      } else {
+        setError(4);
+      }
+    }
