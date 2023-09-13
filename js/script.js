@@ -98,6 +98,7 @@ function recoverPassword() {
 }
 
 // TELA CADASTRO
+
 const buttonCreateAccount = document.getElementById('btnCadInfo');
 buttonCreateAccount.addEventListener('click', () => {
   const formData = {
@@ -136,12 +137,10 @@ buttonCreateAccount.addEventListener('click', () => {
   const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
   function setError(index) {
-    campos[index].style.border = "2px solid #e63636";
     spans[index].style.display = "block";
   }
 
   function removeError(index) {
-    campos[index].style.border = "2px solid #5af25f";
     spans[index].style.display = "none";
   }
   
