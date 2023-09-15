@@ -81,7 +81,7 @@ function getErrorMessage(error) {
 }
 
 function recoverySenha() {
-  window.location.href = '../html/recuperar-senha.html'
+  location.href = '../html/recuperar-senha.html'
 }
 
 function recoverPassword() {
@@ -100,6 +100,7 @@ function recoverPassword() {
 // TELA CADASTRO
 
 const buttonCreateAccount = document.getElementById('btnCadInfo');
+
 buttonCreateAccount.addEventListener('click', () => {
   const formData = {
     nome: document.getElementById('nome').value,
@@ -107,8 +108,32 @@ buttonCreateAccount.addEventListener('click', () => {
     tipoMom: document.querySelector('select[name=tipoMãe').value,
     email: document.getElementById('newEmail').value,
     senha: document.getElementById('newSenha').value
+    
   };
-  firebase.auth().createUserWithEmailAndPassword(formData.email, formData.senha)
+
+      let date = formData.data
+      date = date.replace(/\//g, "-");
+      let dataArray = date.split("-");
+      console.log(dataArray);
+      let nowdate = new Date();
+      nowdate = nowdate.getFullYear();
+
+
+      let confirmSenha = document.getElementById('confirmSenha').value;
+
+    if (formData.nome.length == "") {
+      alert('Por favor, insira seu nome no campo!');
+    } else if(formData.nome.length > 100)  {
+      alert('Limite de 100 caracteres para o nome!');
+    }else if((dataArray[0] < 1900) || (dataArray[0] >= nowdate) || (dataArray[0] == "") || (dataArray[1] == "") || (dataArray[2] == "")){
+      alert('Por favor, selecione uma data de nascimento válida!');
+    }else if(formData.senha.length < 8){
+      alert('Por favor, digite uma senha com mais de 8 caracteres!');
+    }else if(formData.senha != confirmSenha){
+      alert('As senhas devem se coincidir!');
+    }
+    else{
+      firebase.auth().createUserWithEmailAndPassword(formData.email, formData.senha)
     .then(data => {
       const uid = data.user.uid;
     
@@ -116,17 +141,24 @@ buttonCreateAccount.addEventListener('click', () => {
       users.doc(uid).set({
         nome: formData.nome, dataNascimento: formData.data, tipoMom: formData.tipoMom
       });
-
       alert('conta criada com sucesso');
     })
     .catch (error => {
       if (error.code == 'auth/email-already-in-use') {
         alert('Esse e-mail já está em uso por outro usuário')
-      } else {
+      } else if (error.code == 'auth/invalid-email'){
+        alert('Por favor, insira um e-mail!');
+      }else if (error.code == 'auth/missing-password'){
+        alert('Por favor, insira uma senha!');
+      }else{
         alert(error.message)
       }
       console.log(error)
     });
+    }
+
+  
+  
 });
 
   // VALIDAÇÃO CADASTRO
@@ -187,3 +219,5 @@ buttonCreateAccount.addEventListener('click', () => {
         setError(4);
       }
     }
+
+    
