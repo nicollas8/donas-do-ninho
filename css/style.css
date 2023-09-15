@@ -62,6 +62,11 @@ input[type="date"] {
   margin-left: 0.3rem;
 }
 
+::-webkit-calendar-picker-indicator{
+  background-color: #ffffff;
+  cursor: pointer;
+}
+
 .span-required {
   display: none;
   margin: 2px 0 0 2px;
@@ -69,11 +74,7 @@ input[type="date"] {
   color: #db5a5a;
 }
 
-#btnCadastro,
-#btnCadInfo,
-#btnLogin,
-#btnRecuperarSenha,
-#btnTelaBemVindo {
+.btn {
   margin-top: 2rem;
   background: var(--cor-logo);
   border-radius: 2rem;
@@ -89,20 +90,20 @@ input[type="date"] {
 /* tela login  */
 
 .error {
+  color: #db5a5a;
   font-size: 0.9rem;
   margin-left: 1rem;
   display: none;
 }
 
-#group {
+#groupRecSenha {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-around;
 }
 
-#group button {
+#groupRecSenha button {
   border: none;
-  background-color: transparent;
+  background: transparent;
 }
 
 /* Tela recuperar senha */

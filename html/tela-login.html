@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
     <title>Donas do Ninho</title>
 </head>
 <body>
@@ -17,24 +18,24 @@
                 <label for="newEmail"> Email </label>
                 <input type="email" name="email" onchange="onChangeEmail()" id="email" placeholder="Digite seu email"
                 required>
-                <p class="error" id="erroEmailRequired">Email Obrigatório</p>
-                <p class="error" id="erroEmailInvalid">Email inválido</p>
+                <span class="error" id="erroEmailRequired">Email Obrigatório</span>
+                <span class="error" id="erroEmailInvalid">Email inválido</s>
             </div>
             <div class="inputGroup">
                 <label for="cofirmSenha"> Senha </label>
                 <input type="password" onchange="onChangeSenha()" name="senha" id="senha" placeholder="Digite sua senha"
                 required>
-                <p class="error" id="erroSenhaRequired">Senha Obrigatória</p>
+                <span class="error" id="erroSenhaRequired">Senha Obrigatória</span>
             </div>
-            <div id="group">
+            <div id="groupRecSenha">
                 <button type="button" class="btnCadSenha" disabled id="btnRecuperarSenha"
                 onclick="recoverySenha()"> Esqueci minha senha </button>
-                <button type="button" class="btnCadSenha" onclick="location.href='cadastro-info.html'">Não tem conta? Cadastre-se</button>
+                <button type="button" class="btnCadSenha" onclick="location.href='cadastro.html'">Não tem conta? Cadastre-se</button>
             </div>
         </form>
     </main>
     <footer>
-        <button type="button" class="btnPadrão" id="btnLogin" onclick="login()" disabled>Entrar</button>
+        <button type="button" class="btnPadrão btn" id="btnLogin" onclick="login()" disabled>Entrar</button>
     </footer>
 </body>
 <script src="../js/script.js"></script>

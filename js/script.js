@@ -219,5 +219,3 @@ buttonCreateAccount.addEventListener('click', () => {
         setError(4);
       }
     }
-
-    
