@@ -13,15 +13,15 @@
         <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
     </header>
     <main>
-        <form action="cadastro-email.html" method="post" id="formCadastro">
+        <form action="" method="post" id="formCadastro">
             <div class="inputGroup">
-                <label for="nome"> Nome </label> 
+                <label for="nome"> Nome completo </label> 
                 <input type="text" name="nome" id="nome" placeholder="Digite seu nome" oninput="nomeValidation()" class="required">
-                <span class="span-required">Limite de 200 caracteres</span>
+                <span class="span-required">Limite de 100 caracteres</span>
             </div>
             <div class="inputGroup">
                 <label for="dataNascimento"> Data de nascimento </label>
-                <input type="text" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="required"onfocus="(this.type='date')" onblur="(this.type='text')">
+                <input type="text" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="required" onfocus="(this.type='date')" onblur="(this.type='text')">
                 <span class="span-required">Informe uma data acima de 1900</span>
             </div>
             <div class="inputGroup">
@@ -35,7 +35,7 @@
             <div class="inputGroup">
                 <label for="newEmail"> Email </label>
                 <input type="email" name="newEmail" id="newEmail" placeholder="exemplo@email.com"  class="required" oninput="emailValidateCadastro()"/>
-                <span class="span-required">Email inválido</span>
+                <span class="span-required">Tipo de email inválido</span>
               </div>
               <div class="inputGroup">
                 <label for="newSenha"> Senha </label>
@@ -43,7 +43,7 @@
                 <span class="span-required">A senha deve conter no minímo 8 caracteres</span>
               </div>
               <div class="inputGroup">
-                <label for="cofirmSenha"> Confirmar Senha </label>
+                <label for="cofirmSenha"> Confirmar sua senha </label>
                 <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Confirme sua senha" class="required" oninput="comparePassword()"/>
                 <span class="span-required">As senhas devem ser as mesmas</span>
               </div>

@@ -81,7 +81,7 @@ function getErrorMessage(error) {
 }
 
 function recoverySenha() {
-  location.href = '../html/recuperar-senha.html'
+  location.href = "../html/recuperar-senha.html";
 }
 
 function recoverPassword() {
@@ -99,123 +99,127 @@ function recoverPassword() {
 
 // TELA CADASTRO
 
-const buttonCreateAccount = document.getElementById('btnCadInfo');
+const buttonCreateAccount = document.getElementById("btnCadInfo");
 
-buttonCreateAccount.addEventListener('click', () => {
+buttonCreateAccount.addEventListener("click", () => {
   const formData = {
-    nome: document.getElementById('nome').value,
-    data: document.getElementById('dataNascimento').value,
-    tipoMom: document.querySelector('select[name=tipoMãe').value,
-    email: document.getElementById('newEmail').value,
-    senha: document.getElementById('newSenha').value
-    
+    nome: document.getElementById("nome").value,
+    data: document.getElementById("dataNascimento").value,
+    tipoMom: document.querySelector("select[name=tipoMãe").value,
+    email: document.getElementById("newEmail").value,
+    senha: document.getElementById("newSenha").value,
   };
 
-      let date = formData.data
-      date = date.replace(/\//g, "-");
-      let dataArray = date.split("-");
-      console.log(dataArray);
-      let nowdate = new Date();
-      nowdate = nowdate.getFullYear();
+  let date = formData.data;
+  date = date.replace(/\//g, "-");
+  let dataArray = date.split("-");
+  console.log(dataArray);
+  let nowdate = new Date();
+  nowdate = nowdate.getFullYear();
 
+  let confirmSenha = document.getElementById("confirmSenha").value;
 
-      let confirmSenha = document.getElementById('confirmSenha').value;
+  if (formData.nome.length == "") {
+    alert("Por favor, insira seu nome no campo!");
+  } else if (formData.nome.length > 100) {
+    alert("Limite de 100 caracteres para o nome!");
+  } else if (
+    dataArray[0] < 1900 ||
+    dataArray[0] >= nowdate ||
+    dataArray[0] == "" ||
+    dataArray[1] == "" ||
+    dataArray[2] == ""
+  ) {
+    alert("Por favor, selecione uma data de nascimento válida!");
+  } else if (formData.senha.length < 8) {
+    alert("Por favor, digite uma senha com mais de 8 caracteres!");
+  } else if (formData.senha != confirmSenha) {
+    alert("As senhas devem se coincidir!");
+  } else {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(formData.email, formData.senha)
+      .then((data) => {
+        const uid = data.user.uid;
 
-    if (formData.nome.length == "") {
-      alert('Por favor, insira seu nome no campo!');
-    } else if(formData.nome.length > 100)  {
-      alert('Limite de 100 caracteres para o nome!');
-    }else if((dataArray[0] < 1900) || (dataArray[0] >= nowdate) || (dataArray[0] == "") || (dataArray[1] == "") || (dataArray[2] == "")){
-      alert('Por favor, selecione uma data de nascimento válida!');
-    }else if(formData.senha.length < 8){
-      alert('Por favor, digite uma senha com mais de 8 caracteres!');
-    }else if(formData.senha != confirmSenha){
-      alert('As senhas devem se coincidir!');
-    }
-    else{
-      firebase.auth().createUserWithEmailAndPassword(formData.email, formData.senha)
-    .then(data => {
-      const uid = data.user.uid;
-    
-      const users = firebase.firestore().collection('usuarios');
-      users.doc(uid).set({
-        nome: formData.nome, dataNascimento: formData.data, tipoMom: formData.tipoMom
+        const users = firebase.firestore().collection("usuarios");
+        users.doc(uid).set({
+          nome: formData.nome,
+          dataNascimento: formData.data,
+          tipoMom: formData.tipoMom,
+        });
+        alert("conta criada com sucesso");
+      })
+      .catch((error) => {
+        if (error.code == "auth/email-already-in-use") {
+          alert("Esse e-mail já está em uso por outro usuário");
+        } else if (error.code == "auth/invalid-email") {
+          alert("Por favor, insira um e-mail!");
+        } else if (error.code == "auth/missing-password") {
+          alert("Por favor, insira uma senha!");
+        } else {
+          alert(error.message);
+        }
+        console.log(error);
       });
-      alert('conta criada com sucesso');
-    })
-    .catch (error => {
-      if (error.code == 'auth/email-already-in-use') {
-        alert('Esse e-mail já está em uso por outro usuário')
-      } else if (error.code == 'auth/invalid-email'){
-        alert('Por favor, insira um e-mail!');
-      }else if (error.code == 'auth/missing-password'){
-        alert('Por favor, insira uma senha!');
-      }else{
-        alert(error.message)
-      }
-      console.log(error)
-    });
-    }
-
-  
-  
+  }
 });
 
-  // VALIDAÇÃO CADASTRO
+// VALIDAÇÃO CADASTRO
 
-  const formEMailCadastro = document.getElementById("formEmail");
-  const campos = document.querySelectorAll(".required");
-  const spans = document.querySelectorAll(".span-required");
-  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+const formEMailCadastro = document.getElementById("formEmail");
+const campos = document.querySelectorAll(".required");
+const spans = document.querySelectorAll(".span-required");
+const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
-  function setError(index) {
-    spans[index].style.display = "block";
-  }
+function setError(index) {
+  spans[index].style.display = "block";
+}
 
-  function removeError(index) {
-    spans[index].style.display = "none";
+function removeError(index) {
+  spans[index].style.display = "none";
+}
+
+function nomeValidation() {
+  if (campos[0].value.length > 100) {
+    setError(0);
+  } else {
+    removeError(0);
   }
-  
-    function nomeValidation() {
-      if (campos[0].value.length > 100) {
-        setError(0);
-      } else {
-        removeError(0);
-      }
-    }
-  
-  function dataValidation() {
-    let date = document.getElementById("dataNascimento").value;
-    date = date.replace(/\//g, "-");
-    let dataArray = date.split("-");
-    
-    if (dataArray[0] < 1900) {
-      setError(1);
-    } else {
-      removeError(1);
-    }
+}
+
+function dataValidation() {
+  let date = document.getElementById("dataNascimento").value;
+  date = date.replace(/\//g, "-");
+  let dataArray = date.split("-");
+
+  if (dataArray[0] < 1900) {
+    setError(1);
+  } else {
+    removeError(1);
   }
-    function emailValidateCadastro() {
-      if (!emailRegex.test(campos[2].value)) {
-        setError(2);
-      } else {
-        removeError(2);
-      }
-    }
-  
-    function mainPasswordValidate() {
-      if (campos[3].value.length < 8) {
-        setError(3);
-      } else {
-        removeError(3);
-        comparePassword();
-      }
-    }
-  
-    function comparePassword() {
-      if (campos[3].value == campos[4].value && campos[4].value.length >= 8) {
-        removeError(4);
-      } else {
-        setError(4);
-      }
-    }
+}
+function emailValidateCadastro() {
+  if (!emailRegex.test(campos[2].value)) {
+    setError(2);
+  } else {
+    removeError(2);
+  }
+}
+
+function mainPasswordValidate() {
+  if (campos[3].value.length < 8) {
+    setError(3);
+  } else {
+    removeError(3);
+    comparePassword();
+  }
+}
+
+function comparePassword() {
+  if (campos[3].value == campos[4].value && campos[4].value.length >= 8) {
+    removeError(4);
+  } else {
+    setError(4);
+  }
+}

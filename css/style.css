@@ -22,22 +22,22 @@ body {
 }
 
 header img {
-  width: 80vw;
+  width: 70vw;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-form .inputGroup {
+form, form .inputGroup {
   display: flex;
   flex-direction: column;
 }
 
 .inputGroup {
-  margin-top: 1rem;
+  margin-bottom: 0.5rem;
   width: 90vw;
+}
+
+.inputGroup label {
+  margin-bottom: 0.3rem;
+  margin-left: 0.3rem;
 }
 
 .inputGroup input {
@@ -47,8 +47,7 @@ form .inputGroup {
   margin-bottom: 1rem;
 }
 
-.inputGroup select,
-input[type="date"] {
+:where(select, input[type="date"]) {
   padding: 0.7rem;
   border: none;
   border-radius: 1.5rem;
@@ -56,12 +55,6 @@ input[type="date"] {
   background-color: #fff;
   width: 90vw;
 }
-
-.inputGroup label {
-  margin-bottom: 0.3rem;
-  margin-left: 0.3rem;
-}
-
 
 ::-webkit-calendar-picker-indicator{
   background-color: #ffffff;
