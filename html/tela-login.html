@@ -9,34 +9,36 @@
     <title>Donas do Ninho</title>
 </head>
 <body>
-    <header>
-        <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
-    </header>
-    <main>
-        <form action="" method="post" class="formLogin">
-            <div class="inputGroup">
-                <label for="newEmail"> Email </label>
-                <input type="email" name="email" onchange="onChangeEmail()" id="email" placeholder="Digite seu email"
-                required>
-                <span class="error" id="erroEmailRequired">Email Obrigatório</span>
-                <span class="error" id="erroEmailInvalid">Email inválido</s>
-            </div>
-            <div class="inputGroup">
-                <label for="cofirmSenha"> Senha </label>
-                <input type="password" onchange="onChangeSenha()" name="senha" id="senha" placeholder="Digite sua senha"
-                required>
-                <span class="error" id="erroSenhaRequired">Senha Obrigatória</span>
-            </div>
-            <div id="groupRecSenha">
-                <button type="button" class="btnCadSenha" disabled id="btnRecuperarSenha"
-                onclick="recoverySenha()"> Esqueci minha senha </button>
-                <button type="button" class="btnCadSenha" onclick="location.href='cadastro.html'">Não tem conta? Cadastre-se</button>
-            </div>
-        </form>
-    </main>
-    <footer>
-        <button type="button" class="btnPadrão btn" id="btnLogin" onclick="login()" disabled>Entrar</button>
-    </footer>
+    <div class="page">
+        <header>
+            <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+        </header>
+        <main>
+            <form action="" method="post" class="formLogin">
+                <div class="inputGroup">
+                    <label for="newEmail"> Email </label>
+                    <input type="email" name="email" onchange="onChangeEmail()" id="email" placeholder="Digite seu email"
+                    required>
+                    <span class="error" id="erroEmailRequired">Email Obrigatório</span>
+                    <span class="error" id="erroEmailInvalid">Email inválido</s>
+                </div>
+                <div class="inputGroup">
+                    <label for="cofirmSenha"> Senha </label>
+                    <input type="password" onchange="onChangeSenha()" name="senha" id="senha" placeholder="Digite sua senha"
+                    required>
+                    <span class="error" id="erroSenhaRequired">Senha Obrigatória</span>
+                </div>
+                <div id="groupRecSenha">
+                    <button type="button" class="btnCadSenha" disabled id="btnRecuperarSenha"
+                    onclick="recoverySenha()"> Esqueci minha senha </button>
+                    <button type="button" class="btnCadSenha" onclick="location.href='cadastro.html'">Não tem conta? Cadastre-se</button>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <button type="button" class="btnPadrão btn" id="btnLogin" onclick="login()" disabled>Entrar</button>
+        </footer>
+    </div>
 </body>
 <script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 

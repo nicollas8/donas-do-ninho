@@ -12,13 +12,15 @@
 }
 
 body {
-  width: 100%;
+  background: #ffede2;
+}
+
+.page {
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  background: #ffede2;
 }
 
 header img {

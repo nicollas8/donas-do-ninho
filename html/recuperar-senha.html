@@ -9,20 +9,22 @@
 </head>
 
 <body>
-    <main>
-        <header>
-            <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
-        </header>
-        <form action="" method="post" class="formRecSenha">
-            <div class="inputGroup">
-                <label for="email"> Informe seu email para recuperar sua senha </label>
-                <input type="email" name="email" id="email" placeholder="Digite seu email" required>
-                <p class="error" id="erroEmailRequired">Email Obrigatório</p>
-                <p class="error" id="erroEmailInvalid">Email inválido</p>
-            </div>
-            <button type="button" class="btnRecSenha btn" id="btnRecuperarSenha" onclick="recoverPassword()"> Recuperar Senha </button>
-        </form>
-    </main>
+    <div class="page">
+        <main>
+            <header>
+                <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+            </header>
+            <form action="" method="post" class="formRecSenha">
+                <div class="inputGroup">
+                    <label for="email"> Informe seu email para recuperar sua senha </label>
+                    <input type="email" name="email" id="email" placeholder="Digite seu email" required>
+                    <p class="error" id="erroEmailRequired">Email Obrigatório</p>
+                    <p class="error" id="erroEmailInvalid">Email inválido</p>
+                </div>
+                <button type="button" class="btnRecSenha btn" id="btnRecuperarSenha" onclick="recoverPassword()"> Recuperar Senha </button>
+            </form>
+        </main>
+    </div>
 </body>
 <script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
