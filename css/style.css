@@ -41,6 +41,10 @@ header img {
   margin-left: 0.3rem;
 }
 
+input[type='date'] {
+  width: 90vw;
+}
+
 input, select {
   appearance: none;
   margin-bottom: 0.5rem;
