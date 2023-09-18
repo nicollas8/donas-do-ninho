@@ -43,7 +43,7 @@ header img {
 
 input[type="date"]::before{
   color: #999;
-  content: attr(placeholder) ": ";
+  content: attr(placeholder) "";
 }
 input[type="date"]:focus::before {
   content: "" !important;
