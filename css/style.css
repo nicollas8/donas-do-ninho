@@ -47,6 +47,7 @@ header img {
 }
 
 input, select {
+  background-color: #ffffff;
   appearance: none;
   margin-bottom: 0.5rem;
   padding: 0.7rem;
