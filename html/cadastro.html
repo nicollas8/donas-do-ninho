@@ -22,7 +22,8 @@
                 </div>
                 <div class="inputGroup">
                     <label for="dataNascimento"> Data de nascimento </label>
-                    <input type="date" name="dataNascimento" id="dataNascimento" oninput="dataValidation()" class="required">
+                    <input type="text" name="dataNascimento" id="dataNascimento" placeholder="dd/mm/aaaa" oninput="dataValidation()" class="required"
+                    onmouseover="(this.type='date')">
                     <span class="span-required">Informe uma data acima de 1900</span>
                 </div>
                 <div class="inputGroup">

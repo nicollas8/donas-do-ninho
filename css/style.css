@@ -41,12 +41,9 @@ header img {
   margin-left: 0.3rem;
 }
 
-input[type="date"]::before{
-  color: #999;
-  content: attr(placeholder) "";
-}
-input[type="date"]:focus::before {
-  content: "" !important;
+.inputGroup input[type="date"] {
+  background-color: #ffffff;
+  width: 90vw;
 }
 
 input, select {
