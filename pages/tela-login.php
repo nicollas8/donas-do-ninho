@@ -11,7 +11,7 @@
 <body>
     <div class="page">
         <header>
-            <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+            <img src="../assets/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
         </header>
         <main>
             <form action="" method="post" class="formLogin">

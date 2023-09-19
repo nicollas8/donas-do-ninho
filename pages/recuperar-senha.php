@@ -12,7 +12,7 @@
     <div class="page">
         <main>
             <header>
-                <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+                <img src="../assets/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
             </header>
             <form action="" method="post" class="formRecSenha">
                 <div class="inputGroup">

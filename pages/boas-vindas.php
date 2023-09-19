@@ -11,7 +11,7 @@
     <div  id="telaBoasVindas" class="page">
         <main>
             <div id="imgBoasVindas">
-                <img src="../img/imgBaby.svg" alt="">
+                <img src="../assets/imgBaby.svg" alt="">
             </div>
             <div id="containerBemVindo">
                     <h2>Bem vindo (a)!</h2>

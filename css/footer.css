@@ -1,0 +1,24 @@
+
+.pageFooter {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+  }
+  
+  .boxFooter {
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    background-color: #ffede2;
+    padding: 1rem 0rem;
+  }
+  
+  .boxFooter img {
+    width: 60%;
+  }
+  
+  .btnFooter {
+    background: transparent;
+    border: none; 
+  }
