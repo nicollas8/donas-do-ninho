@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donas do Ninho</title> 
+    <title>Document</title>
 </head>
 <body>
-    <p> OII </p>
-    <?php require '../components/footer.php';?>
+    <a href="./html/tela-inicio.php">entrar</a>
 </body>
-</html> 
+</html>

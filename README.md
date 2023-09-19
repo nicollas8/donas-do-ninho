@@ -9,7 +9,7 @@ WebApp voltado a solução de questões maternais <br/>
 </p>
 
 <p align="center">
-  <img alt="License" src="./img/logoDonasDoNinho.svg">
+  <img alt="License" src="../img/logoDonasDoNinho.svg">
 </p>
 
 <br>
