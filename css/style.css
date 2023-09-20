@@ -13,11 +13,8 @@
   font-family: "Roboto", sans-serif;
 }
 
-body {
-  background: var(--cor-fundo);
-}
-
 .page {
+  background: var(--cor-fundo);
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -157,3 +154,27 @@ input, select {
 }
 
 /* Tela perfil usuário  */
+
+
+.pageFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.boxFooter {
+  display: flex;
+  flex-direction: row;
+  width: 100vw;
+  background-color: #ffede2;
+  padding: 1rem 0rem;
+}
+
+.boxFooter img {
+  width: 55%;
+}
+
+.btnFooter {
+  background: transparent;
+  border: none; 
+}
