@@ -8,11 +8,11 @@
 </head>
 <body>
     <div class="pagePerfil">
-        <header>
-            <img src="../assets/seta.svg" alt="" id="seta" onclick="(window.location.href='tela-inicio.html')">
-        </header>
         <main>
             <div class="fotoPerfil">
+              <header>
+                <img src="../assets/seta.svg" alt="" id="seta" onclick="(window.location.href='tela-inicio.html')">
+            </header>
                 <div class="personal-image">
                     <label class="label">
                       <input type="file" />
@@ -25,10 +25,33 @@
                     </label>
                     <p style="color: black;">Nome</p>
                   </div>
-            </div>
+                </div>
             <div class="bioUser">
+              <div class="inputPerfil">
+                <label for="" id="biografia">Biografia</label>
+              </div>
+              <div class="inputPerfil">
+                <img src="../assets/calendario.png" alt="" id="calendario">
+                <label id="dataNascimenoPerf">dd/mm/aaaa</label>
+              </div>
+              <button id="verNivel">ver nivel</button>
+            </div>
+            <div class="publiUser">
+              <div class="iconsPubli">
+                <img src="../assets/salvar.png" alt="" class="iconsPubli">
+                <img src="../assets/btnPublicação.svg" alt="" class="iconsPubli">
+              </div>
             </div>
         </main>
+        <div class="pageFooter">
+          <div class="boxFooter footerPerfil">
+              <button class="btnFooter"><img src="../assets/btnHome.svg" alt=""></button>
+              <button class="btnFooter"><img src="../assets/btnVideo.svg" alt=""></button>
+              <button class="btnFooter"><img src="../assets/btnPublicação.svg" alt=""></button>
+              <button class="btnFooter"><img src="../assets/btnNotificação.svg" alt=""></button>
+              <button class="btnFooter"><img src="../assets/btnPerfil.svg" alt=""></button>
+          </div>
+      </div>
     </div>
 </body>
 </html>
