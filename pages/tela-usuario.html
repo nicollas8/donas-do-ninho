@@ -1,57 +1,53 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <title>Donas do ninho</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
+  <title>Donas do ninho</title>
 </head>
-<body>
-    <div class="pagePerfil">
-        <main>
-            <div class="fotoPerfil">
-              <header>
-                <img src="../assets/seta.svg" alt="" id="seta" onclick="(window.location.href='tela-inicio.html')">
-            </header>
-                <div class="personal-image">
-                    <label class="label">
-                      <input type="file" />
-                      <figure class="personal-figure">
-                        <img src="../assets/fotoPerfil.svg" class="personal-avatar" alt="avatar">
-                        <figcaption class="personal-figcaption">
-                          <img src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png">
-                        </figcaption>
-                      </figure>
-                    </label>
-                    <p style="color: black;">Nome</p>
-                  </div>
-                </div>
-            <div class="bioUser">
-              <div class="inputPerfil">
-                <label for="" id="biografia">Biografia</label>
-              </div>
-              <div class="inputPerfil">
-                <img src="../assets/calendario.png" alt="" id="calendario">
-                <label id="dataNascimenoPerf">dd/mm/aaaa</label>
-              </div>
-              <button id="verNivel">ver nivel</button>
-            </div>
-            <div class="publiUser">
-              <div class="iconsPubli">
-                <img src="../assets/salvar.png" alt="" class="iconsPubli">
-                <img src="../assets/btnPublicação.svg" alt="" class="iconsPubli">
-              </div>
-            </div>
-        </main>
-        <div class="pageFooter">
-          <div class="boxFooter footerPerfil">
-              <button class="btnFooter"><img src="../assets/btnHome.svg" alt=""></button>
-              <button class="btnFooter"><img src="../assets/btnVideo.svg" alt=""></button>
-              <button class="btnFooter"><img src="../assets/btnPublicação.svg" alt=""></button>
-              <button class="btnFooter"><img src="../assets/btnNotificação.svg" alt=""></button>
-              <button class="btnFooter"><img src="../assets/btnPerfil.svg" alt=""></button>
-          </div>
+<body class="screenProfile">
+    <div class="perfil wrapper">
+      <div class="perfilFoto">
+        <img src="../assets/fotoPerfil.svg" alt="" id="fotoPerfil">
+        <p>Nome</p>
       </div>
+        <div class="infoPessoas">
+          <div class="dataNascimento">
+            <img src="../assets/calendar-lines.svg" alt="" id="calender">
+            <p>21 de junho</p>
+          </div>
+          <div class="biografia">
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, facilis.</p>
+          </div>
+          <div class="textoSeguidores">
+            <div class="seguidores">
+              <h6>Seguidores</h6>
+              <p>0.000</p>
+            </div>
+            <div class="seguindo">
+              <h6>Seguindo</h6>
+              <p>0.000</p>
+            </div>
+          </div>
+          <div class="verNivel">
+            <button type="submit">Ver Nível  </button>
+          </div>
+        </div>
     </div>
+    <div class="publi"></div>
+    <footer>
+      <div class="footerPerfil">
+        <div class="boxFooterPerfil">
+            <button class="btnFooter"><img src="../assets/home.png" alt=""></button>
+            <button class="btnFooter"><img src="../assets/play.png" alt=""></button>
+            <button class="btnFooter"><img src="../assets/square-plus.png" alt=""></button>
+            <button class="btnFooter"><img src="../assets/bell.png" alt=""></button>
+            <button class="btnFooter"><img src="../assets/user.png" alt=""></button>
+        </div>
+    </div>
+    </footer>
 </body>
 </html>
