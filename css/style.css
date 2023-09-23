@@ -241,19 +241,18 @@ input, select {
 
 .perfilFoto {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   background-color: #ffffff;
   border-radius: 1rem 1rem 0rem 0rem;
 }
 
 .perfilFoto p {
+  align-self: flex-end;
   color: black;
 }
 
 #fotoPerfil {
-  position: relative;
-  bottom: 2.5rem;
+  margin-left: 1rem;
+  padding: 0.7rem;
   width: 20%;
 }
 
@@ -313,6 +312,49 @@ input, select {
   border-radius: 1.5rem;
 }
 
+.publi {
+  background-color: #ffffff;
+  height: 80vh;
+}
+
+.publi p {
+  padding-top: 1rem;
+  text-align: left;
+  color: black;
+}
+
+.pergunta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 0;
+  margin-bottom: 0.4rem;
+}
+
+.containerPubli {
+  background-color: #D9D9D9;
+  padding: 1rem 0.5rem;
+  border-radius: 1rem;
+}
+
+.containerPubli p {
+  color: black;
+}
+
+.react {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.react img {
+  width: 20%;
+}
+
+.react button {
+  border: none;
+  background-color: transparent;
+}
 
 /* footer perfil  */
 
