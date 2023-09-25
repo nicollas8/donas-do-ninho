@@ -5,64 +5,80 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/style.css">
-  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css'>
   <title>Donas do ninho</title>
 </head>
-<body class="screenProfile">
-    <div class="perfil wrapper">
-      <div class="perfilFoto">
-        <img src="../assets/fotoPerfil.svg" alt="" id="fotoPerfil">
-        <p>Nome</p>
+<body class="telaUser">
+<div class="telaUser">
+<div class="perfil">
+  <div class="fotoUser">
+    <div class="personal-image">
+      <label class="label">
+        <input type="file" />
+        <figure class="personal-figure">
+          <img src="../assets/fotoPerfil.svg" class="personal-avatar" alt="avatar">
+          <figcaption class="personal-figcaption">
+            <img src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png">
+          </figcaption>
+        </figure>
+      </label>
+    </div>
+    <div class="nomeUser">
+      <label for="">
+        <input type="text" name="username" id="" placeholder="nome">
+      </label>
       </div>
-        <div class="infoPessoas">
-          <div class="dataNascimento">
-            <img src="../assets/calendar-lines.svg" alt="" id="calender">
-            <p>21 de junho</p>
-          </div>
-          <div class="biografia">
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat, facilis.</p>
-          </div>
-          <div class="textoSeguidores">
-            <div class="seguidores">
-              <h6>Seguidores</h6>
-              <p>0.000</p>
-            </div>
-            <div class="seguindo">
-              <h6>Seguindo</h6>
-              <p>0.000</p>
-            </div>
-          </div>
-          <div class="verNivel">
-            <button type="submit">Ver Nível  </button>
-          </div>
-        </div>
-    </div>
-    <div class="publi"> 
-      <p>Publicações</p>
-      <div class="containerPubli">
-        <div class="pergunta">
-          <p>? DÚVIDA</p>
-          <p>Balão de perguna</p>
-        </div>
-        <div class="react">
-          <button type="submit"><img src="../assets/social-network.svg" alt=""></button>
-          <button type="submit"><img src="../assets/hand.svg" alt=""></button>
-          <button type="submit"><img src="../assets/comment-dots.svg" alt=""></button>
-          <button type="submit"><img src="../assets/star.svg" alt=""></button>
-          <button type="submit"><img src="../assets/menu-dots.svg" alt=""></button>
-        </div>
+      <div class="editPerfil">
+        <button><img src="../assets/lapis.svg" alt=""></button>
       </div>
+  </div>
+  <div class="userdata">
+      <img src="../assets/calendar-lines.svg" alt="">
+      <input type="date"  name="userdata" disabled>
+  </div>
+  <div class="biografia">
+    <label for="">
+      <input type="text" name="biografia" placeholder="biografia">
+    </label>
+  </div>
+  <div class="follows">
+    <div class="seguidores">
+      <h6>Seguidores</h6>
+      <p>0.000</p>
     </div>
-    <footer>
-      <div class="footerPerfil">
-        <div class="boxFooterPerfil">
-            <button class="btnFooter"><img src="../assets/home.png" alt=""></button>
-            <button class="btnFooter"><img src="../assets/play.png" alt=""></button>
-            <button class="btnFooter"><img src="../assets/square-plus.png" alt=""></button>
-            <button class="btnFooter"><img src="../assets/bell.png" alt=""></button>
-            <button class="btnFooter"><img src="../assets/user.png" alt=""></button>
+    <div class="seguindo">
+      <h6>Seguindo</h6>
+      <p>0.000</p>
+    </div>
+  </div>
+  <div class="btnLevel">
+    <button>Seu Nível</button>
+  </div>
+</div>
+<div class="publi">
+  <div class="ballPerguntas">
+    <div class="options">
+      <h4>? DÚVIDA</h4>
+    </div>
+    <div class="balaoPergunta">
+      <p>balão de pergunta</p>
+    </div>
+    <div class="react">
+      <button><img src="../assets/social-network.svg" alt=""></button>
+      <button><img src="../assets/hand.svg" alt=""></button>
+      <button><img src="../assets/star.svg" alt=""></button>
+      <button><img src="../assets/comment-dots.svg" alt=""></button>
+      <button><img src="../assets/menu-dots.svg" alt=""></button>
+    </div>
+  </div>
+</div>
+      <nav>
+        <div class="navPerfil">
+            <button class="navButton"><img src="../assets/home.png" alt=""></button>
+            <button class="navButton"><img src="../assets/play.png" alt=""></button>
+            <button class="navButton"><img src="../assets/square-plus.png" alt=""></button>
+            <button class="navButton"><img src="../assets/bell.png" alt=""></button>
+            <button class="navButton"><img src="../assets/user.png" alt=""></button>
         </div>
-    </div>
-    </footer>
+    </nav>
 </body>
 </html>
