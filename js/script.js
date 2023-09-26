@@ -337,6 +337,7 @@ function atualizar() {
       console.log("Não foi possível obter o usuário autenticado.");
     }
   });
+  alert('Dados Atualizados com Sucesso!');
 }
 
 function excluir() {
