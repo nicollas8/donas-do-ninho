@@ -280,8 +280,6 @@ function teste(){
 
 function atualizar() {
   var nome = document.getElementById('nameNew').value;
-  var email = document.getElementById('emailNew').value;
-  var senha = document.getElementById('senhaNew').value;
   var biografia = document.getElementById('biografia').value;
 
   firebase.auth().onAuthStateChanged(function(user) {
@@ -310,25 +308,6 @@ function atualizar() {
       userDocRef.update(updateData)
         .then(function() {
           console.log("Dados do usuário atualizados com sucesso!");
-          
-          // Se a senha foi fornecida, atualize a senha no Firebase Authentication
-          if (senha) {
-            user.updatePassword(senha)
-              .then(function() {
-                console.log("Senha atualizada com sucesso!");
-              })
-              .catch(function(error) {
-                console.error("Erro ao atualizar a senha:", error);
-              });
-          }
-
-          user.updateEmail(email)
-    .then(function() {
-      console.log("Email atualizado com sucesso!");
-    })
-    .catch(function(error) {
-      console.error("Erro ao atualizar o email:", error);
-    });
         })
         .catch(function(error) {
           console.error("Erro ao atualizar os dados do usuário:", error);
@@ -372,5 +351,4 @@ function excluir() {
     }
   });
   alert('Conta Excluída com sucesso!');
-  location.href ='tela-login.html';
 }
