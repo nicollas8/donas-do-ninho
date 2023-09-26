@@ -101,36 +101,36 @@ function recoverPassword() {
   
   // TELA CADASTRO
   
-  const buttonCreateAccount = document.getElementById("btnCadInfo");
-  
-  buttonCreateAccount.addEventListener("click", () => {
-    const formData = {
-      nome: document.getElementById("nome").value,
-      data: document.getElementById("dataNascimento").value,
-      tipoMom: document.querySelector("select[name=tipoMãe").value,
-      email: document.getElementById("newEmail").value,
-      senha: document.getElementById("newSenha").value,
-    };
+  const buttonCreateAccount = document.getElementById("btnCadInfo") ? document.getElementById("btnCadInfo") : null;
+  if (buttonCreateAccount) {
+    buttonCreateAccount.addEventListener("click", () => {
+      const formData = {
+        nome: document.getElementById("nome").value,
+        data: document.getElementById("dataNascimento").value,
+        tipoMom: document.querySelector("select[name=tipoMãe").value,
+        email: document.getElementById("newEmail").value,
+        senha: document.getElementById("newSenha").value,
+      };
     
-    let date = formData.data;
-    date = date.replace(/\//g, "-");
-    let dataArray = date.split("-");
-    console.log(dataArray);
-    let nowdate = new Date();
-    nowdate = nowdate.getFullYear();
+      let date = formData.data;
+      date = date.replace(/\//g, "-");
+      let dataArray = date.split("-");
+      console.log(dataArray);
+      let nowdate = new Date();
+      nowdate = nowdate.getFullYear();
     
-    let confirmSenha = document.getElementById("confirmSenha").value;
+      let confirmSenha = document.getElementById("confirmSenha").value;
     
-    if (formData.nome.length == "") {
-      alert("Por favor, insira seu nome no campo!");
-    } else if (formData.nome.length > 100) {
-      alert("Limite de 100 caracteres para o nome!");
-    } else if (
-      dataArray[0] < 1900 ||
-      dataArray[0] >= nowdate ||
-      dataArray[0] == "" ||
-      dataArray[1] == "" ||
-      dataArray[2] == ""
+      if (formData.nome.length == "") {
+        alert("Por favor, insira seu nome no campo!");
+      } else if (formData.nome.length > 100) {
+        alert("Limite de 100 caracteres para o nome!");
+      } else if (
+        dataArray[0] < 1900 ||
+        dataArray[0] >= nowdate ||
+        dataArray[0] == "" ||
+        dataArray[1] == "" ||
+        dataArray[2] == ""
       ) {
         alert("Por favor, selecione uma data de nascimento válida!");
       } else if (formData.senha.length < 8) {
@@ -139,35 +139,35 @@ function recoverPassword() {
         alert("As senhas devem se coincidir!");
       } else {
         firebase
-        .auth()
-        .createUserWithEmailAndPassword(formData.email, formData.senha)
-        .then((data) => {
-          const uid = data.user.uid;
-          
-          const users = firebase.firestore().collection("usuarios");
-        users.doc(uid).set({
-          uid: uid,
-          nome: formData.nome,
-          dataNascimento: formData.data,
-          tipoMom: formData.tipoMom,
-        });
-        alert("conta criada com sucesso");
-      })
-      .catch((error) => {
-        if (error.code == "auth/email-already-in-use") {
-          alert("Esse e-mail já está em uso por outro usuário");
-        } else if (error.code == "auth/invalid-email") {
-          alert("Por favor, insira um e-mail!");
-        } else if (error.code == "auth/missing-password") {
-          alert("Por favor, insira uma senha!");
-        } else {
-          alert(error.message);
-        }
-        console.log(error);
-      });
-    }
-  });
-  
+          .auth()
+          .createUserWithEmailAndPassword(formData.email, formData.senha)
+          .then((data) => {
+            const uid = data.user.uid;
+    
+            const users = firebase.firestore().collection("usuarios");
+            users.doc(uid).set({
+              uid: uid,
+              nome: formData.nome,
+              dataNascimento: formData.data,
+              tipoMom: formData.tipoMom,
+            });
+            alert("conta criada com sucesso");
+          })
+          .catch((error) => {
+            if (error.code == "auth/email-already-in-use") {
+              alert("Esse e-mail já está em uso por outro usuário");
+            } else if (error.code == "auth/invalid-email") {
+              alert("Por favor, insira um e-mail!");
+            } else if (error.code == "auth/missing-password") {
+              alert("Por favor, insira uma senha!");
+            } else {
+              alert(error.message);
+            }
+            console.log(error);
+          });
+      }
+    });
+  }
   // VALIDAÇÃO CADASTRO
   
   const formEMailCadastro = document.getElementById("formEmail");
@@ -262,7 +262,8 @@ function teste(){
 
           document.getElementById('dataNasc-usuario').textContent = userData.dataNascimento;
           document.getElementById('nome-usuario').textContent = userData.nome;
-        });
+          document.getElementById('bio').textContent = userData.biografia;
+        });    
       } else {
         console.log('Nenhum usuário encontrado com o UID fornecido.');
       }
@@ -277,3 +278,98 @@ function teste(){
  });
 }
 
+function atualizar() {
+  var nome = document.getElementById('nameNew').value;
+  var email = document.getElementById('emailNew').value;
+  var senha = document.getElementById('senhaNew').value;
+  var biografia = document.getElementById('biografia').value;
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var uid = user.uid;
+      console.log(uid);
+      var usersCollection = firebase.firestore().collection('usuarios');
+      
+      // Crie uma referência para o documento do usuário
+      var userDocRef = usersCollection.doc(uid);
+      
+      // Atualize os campos desejados no documento do usuário
+      var updateData = {
+        
+      };
+      if (nome) {
+        updateData.nome = nome
+      }
+      
+      // Se a biografia foi fornecida, adicione-a ao objeto de atualização
+      if (biografia) {
+        updateData.biografia = biografia;
+      }
+      
+      // Atualize o documento do usuário com os dados atualizados
+      userDocRef.update(updateData)
+        .then(function() {
+          console.log("Dados do usuário atualizados com sucesso!");
+          
+          // Se a senha foi fornecida, atualize a senha no Firebase Authentication
+          if (senha) {
+            user.updatePassword(senha)
+              .then(function() {
+                console.log("Senha atualizada com sucesso!");
+              })
+              .catch(function(error) {
+                console.error("Erro ao atualizar a senha:", error);
+              });
+          }
+
+          user.updateEmail(email)
+    .then(function() {
+      console.log("Email atualizado com sucesso!");
+    })
+    .catch(function(error) {
+      console.error("Erro ao atualizar o email:", error);
+    });
+        })
+        .catch(function(error) {
+          console.error("Erro ao atualizar os dados do usuário:", error);
+        });
+    } else {
+      console.log("Não foi possível obter o usuário autenticado.");
+    }
+  });
+}
+
+function excluir() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var uid = user.uid;
+      console.log(uid);
+      var usersCollection = firebase.firestore().collection('usuarios');
+      
+      // Crie uma referência para o documento do usuário
+      var userDocRef = usersCollection.doc(uid);
+      
+      // Exclua o documento do usuário do Firestore
+      userDocRef.delete()
+        .then(function() {
+          console.log("Usuário excluído do Firestore com sucesso!");
+          
+          // Em seguida, exclua o usuário da autenticação do Firebase
+          user.delete()
+            .then(function() {
+              console.log("Usuário excluído da autenticação do Firebase com sucesso!");
+            })
+            .catch(function(error) {
+              console.error("Erro ao excluir o usuário da autenticação do Firebase:", error);
+            });
+        })
+        .catch(function(error) {
+          console.error("Erro ao excluir o usuário do Firestore:", error);
+        });
+    } else {
+      console.log("Não foi possível obter o usuário autenticado.");
+    }
+  });
+  alert('Conta Excluída com sucesso!');
+  location.href ='tela-login.html';
+}

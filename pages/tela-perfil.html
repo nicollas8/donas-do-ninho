@@ -8,7 +8,7 @@
 </head>
 <body class="perfilUser">
     <header>
-        <img src="../assets/seta.svg" alt="" id="seta">
+        <img src="../assets/seta.svg" alt="" id="seta" onclick="location.href='tela-usuario.html'">
         <h4>Perfil</h4>
     </header>
     <div class="perfilEdit">
@@ -39,7 +39,8 @@
                 <label for="biografia">Biografia</label>
                 <input type="text" name="biografia" id="biografia" placeholder="Opcional">
             </div>
-            <button>Atualizar dados</button>
+            <button onclick="atualizar()">Atualizar dados</button>
+            <button onclick="excluir()"> Excluir Conta</button>
         </div>
     </div>
 </body>
