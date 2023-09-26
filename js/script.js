@@ -69,7 +69,9 @@ function login() {
     .catch((error) => {
       alert(getErrorMessage(error));
     });
+
 }
+
 
 function getErrorMessage(error) {
   if (error.code == "auth/user-not-found") {
@@ -86,64 +88,65 @@ function recoverySenha() {
 
 function recoverPassword() {
   firebase
-    .auth()
-    .sendPasswordResetEmail(form.email().value)
-    .then(() => {
-      alert("E-mail enviado com sucesso");
+  .auth()
+  .sendPasswordResetEmail(form.email().value)
+  .then(() => {
+    alert("E-mail enviado com sucesso");
       window.location.href = "../pages/tela-login.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
     });
-}
-
-// TELA CADASTRO
-
-const buttonCreateAccount = document.getElementById("btnCadInfo");
-
-buttonCreateAccount.addEventListener("click", () => {
-  const formData = {
-    nome: document.getElementById("nome").value,
-    data: document.getElementById("dataNascimento").value,
-    tipoMom: document.querySelector("select[name=tipoMãe").value,
-    email: document.getElementById("newEmail").value,
-    senha: document.getElementById("newSenha").value,
-  };
-
-  let date = formData.data;
-  date = date.replace(/\//g, "-");
-  let dataArray = date.split("-");
-  console.log(dataArray);
-  let nowdate = new Date();
-  nowdate = nowdate.getFullYear();
-
-  let confirmSenha = document.getElementById("confirmSenha").value;
-
-  if (formData.nome.length == "") {
-    alert("Por favor, insira seu nome no campo!");
-  } else if (formData.nome.length > 100) {
-    alert("Limite de 100 caracteres para o nome!");
-  } else if (
-    dataArray[0] < 1900 ||
-    dataArray[0] >= nowdate ||
-    dataArray[0] == "" ||
-    dataArray[1] == "" ||
-    dataArray[2] == ""
-  ) {
-    alert("Por favor, selecione uma data de nascimento válida!");
-  } else if (formData.senha.length < 8) {
-    alert("Por favor, digite uma senha com mais de 8 caracteres!");
-  } else if (formData.senha != confirmSenha) {
-    alert("As senhas devem se coincidir!");
-  } else {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(formData.email, formData.senha)
-      .then((data) => {
-        const uid = data.user.uid;
-
-        const users = firebase.firestore().collection("usuarios");
+  }
+  
+  // TELA CADASTRO
+  
+  const buttonCreateAccount = document.getElementById("btnCadInfo");
+  
+  buttonCreateAccount.addEventListener("click", () => {
+    const formData = {
+      nome: document.getElementById("nome").value,
+      data: document.getElementById("dataNascimento").value,
+      tipoMom: document.querySelector("select[name=tipoMãe").value,
+      email: document.getElementById("newEmail").value,
+      senha: document.getElementById("newSenha").value,
+    };
+    
+    let date = formData.data;
+    date = date.replace(/\//g, "-");
+    let dataArray = date.split("-");
+    console.log(dataArray);
+    let nowdate = new Date();
+    nowdate = nowdate.getFullYear();
+    
+    let confirmSenha = document.getElementById("confirmSenha").value;
+    
+    if (formData.nome.length == "") {
+      alert("Por favor, insira seu nome no campo!");
+    } else if (formData.nome.length > 100) {
+      alert("Limite de 100 caracteres para o nome!");
+    } else if (
+      dataArray[0] < 1900 ||
+      dataArray[0] >= nowdate ||
+      dataArray[0] == "" ||
+      dataArray[1] == "" ||
+      dataArray[2] == ""
+      ) {
+        alert("Por favor, selecione uma data de nascimento válida!");
+      } else if (formData.senha.length < 8) {
+        alert("Por favor, digite uma senha com mais de 8 caracteres!");
+      } else if (formData.senha != confirmSenha) {
+        alert("As senhas devem se coincidir!");
+      } else {
+        firebase
+        .auth()
+        .createUserWithEmailAndPassword(formData.email, formData.senha)
+        .then((data) => {
+          const uid = data.user.uid;
+          
+          const users = firebase.firestore().collection("usuarios");
         users.doc(uid).set({
+          uid: uid,
           nome: formData.nome,
           dataNascimento: formData.data,
           tipoMom: formData.tipoMom,
@@ -162,37 +165,37 @@ buttonCreateAccount.addEventListener("click", () => {
         }
         console.log(error);
       });
+    }
+  });
+  
+  // VALIDAÇÃO CADASTRO
+  
+  const formEMailCadastro = document.getElementById("formEmail");
+  const campos = document.querySelectorAll(".required");
+  const spans = document.querySelectorAll(".span-required");
+  const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  
+  function setError(index) {
+    spans[index].style.display = "block";
   }
-});
-
-// VALIDAÇÃO CADASTRO
-
-const formEMailCadastro = document.getElementById("formEmail");
-const campos = document.querySelectorAll(".required");
-const spans = document.querySelectorAll(".span-required");
-const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-
-function setError(index) {
-  spans[index].style.display = "block";
-}
-
-function removeError(index) {
-  spans[index].style.display = "none";
-}
-
-function nomeValidation() {
-  if (campos[0].value.length > 100) {
-    setError(0);
-  } else {
-    removeError(0);
+  
+  function removeError(index) {
+    spans[index].style.display = "none";
   }
+  
+  function nomeValidation() {
+    if (campos[0].value.length > 100) {
+      setError(0);
+    } else {
+      removeError(0);
+    }
 }
 
 function dataValidation() {
   let date = document.getElementById("dataNascimento").value;
   date = date.replace(/\//g, "-");
   let dataArray = date.split("-");
-
+  
   if (dataArray[0] < 1900) {
     setError(1);
   } else {
@@ -228,12 +231,49 @@ function previewFile() {
   const preview = document.getElementById('fotoPerfil');
   const file = document.getElementById('loadImage').files[0];
   const reader = new FileReader();
-
+  
   reader.addEventListener("load", () => {
     preview.src = reader.result;
   }, false);
-
+  
   if (file) {
     reader.readAsDataURL(file);
   }
 }
+function teste(){
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var uid = user.uid
+      console.log(uid)
+      var usersCollection = firebase.firestore().collection('usuarios');
+
+  // Consulta para recuperar o documento do usuário com base no UID
+  var userQuery = usersCollection.where('uid', '==', uid);
+  console.log(userQuery);
+
+  // Executar a consulta
+  userQuery.get()
+    .then(function(querySnapshot) {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(function(doc) {
+          // O documento do usuário foi encontrado
+          var userData = doc.data();
+          console.log('Dados do usuário:', userData);
+
+          document.getElementById('dataNasc-usuario').textContent = userData.dataNascimento;
+          document.getElementById('nome-usuario').textContent = userData.nome;
+        });
+      } else {
+        console.log('Nenhum usuário encontrado com o UID fornecido.');
+      }
+    })
+    .catch(function(error) {
+      console.error('Erro ao recuperar dados do usuário:', error);
+    });
+
+    } else{
+      console.log("não deu certo")
+    }
+ });
+}
+

@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/style.css">
-  <title>Donas do ninho</title>
-</head>
-<body class="telaUser" onload="showInfos()">
-<div class="telaUser">
+  
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do ninho</title>
+  </head>
+  <body class="telaUser" onload="teste()">
+    <script src="../js/script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-init.js"></script>
+    <div class="telaUser">
 <div class="perfil">
   <div class="fotoUser">
     <div class="personal-image">
@@ -21,16 +26,18 @@
     </div>
     <div class="nomeUser">
       <label for="">
-        <input type="text" name="username" placeholder=" ">
+       <!-- <input type="text" name="username" placeholder=" "> -->
+        <p id="nome-usuario" style="color: black;"></p>
       </label>
       </div>
       <div class="editPerfil"> 
-        <button><img src="../assets/lapis.svg" alt=""></button>
+        <button><img src="../assets/lapis.svg" alt="" onclick="teste()"></button>
       </div>
   </div>
   <div class="userdata">
       <img src="../assets/calendar-lines.svg" alt="">
-      <input type="text"  name="userdata" placeholder=" ">
+      <!-- <input type="text"  name="userdata" placeholder=" "> -->
+      <p id="dataNasc-usuario" style="color: black;"></p>
   </div>
   <div class="biografia">
     <label for="">
@@ -78,10 +85,4 @@
         </div>
     </nav>
 </body>
-<script src="../js/telausuario.js"></script>
-<script src="../js/script.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
-<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
-<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
-<script src="../js/firebase-init.js"></script>
 </html>
