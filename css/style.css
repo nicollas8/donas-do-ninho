@@ -419,7 +419,7 @@ nav {
   background-color: #ffffff;
 }
 
-header {
+.headerPubli {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -432,7 +432,7 @@ header {
   width: 8vw;
 }
 
-header h4 {
+.headerPubli h4 {
   align-self: center;
 }
 
