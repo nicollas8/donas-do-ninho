@@ -1,7 +1,7 @@
 
 function showInfos(){
 const db = firebase.firestore()
-db.collection('usuarios').get()
+db.collection('usuarios').get() 
 .then((snapshot) => {
     const nomes = snapshot.docs.reduce((acc, doc) => {
         acc = ` ${doc.data().nome} `
