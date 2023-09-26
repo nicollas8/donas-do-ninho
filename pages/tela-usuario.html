@@ -13,12 +13,9 @@
   <div class="fotoUser">
     <div class="personal-image">
       <label class="label">
-        <input type="file" />
+        <input type="file" id="loadImage" onchange="previewFile()"/>
         <figure class="personal-figure">
-          <img src="../assets/fotoPerfil.svg" class="personal-avatar" alt="avatar">
-          <figcaption class="personal-figcaption">
-            <img src="https://raw.githubusercontent.com/ThiagoLuizNunes/angular-boilerplate/master/src/assets/imgs/camera-white.png">
-          </figcaption>
+          <img src="../assets/fotoPerfil.svg" class="personal-avatar" alt="avatar" id="fotoPerfil">
         </figure>
       </label>
     </div>
@@ -81,4 +78,9 @@
         </div>
     </nav>
 </body>
+<script src="../js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
 </html>

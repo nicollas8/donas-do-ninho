@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do ninho</title>
+</head>
+<body class="perfilUser">
+    <header>
+        <img src="../assets/seta.svg" alt="" id="seta">
+        <h4>Perfil</h4>
+    </header>
+    <div class="perfilEdit">
+        <div class="fotoUserEdit">
+            <div class="fotoPerfil">
+                <button>
+                    <label class="label">
+                        <input type="file" id="loadImage" onchange="previewFile()"/>
+                          <img src="../assets/fotoPerfil.svg" class="fotoPerfil" alt="fotoPerfil" id="fotoPerfil">
+                      </label>
+                </button>
+            </div>
+        </div>
+        <div class="dadosUserEdit">
+            <div class="dados__control">
+                <label for="Nome">Nome</label>
+                <input type="text" name="nameNew" id="nameNew" placeholder="Alterar Nome">
+            </div>
+            <div class="dados__control">
+                <label for="email">Email</label>
+                <input type="email" name="emailNew" id="emailNew" placeholder="Alterar email">
+            </div>
+            <div class="dados__control">
+                <label for="senha">Senha</label>
+                <input type="password" name="senhaNew" id="senhaNew" placeholder="Alterar senha">
+            </div>
+            <div class="dados__control">
+                <label for="biografia">Biografia</label>
+                <input type="text" name="biografia" id="biografia" placeholder="Opcional">
+            </div>
+            <button>Atualizar dados</button>
+        </div>
+    </div>
+</body>
+<script src="../js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+</html>

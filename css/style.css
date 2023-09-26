@@ -242,43 +242,9 @@ input, select {
 .personal-image input[type="file"] {
   display: none;
 }
-.personal-figure {
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
 .personal-avatar {
   cursor: pointer;
-  width: inherit;
-  height: inherit;
-  box-sizing: border-box;
-  border-radius: 100%;
-  border: 2px solid transparent;
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
-  transition: all ease-in-out .3s;
-}
-.personal-avatar:hover {
-  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
-}
-.personal-figcaption {
-  cursor: pointer;
-  position: absolute;
-  top: 0px;
-  width: inherit;
-  height: inherit;
-  border-radius: 100%;
-  opacity: 0;
-  background-color: rgba(0, 0, 0, 0);
-  transition: all ease-in-out .3s;
-}
-.personal-figcaption:hover {
-  opacity: 1;
-  background-color: rgba(0, 0, 0, .5);
-}
-.personal-figcaption > img {
-  margin-top: 25.5px;
-  width: 30px;
-  height: 30px;
+  width: 20vw;
 }
 
 .nomeUser {
@@ -462,7 +428,7 @@ header {
   background-color: var(--cor-fundo);
 }
 
-header img {
+#seta {
   width: 8vw;
 }
 
@@ -546,4 +512,80 @@ select {
   border-radius: 50%;
   width: 100%;
   text-align: center;
+}
+
+.iconPubli input[type="file"] {
+  background: transparent;
+  display: none;
+}
+
+.iconPubli .pictureImage {
+  border-radius: 50%;
+}
+
+.iconPubli label {
+  align-self: center;
+}
+
+/* tela edição perfil  */
+
+.perfilEdit {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+}
+
+.fotoUserEdit {
+  display: flex;
+  justify-content: center;
+}
+
+.fotoPerfil {
+  width: 50%;
+}
+
+.fotoUserEdit input[type="file"] {
+  background: transparent;
+  display: none;
+}
+
+.fotoUser label {
+  align-self: center;
+}
+
+.fotoUserEdit img{
+  width: 50%;
+}
+
+.fotoUserEdit button {
+ background: transparent;
+ border: none;
+}
+
+.dadosUserEdit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.dados__control {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+}
+
+.dados__control label {
+  padding-left: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.dados__control input {
+  width: 90vw;
+}
+
+.dadosUserEdit button {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 1rem;
 }

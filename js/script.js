@@ -223,3 +223,17 @@ function comparePassword() {
     setError(4);
   }
 }
+
+function previewFile() {
+  const preview = document.getElementById('fotoPerfil');
+  const file = document.getElementById('loadImage').files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener("load", () => {
+    preview.src = reader.result;
+  }, false);
+
+  if (file) {
+    reader.readAsDataURL(file);
+  }
+}
