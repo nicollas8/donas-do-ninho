@@ -506,7 +506,7 @@ textarea {
   align-self: center;
 }
 
-select {
+.tags select {
   background-color: transparent;
   border: 0.1rem solid black;
   border-radius: 50%;
