@@ -150,8 +150,11 @@ function recoverPassword() {
               nome: formData.nome,
               dataNascimento: formData.data,
               tipoMom: formData.tipoMom,
-            });
+            
+            }).then(() => {
             alert("conta criada com sucesso");
+            window.location.replace("boas-vindas.html");
+          })
           })
           .catch((error) => {
             if (error.code == "auth/email-already-in-use") {
@@ -308,6 +311,8 @@ function atualizar() {
       userDocRef.update(updateData)
         .then(function() {
           console.log("Dados do usuário atualizados com sucesso!");
+          alert('Dados Atualizados com Sucesso!');
+          window.location.replace("tela-usuario.html");
         })
         .catch(function(error) {
           console.error("Erro ao atualizar os dados do usuário:", error);
@@ -316,7 +321,6 @@ function atualizar() {
       console.log("Não foi possível obter o usuário autenticado.");
     }
   });
-  alert('Dados Atualizados com Sucesso!');
 }
 
 function excluir() {
@@ -338,6 +342,8 @@ function excluir() {
           user.delete()
             .then(function() {
               console.log("Usuário excluído da autenticação do Firebase com sucesso!");
+              alert('Conta Excluída com sucesso!');
+              window.location.replace("tela-login.html");
             })
             .catch(function(error) {
               console.error("Erro ao excluir o usuário da autenticação do Firebase:", error);
@@ -350,5 +356,5 @@ function excluir() {
       console.log("Não foi possível obter o usuário autenticado.");
     }
   });
-  alert('Conta Excluída com sucesso!');
+  
 }
