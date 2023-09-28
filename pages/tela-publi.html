@@ -17,7 +17,7 @@
             <label for=""> Nome</label>
         </div>
         <textarea name="publi" id="publi" cols="30" rows="10" placeholder="Escreva sua Publicação"></textarea>
-        <div class="buttonPostar"><button>Postar</button></div>
+        <div class="buttonPostar"><button onclick="addPubli()">Postar</button></div>
     </div>
     <footer>
         <div class="boxPubli">
@@ -41,4 +41,9 @@
         </div>
     </footer>
 </body>
+<script src="../js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
 </html>

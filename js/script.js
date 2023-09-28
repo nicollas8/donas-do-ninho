@@ -249,10 +249,50 @@ function teste(){
       var uid = user.uid
       console.log(uid)
       var usersCollection = firebase.firestore().collection('usuarios');
+      var userRef = firebase.firestore().collection('usuarios').doc(uid);
+      
+
+      console.log("vamo ver ele:" + userRef.collection('posts'));
+      
 
   // Consulta para recuperar o documento do usuário com base no UID
   var userQuery = usersCollection.where('uid', '==', uid);
-  console.log(userQuery);
+  console.log("userQuery="+userQuery);
+  const publis = document.getElementById('publis');
+
+  userRef.collection('posts').get()
+  .then(function(querySnapshot) {
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach(function(doc) {
+        // O documento do usuário foi encontrado
+        var userPosts = doc.data();
+        console.log("dados", userPosts.post);
+        publis.innerHTML += 
+        `<div class="publi">
+        <div class="ballPerguntas">
+          <div class="options">
+            <h4>? DÚVIDA</h4>
+          </div>
+          <div class="balaoPergunta">
+            <p> ${userPosts.post} </p>
+          </div>
+          <div class="react">
+            <button><img src="../assets/social-network.svg" alt=""></button>
+            <button><img src="../assets/hand.svg" alt=""></button>
+            <button><img src="../assets/star.svg" alt=""></button>
+            <button><img src="../assets/comment-dots.svg" alt=""></button>
+            <button><img src="../assets/menu-dots.svg" alt=""></button>
+          </div>
+        </div>
+      </div>`
+      });    
+    } else {
+      console.log('Nenhum usuário encontrado com o UID fornecido.');
+    }
+  })
+  .catch(function(error) {
+    console.error('Erro ao recuperar dados do usuário:', error);
+  });
 
   // Executar a consulta
   userQuery.get()
@@ -358,3 +398,28 @@ function excluir() {
   });
   
 }
+
+function addPubli(){
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var uid = user.uid;
+      console.log(uid);
+      const userId = uid;
+      const userRef = firebase.firestore().collection('usuarios').doc(userId);
+
+// Crie uma nova publicação (subdocumento) na subcoleção "posts" dentro do documento de usuário
+const newPostData = {
+  post: document.getElementById("publi").value,
+  timestamp: firebase.firestore.FieldValue.serverTimestamp(), // Adiciona um timestamp do servidor
+};
+
+userRef.collection('posts').add(newPostData)
+  .then((docRef) => {
+    console.log('Publicação adicionada com sucesso com o ID:', docRef.id);
+    window.location.replace("tela-inicio.html");
+  })
+  .catch((error) => {
+    console.error('Erro ao adicionar a publicação:', error);
+  });
+
+}})}
