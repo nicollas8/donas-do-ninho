@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+  <title>Donas do ninho</title>
+</head>
+<body class="tela-user" onload="teste()">
+  <header class="box-perfil">
+    <img src="../assets/circle-user.png" alt="">
+  </header>
+  <main class="boxUser">
+    <div class="inputInfo">
+      <div class="groupSpan">
+        <i class="fi fi-rr-user"></i>
+        <span class="nome-user" id="nome-user">Nome</span>
+      </div>
+    </div>
+    <div class="inputInfo">
+      <div class="groupSpan">
+        <i class="fi fi-rr-calendar-day"></i>
+        <span class="data-user" id="data-user">Data de nascimento</span>
+      </div>
+    </div>
+    <div class="inputInfo">
+      <div class="groupSpan">
+        <i class="fi fi-rr-heart"></i>
+        <span class="tipo-user" id="tipo-user">Tipo de usuário</span>
+      </div>
+    </div>
+    <div class="inputInfo">
+      <div class="groupSpan">
+        <i class="fi fi-rs-book-open-cover"></i>
+        <span class="bio-user" id="bio-user">Biografia</span>
+      </div>
+    </div>
+  </main>
+  <footer class="btnPerfil">
+    <button id="editPerfil" onclick="location.href='tela-editPerfil.html'">Editar Perfil</button>
+    <button id="verNivel"> Ver nível </button>
+  </footer>
+  <nav>
+    <div class="navPerfil">
+        <button class="navButton"><img src="../assets/home.png" alt=""></button>
+        <button class="navButton"><img src="../assets/play.png" alt=""></button>
+        <button class="navButton"><img src="../assets/square-plus.png" alt="" onclick="location.href='tela-publi.html'"></button>
+        <button class="navButton"><img src="../assets/bell.png" alt=""></button>
+        <button class="navButton"><img src="../assets/user.png" alt=""></button>
+    </div>
+  </nav>
+</body>
+<script src="../js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+</html>

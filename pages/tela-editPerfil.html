@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+  <title>Donas do ninho</title>
+</head>
+<body class="tela-user">
+  <header class="box-perfil">
+    <img src="../assets/circle-user.png" alt="">
+  </header>
+  <main class="boxUser">
+    <div class="inputInfoPerfil">
+        <label for=""> Alterar Nome </label>
+        <div class="inputIcon">
+            <i class="fi fi-rr-id-badge"></i>
+            <input type="text" name="nameNew" id="nameNew" placeholder="Alterar Nome">
+        </div>
+    </div>
+    <div class="inputInfoPerfil">
+        <label for=""> Adicionar Biografia </label>
+            <div class="inputIcon">
+                <i class="fi fi-rs-book-open-cover"></i>
+                <input type="text" name="biografia" id="biografia" placeholder="Biografia (Opcional)">
+            </div>
+      </div>
+  </main>
+  <footer class="btnPerfil">
+    <button onclick="atualizar()">Atualizar dados</button>
+    <button onclick="excluir()"> Excluir Conta</button>
+  </footer>
+  <nav>
+    <div class="navPerfil">
+        <button class="navButton"><img src="../assets/home.png" alt=""></button>
+        <button class="navButton"><img src="../assets/play.png" alt=""></button>
+        <button class="navButton"><img src="../assets/square-plus.png" alt="" onclick="location.href='tela-publi.html'"></button>
+        <button class="navButton"><img src="../assets/bell.png" alt=""></button>
+        <button class="navButton"><img src="../assets/user.png" alt=""></button>
+    </div>
+  </nav>
+</body>
+<script src="../js/script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+</html>

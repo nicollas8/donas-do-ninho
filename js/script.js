@@ -303,9 +303,10 @@ function teste(){
           var userData = doc.data();
           console.log('Dados do usuário:', userData);
 
-          document.getElementById('dataNasc-usuario').textContent = userData.dataNascimento;
-          document.getElementById('nome-usuario').textContent = userData.nome;
-          document.getElementById('bio').textContent = userData.biografia;
+          document.getElementById('nome-user').textContent = userData.nome;
+          document.getElementById('data-user').textContent = userData.dataNascimento;
+          document.getElementById('tipo-user').textContent = userData.tipoMom;
+          document.getElementById('bio-user').textContent = userData.biografia;
         });    
       } else {
         console.log('Nenhum usuário encontrado com o UID fornecido.');
