@@ -230,6 +230,7 @@ function comparePassword() {
   } else {
     setError(4);
   }
+  
 }
 
 function previewFile() {
@@ -297,48 +298,46 @@ function viewPublis() {
           console.error("Erro ao recuperar dados do usuário:", error);
         });
 
-      // Executar a consulta
-    } else {
-      console.log("não deu certo");
+  // Executar a consulta
+
+    } else{
+      console.log("não deu certo")
     }
-  });
+ });
 }
 
+
 function att() {
-  firebase.auth().onAuthStateChanged(function (user) {
+  firebase.auth().onAuthStateChanged(function(user) {
     if (user) {
       var uid = user.uid;
       //console.log(uid);
-      var usersCollection = firebase.firestore().collection("usuarios");
-      var userRef = firebase.firestore().collection("usuarios").doc(uid);
+      var usersCollection = firebase.firestore().collection('usuarios');
+      var userRef = firebase.firestore().collection('usuarios').doc(uid);
 
       //console.log("vamo ver ele:" + userRef.collection('posts'));
 
       // Consulta para recuperar o documento do usuário com base no UID
-      var userQuery = usersCollection.where("uid", "==", uid);
-      userQuery
-        .get()
-        .then(function (querySnapshot) {
+      var userQuery = usersCollection.where('uid', '==', uid);
+      userQuery.get()
+        .then(function(querySnapshot) {
           if (!querySnapshot.empty) {
-            querySnapshot.forEach(function (doc) {
+            querySnapshot.forEach(function(doc) {
               // O documento do usuário foi encontrado
               var userData = doc.data();
               //console.log('Dados do usuário:', userData);
 
-              document.getElementById("nome-user").textContent = userData.nome;
-              document.getElementById("data-user").textContent =
-                userData.dataNascimento;
-              document.getElementById("tipo-user").textContent =
-                userData.tipoMom;
-              document.getElementById("bio-user").textContent =
-                userData.biografia;
+              document.getElementById('nome-user').textContent = userData.nome;
+              document.getElementById('data-user').textContent = userData.dataNascimento;
+              document.getElementById('tipo-user').textContent = userData.tipoMom;
+              document.getElementById('bio-user').textContent = userData.biografia;
             });
           } else {
-            console.log("Nenhum usuário encontrado com o UID fornecido.");
+            console.log('Nenhum usuário encontrado com o UID fornecido.');
           }
         })
-        .catch(function (error) {
-          console.error("Erro ao recuperar dados do usuário:", error);
+        .catch(function(error) {
+          console.error('Erro ao recuperar dados do usuário:', error);
         });
     }
   });
