@@ -18,7 +18,7 @@ body {
 }
 
 .page {
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -213,7 +213,7 @@ nav {
 .navPerfil {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
   width: 100vw;
   background-color: #ffa9a9;
   padding: 0.7rem 0rem;
@@ -225,8 +225,9 @@ nav {
 }
 
 .navButton {
+  display: flex;
+  justify-content: center;
   background: transparent;
-  padding: 0rem 0.7rem;
   border: none;
 }
 
