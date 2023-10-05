@@ -158,40 +158,21 @@ p {
   font-size: 0.9rem;
 }
 
-/* Header */
+/* header  */
 
-.pageHeader {
+.page-header {
   width: 100vw;
   position: fixed;
-}
-
-.boxHeader {
-  display: flex;
-  flex-direction: row;
-  background-color: #ffede2;
-  padding: 1rem 0rem;
-}
-
-.boxHeader #search {
-  width: 100vw;
-}
-
-.boxHeader button {
-  background: transparent;
-  border: none;
-  width: fit-content;
-}
-
-.pageHeader img {
-  max-width: 10%;
+  top: 0;
 }
 
 /* Content */
+
 .pageContent {
-  background-color: #ffffff;
+  background-color: #ffede2;
   max-width: 100vw;
   word-wrap: break-word;
-  margin-top: 20vw;
+  margin-top: 13vw;
   height: 100%;
   width: 100%;
 }
@@ -462,4 +443,9 @@ textarea {
   display: flex;
   flex-direction: column;
   width: 90vw;
+}
+
+.options-publi {
+  position: fixed;
+  bottom: 0;
 }
