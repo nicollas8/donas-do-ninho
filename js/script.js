@@ -207,6 +207,7 @@ function dataValidation() {
     removeError(1);
   }
 }
+
 function emailValidateCadastro() {
   if (!emailRegex.test(campos[2].value)) {
     setError(2);
@@ -440,10 +441,15 @@ function addPubli() {
           querySnapshot.forEach(function (doc) {
             // O documento do usuário foi encontrado
             var userData = doc.data();
-            console.log("Dados do usuário:", userData);
+            console.log('Dados do usuário:', userData);
+
+            var Postuid = firebase.firestore().collection('posts').doc().id;
+            console.log("aaaaaaaaaa");
+
             const newPostData = {
               post: document.getElementById("publi").value,
               timestamp: new Date(), // Adiciona um timestamp do servidor
+              IDpost: Postuid,
               UIDusuario: uid,
               nomeUser: userData.nome,
             };
@@ -529,10 +535,11 @@ function showPosts() {
             <h4 class="py-3 text-purple-700 text-left">DÚVIDA</h4>
             </div>
             <div class="balaoPergunta">
+            <p style=color:black></p>
             <p class="text-black text-left mb-4"> ${postData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6" onclick="like()><img src="../assets/like.svg" alt=""></button>
             <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
             <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
             <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
@@ -549,9 +556,8 @@ function showPosts() {
         error
       );
     });
-}
-
-// firebase.initializeApp(firebaseConfig);
+  }
+  // firebase.initializeApp(firebaseConfig);
 
 // const storage = firebase.storage();
 // const firestore = firebase.firestore();
@@ -583,3 +589,14 @@ function showPosts() {
 //     alert("Selecione uma imagem antes de enviar.");
 //   }
 // });
+
+  function like() {
+    // Gere um UID único usando a data atual
+    
+    firebase.firestore().collection('posts').doc(Postuid).set(uid).then(function() {
+        console.log('Deu certo', Postuid);
+      })
+      .catch(function(error) {
+        console.log('Deu errado', error);
+      });
+  }
