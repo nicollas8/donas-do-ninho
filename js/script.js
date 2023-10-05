@@ -539,7 +539,7 @@ function showPosts() {
             <button class="w-6"><img src="../assets/comment-dots.svg" alt=""></button>
             <button class="w-6"><img src="../assets/menu-dots.svg" alt=""></button>
             </div>
-            <p class='text-black text-right mt-3'> ${tempo}</p>
+            <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
         //console.log( db.collection("posts").get());
       });
