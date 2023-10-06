@@ -1,73 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-  
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <title>Donas do ninho</title>
   </head>
-  <body class="telaUser" onload="teste()">
-    <script src="../js/script.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
-    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
-    <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
-    <script src="../js/firebase-init.js"></script>
-    <div class="telaUser">
-<div class="perfil">
-  <div class="fotoUser">
-    <div class="personal-image">
-      <label class="label">
-        <input type="file" id="loadImage" onchange="previewFile()"/>
-        <figure class="personal-figure">
-          <img src="../assets/fotoPerfil.svg" class="personal-avatar" alt="avatar" id="fotoPerfil">
-        </figure>
-      </label>
+  <body onload="viewPublis()" class="bg-white">
+    <div class="header-mypubli flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9]">
+      <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-usuario.html'">
+      <h4 class="self-center text-white">Minhas publicações</h4>
     </div>
-    <div class="nomeUser">
-      <label for="">
-        <p id="nome-usuario" style="color: black;"></p>
-      </label>
-      </div>
-      <div class="editPerfil"> 
-        <button><img src="../assets/lapis.svg" alt="" onclick="location.href='tela-perfil.html'"></button>
-      </div>
-  </div>
-  <div class="userdata">
-      <img src="../assets/calendar-lines.svg" alt="">
-      <p id="dataNasc-usuario" style="color: black;"></p>
-  </div>
-  <div class="biografia">
-    <label for="">
-      <p id="bio" style="color: black;"> Biografia</p>
-    </label>
-  </div>
-  <div class="follows">
-    <div class="seguidores">
-      <h6>Seguidores</h6>
-      <p>0.000</p>
-    </div>
-    <div class="seguindo">
-      <h6>Seguindo</h6>
-      <p>0.000</p>
-    </div>
-  </div>
-  <div class="btnLevel">
-    <button>Seu Nível</button> 
-    <button style="margin-left:2rem;" onclick="window.location.replace('tela-login.html')"> Sair </button>
-  </div>
+<div id="publis" class="mb-16">
 </div>
-<div id="publis">
-  
-</div>
-      <nav>
-        <div class="navPerfil">
-            <button class="navButton"><img src="../assets/home.png" alt="" onclick="window.location.href='tela-inicio.html'"></button>
-            <button class="navButton"><img src="../assets/play.png" alt=""></button>
-            <button class="navButton"><img src="../assets/square-plus.png" alt="" onclick="window.location.href='tela-publi.html'"></button>
-            <button class="navButton"><img src="../assets/bell.png" alt=""></button>
-            <button class="navButton"><img src="../assets/user.png" alt=""></button>
-        </div>
-    </nav>
+<nav>
+  <div class="navPerfil">
+      <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-tela-inicio.html'"></button>
+      <button class="navButton"><img src="../assets/play.png" alt=""></button>
+      <button class="navButton"><img src="../assets/publicação.png" alt="" onclick="location.href='tela-publi.html'"></button>
+      <button class="navButton"><img src="../assets/notficação.png" alt=""></button>
+      <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-tela-usuario.html'"></button>
+  </div>
+</nav>
 </body>
+  <script src="../js/script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-init.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </html>

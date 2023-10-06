@@ -280,11 +280,11 @@ function viewPublis() {
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6"><img src="../assets/social-network.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/hand.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/star.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/comment-dots.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/menu-dots.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -533,11 +533,11 @@ function showPosts() {
             <p class="text-black text-left mb-4"> ${postData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6"><img src="../assets/social-network.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/hand.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/star.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/comment-dots.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/menu-dots.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
