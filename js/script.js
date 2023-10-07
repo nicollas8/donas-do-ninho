@@ -507,8 +507,14 @@ function showPosts() {
         const timestamp = postData.timestamp.toMillis();
         const now = new Date().getTime();
         const miliDiff = now - timestamp;
-        const minDiff = Math.floor(miliDiff / 60000);
-        if (minDiff < 60) {
+        const secDiff = Math.floor(miliDiff / 1000)
+        const minDiff = Math.floor(secDiff / 60);
+        if (secDiff < 60) {
+          tempo = `postado há ${secDiff} ${
+            secDiff === 1 ? "segundo" : "segundos"            
+          } atrás`;
+        }
+        else if (minDiff < 60) {
           tempo = `postado há ${minDiff} ${
             minDiff === 1 ? "minuto" : "minutos"
           } atrás`;
@@ -525,8 +531,12 @@ function showPosts() {
             month: "numeric",
             day: "numeric",
           });
+          formatterH = new Intl.DateTimeFormat("pt-BR", {
+            hour: "numeric",
+            minute: "numeric",
+          });
 
-          tempo = formatter.format(time);
+          tempo = "postado "+formatter.format(time)+" às "+formatterH.format(time);
           
         }
         publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
