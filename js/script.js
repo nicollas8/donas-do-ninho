@@ -282,11 +282,11 @@ function viewPublis() {
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-8"><img src="../assets/social-network.svg" alt=""></button>
-            <button class="w-8"><img src="../assets/hand.svg" alt=""></button>
-            <button class="w-8"><img src="../assets/star.svg" alt=""></button>
-            <button class="w-8"><img src="../assets/comment-dots.svg" alt=""></button>
-            <button class="w-8"><img src="../assets/menu-dots.svg" alt=""></button>
+          <button class="w-6"><img src="../assets/like.svg" alt=""></button>
+          <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+          <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+          <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
+          <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -512,11 +512,11 @@ function showPosts() {
           tempo = `postado há ${minDiff} ${
             minDiff === 1 ? "minuto" : "minutos"
           } atrás`;
-        } else if ((minDiff) => 60) {
+        } else if (((minDiff) => 60) && ((minDiff) < 1440)) {
           tempo = `postado há ${Math.floor(minDiff / 60)} ${
             Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
           } atrás`;
-        } else if ((minDiff) => 1440) {
+        } else if ((minDiff) == 1440) {
           tempo = `postado ontem`;
         } else {
           time = postData.timestamp.toDate();
@@ -527,6 +527,7 @@ function showPosts() {
           });
 
           tempo = formatter.format(time);
+          
         }
         publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
