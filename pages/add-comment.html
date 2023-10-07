@@ -7,18 +7,16 @@
     <title>Donas do ninho</title>
 </head>
 <body>
+    <script> var urlParams = new URLSearchParams(window.location.search);
+        var meuValor = urlParams.get("ID");</script>
     <div class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
-        <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-inicio.html'">
-        <h4 class="self-center text-white">Publicações</h4>
+        <img src="../assets/seta.png" alt="" class="w-10" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + meuValor;">
+        <h4 class="self-center text-white">Resposta</h4>
     </div>
     <div class="create-publi flex flex-col">
-        <select name="" id="select" class="w-1/4	p-2 text-sm text-center self-auto ml-4 mt-3"> 
-            <option value="DÚVIDA">Dúvida</option>
-            <option value="DICA">Dica</option>
-        </select>
-        <textarea name="publi" id="publi" cols="30" rows="10" class="m-5 p-5" placeholder="Escreva sua publicação"></textarea>
+        <textarea name="resp" id="resp" cols="30" rows="10" class="m-5 p-5" placeholder="Escreva sua resposta"></textarea>
         <div class="btn-postar flex justify-end mr-5">
-            <button type="submit" class="bg-[#ffa9a9] p-2 px-5 border-1 text-white rounded-full" onclick="addPubli()">Postar</button>
+            <button type="submit" class="bg-[#ffa9a9] p-2 px-5 border-1 text-white rounded-full" onclick="addResp()">Postar</button>
         </div>
     </div>
     <div class="options-publi w-screen bg-[#ffa9a9] flex flex-row p-3 rounded-t-xl justify-between">
@@ -26,11 +24,6 @@
                <img src="../assets/galeria.png" alt="" class="w-10 h-10">
                <input type="file" name="img-publi" id="image-input" class="hidden">
            </label>
-       <select name="" id="" class="p-2 ml-4 text-center self-center">
-        <option value="">Tags</option>
-        <option value="">amamentação</option>
-        <option value="">filhos</option>
-       </select>
     </div>
 </body>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 

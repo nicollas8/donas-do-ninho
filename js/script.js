@@ -231,7 +231,6 @@ function comparePassword() {
   } else {
     setError(4);
   }
-  
 }
 
 function previewFile() {
@@ -272,11 +271,11 @@ function viewPublis() {
             querySnapshot.forEach(function (doc) {
               // O documento do usuário foi encontrado
               var userPosts = doc.data();
-              //console.log("dados", userPosts.post);
+              console.log("dados", userPosts);
               publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
           <div class="options">
-            <h4 class="py-2 text-purple-700">DÚVIDA</h4>
+            <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
           </div>
           <div class="balaoPergunta">
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
@@ -286,7 +285,7 @@ function viewPublis() {
           <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
           <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
           <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
-          <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+          <button class="w-6" onclick="confirmarExclusao('${userPosts.IDpost}')"><img src="../assets/lixeira.png" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -299,46 +298,48 @@ function viewPublis() {
           console.error("Erro ao recuperar dados do usuário:", error);
         });
 
-  // Executar a consulta
-
-    } else{
-      console.log("não deu certo")
+      // Executar a consulta
+    } else {
+      console.log("não deu certo");
     }
- });
+  });
 }
 
-
 function att() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var uid = user.uid;
       //console.log(uid);
-      var usersCollection = firebase.firestore().collection('usuarios');
-      var userRef = firebase.firestore().collection('usuarios').doc(uid);
+      var usersCollection = firebase.firestore().collection("usuarios");
+      var userRef = firebase.firestore().collection("usuarios").doc(uid);
 
       //console.log("vamo ver ele:" + userRef.collection('posts'));
 
       // Consulta para recuperar o documento do usuário com base no UID
-      var userQuery = usersCollection.where('uid', '==', uid);
-      userQuery.get()
-        .then(function(querySnapshot) {
+      var userQuery = usersCollection.where("uid", "==", uid);
+      userQuery
+        .get()
+        .then(function (querySnapshot) {
           if (!querySnapshot.empty) {
-            querySnapshot.forEach(function(doc) {
+            querySnapshot.forEach(function (doc) {
               // O documento do usuário foi encontrado
               var userData = doc.data();
               //console.log('Dados do usuário:', userData);
 
-              document.getElementById('nome-user').textContent = userData.nome;
-              document.getElementById('data-user').textContent = userData.dataNascimento;
-              document.getElementById('tipo-user').textContent = userData.tipoMom;
-              document.getElementById('bio-user').textContent = userData.biografia;
+              document.getElementById("nome-user").textContent = userData.nome;
+              document.getElementById("data-user").textContent =
+                userData.dataNascimento;
+              document.getElementById("tipo-user").textContent =
+                userData.tipoMom;
+              document.getElementById("bio-user").textContent =
+                userData.biografia;
             });
           } else {
-            console.log('Nenhum usuário encontrado com o UID fornecido.');
+            console.log("Nenhum usuário encontrado com o UID fornecido.");
           }
         })
-        .catch(function(error) {
-          console.error('Erro ao recuperar dados do usuário:', error);
+        .catch(function (error) {
+          console.error("Erro ao recuperar dados do usuário:", error);
         });
     }
   });
@@ -428,53 +429,116 @@ function excluir() {
 }
 
 function addPubli() {
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      var uid = user.uid;
-      console.log(uid);
-      var usersCollection = firebase.firestore().collection("usuarios");
-      console.log(usersCollection);
+  if (document.getElementById("publi").value != "") {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        var uid = user.uid;
+        console.log(uid);
+        var usersCollection = firebase.firestore().collection("usuarios");
+        console.log(usersCollection);
 
-      var userQuery = usersCollection.where("uid", "==", uid);
-      userQuery.get().then(function (querySnapshot) {
-        if (!querySnapshot.empty) {
-          querySnapshot.forEach(function (doc) {
-            // O documento do usuário foi encontrado
-            var userData = doc.data();
-            console.log('Dados do usuário:', userData);
+        var userQuery = usersCollection.where("uid", "==", uid);
+        userQuery.get().then(function (querySnapshot) {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(function (doc) {
+              // O documento do usuário foi encontrado
+              var userData = doc.data();
+              console.log("Dados do usuário:", userData);
 
-            var Postuid = firebase.firestore().collection('posts').doc().id;
-            console.log("aaaaaaaaaa");
+              var Postuid = firebase.firestore().collection("posts").doc().id;
 
-            const newPostData = {
-              post: document.getElementById("publi").value,
-              timestamp: new Date(), // Adiciona um timestamp do servidor
-              IDpost: Postuid,
-              UIDusuario: uid,
-              nomeUser: userData.nome,
-            };
-            firebase
-              .firestore()
-              .collection("posts")
-              .add(newPostData)
-              .then((docRef) => {
-                console.log(
-                  "Publicação adicionada com sucesso com o ID:",
-                  docRef.id
-                );
-                window.location.replace("tela-inicio.html");
-              })
-              .catch((error) => {
-                console.error("Erro ao adicionar a publicação:", error);
-              });
-          });
-        } else {
-          alert("deu erro");
-        }
-      });
-    }
-  });
+              const newPostData = {
+                post: document.getElementById("publi").value,
+                timestamp: new Date(), // Adiciona um timestamp do servidor
+                IDpost: Postuid,
+                UIDusuario: uid,
+                nomeUser: userData.nome,
+                tipo: document.getElementById("select").value,
+                resps: 0,
+              };
+              firebase
+                .firestore()
+                .collection("posts")
+                .add(newPostData)
+                .then((docRef) => {
+                  alert("Publicação adicionada com sucesso!");
+                  window.location.replace("tela-inicio.html");
+                })
+                .catch((error) => {
+                  console.error("Erro ao adicionar a publicação:", error);
+                });
+            });
+          } else {
+            alert("deu erro");
+          }
+        });
+      }
+    });
+  } else {
+    alert("Por favor, digite algo para enviar!");
+  }
 }
+
+function addResp() {
+  if (document.getElementById("resp").value !== "") {
+    var urlParams = new URLSearchParams(window.location.search);
+    var meuValor = urlParams.get("ID");
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        var uid = user.uid; // Mova esta linha para dentro deste bloco
+        console.log(uid);
+        var usersCollection = firebase.firestore().collection("usuarios");
+        console.log(usersCollection);
+        var RespID = firebase.firestore().collection("usuarios").doc().id;
+
+        var userQuery = usersCollection.where("uid", "==", uid);
+        userQuery.get().then(function (querySnapshot) {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(function (doc) {
+              var userData = doc.data();
+              const newRespData = {
+                post: document.getElementById("resp").value,
+                timestamp: new Date(), // Adiciona um timestamp do servidor
+                IDresp: RespID,
+                UIDusuario: uid,
+                nomeUser: userData.nome,
+              };
+
+              firebase
+                .firestore()
+                .collection("posts")
+                .where("IDpost", "==", meuValor)
+                .get()
+                .then((querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    doc.ref.collection("resps").add(newRespData).then((docRef) => {
+                      console.log("Resposta adicionada com sucesso!");
+                    }).catch((error) => {
+                      console.error("Erro ao adicionar resposta: ", error);
+                    });
+                    console.log(newRespData);
+                  });
+                })
+                .catch(function (error) {
+                  console.error("Erro ao consultar posts:", error);
+                });
+            });
+          } else {
+            console.log("Nenhum documento encontrado com o UID fornecido.");
+          }
+        }).catch(function (error) {
+          console.error("Erro ao recuperar dados do usuário:", error);
+        });
+      } else {
+        console.log("Usuário não autenticado.");
+      }
+    });
+  } else {
+    alert("Por favor, digite alguma coisa para enviar sua resposta!");
+  }
+}
+
+
 
 function showPosts() {
   var db = firebase.firestore();
@@ -507,22 +571,21 @@ function showPosts() {
         const timestamp = postData.timestamp.toMillis();
         const now = new Date().getTime();
         const miliDiff = now - timestamp;
-        const secDiff = Math.floor(miliDiff / 1000)
+        const secDiff = Math.floor(miliDiff / 1000);
         const minDiff = Math.floor(secDiff / 60);
         if (secDiff < 60) {
           tempo = `postado há ${secDiff} ${
-            secDiff === 1 ? "segundo" : "segundos"            
+            secDiff === 1 ? "segundo" : "segundos"
           } atrás`;
-        }
-        else if (minDiff < 60) {
+        } else if (minDiff < 60) {
           tempo = `postado há ${minDiff} ${
             minDiff === 1 ? "minuto" : "minutos"
           } atrás`;
-        } else if (((minDiff) => 60) && ((minDiff) < 1440)) {
+        } else if (((minDiff) => 60) && minDiff < 1440) {
           tempo = `postado há ${Math.floor(minDiff / 60)} ${
             Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
           } atrás`;
-        } else if ((minDiff) == 1440) {
+        } else if (minDiff == 1440) {
           tempo = `postado ontem`;
         } else {
           time = postData.timestamp.toDate();
@@ -536,14 +599,17 @@ function showPosts() {
             minute: "numeric",
           });
 
-          tempo = "postado "+formatter.format(time)+" às "+formatterH.format(time);
-          
+          tempo =
+            "postado " +
+            formatter.format(time) +
+            " às " +
+            formatterH.format(time);
         }
         publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
         <p id=nome style= color:black></p> ${postData.nomeUser}
             <div class="options">
-            <h4 class="py-3 text-purple-700 text-left">DÚVIDA</h4>
+            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
             </div>
             <div class="balaoPergunta">
             <p style=color:black></p>
@@ -553,7 +619,7 @@ function showPosts() {
             <button class="w-6" onclick="like('${postData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
             <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
             <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
+            <button class="w-6" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postData.IDpost}';"> ${postData.respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
             <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
@@ -561,13 +627,211 @@ function showPosts() {
         //console.log( db.collection("posts").get());
       });
     })
+
     .catch(function (error) {
       console.error(
         "Erro ao obter os documentos da subcoleção 'posts':",
         error
       );
     });
+}
+
+function comments() {
+  // Obtenha o valor 'ID' da URL
+  var urlParams = new URLSearchParams(window.location.search);
+  var idComment = urlParams.get("ID");
+
+  // Verifique se 'meuValor' não é nulo ou vazio
+  if (idComment) {
+    var db = firebase.firestore();
+
+    // Referência à coleção 'posts' e consulta usando .where
+    var postsCollectionRef = db.collection("posts");
+    var query = postsCollectionRef.where("IDpost", "==", idComment);
+
+    // Execute a consulta
+    query
+      .get()
+      .then(function (querySnapshot) {
+        if (!querySnapshot.empty) {
+          // A consulta retornou resultados, então existe um documento com o IDpost correspondente
+          querySnapshot.forEach(function (doc) {
+            // Obtenha os dados do documento
+            
+            const postData = doc.data();
+            const postDoc = doc;
+
+            const timestamp = postData.timestamp.toMillis();
+            const now = new Date().getTime();
+            const miliDiff = now - timestamp;
+            const secDiff = Math.floor(miliDiff / 1000);
+            const minDiff = Math.floor(secDiff / 60);
+            if (secDiff < 60) {
+              tempo = `postado há ${secDiff} ${
+                secDiff === 1 ? "segundo" : "segundos"
+              } atrás`;
+            } else if (minDiff < 60) {
+              tempo = `postado há ${minDiff} ${
+                minDiff === 1 ? "minuto" : "minutos"
+              } atrás`;
+            } else if (((minDiff) => 60) && minDiff < 1440) {
+              tempo = `postado há ${Math.floor(minDiff / 60)} ${
+                Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
+              } atrás`;
+            } else if (minDiff == 1440) {
+              tempo = `postado ontem`;
+            } else {
+              time = postData.timestamp.toDate();
+              formatter = new Intl.DateTimeFormat("pt-BR", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              });
+              formatterH = new Intl.DateTimeFormat("pt-BR", {
+                hour: "numeric",
+                minute: "numeric",
+              });
+
+              tempo =
+                "postado " +
+                formatter.format(time) +
+                " às " +
+                formatterH.format(time);
+            }
+            publis.innerHTML = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+        <div class="ballPerguntas p-3">
+        <p id=nome style= color:black></p> ${postData.nomeUser}
+            <div class="options">
+            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
+            </div>
+            <div class="balaoPergunta">
+            <p style=color:black></p>
+            <p class="text-black text-left mb-4"> ${postData.post} </p>
+            </div>
+            <div class="react flex flex-row gap-10 justify-around mb-2">
+            <button class="w-6" onclick="like('${postData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+            <button class="w-6" onclick= "window.location.href = 'add-comment.html' + '?ID=' + '${postData.IDpost}';"><img src="../assets/comentário.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+            </div>
+            <p class='text-black text-right mt-2'> ${tempo}</p>
+          </div>`;
+
+          const respUID = postData.IDpost;
+          console.log(respUID);
+          let respsQntd = 0;
+
+          const respsCollectionRef = postDoc.ref.collection('resps');
+          console.log(respsCollectionRef);
+          respsCollectionRef.orderBy("timestamp", "desc").get().then(function (querySnapshot) {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach(function (doc) {
+                
+                const respData = doc.data()
+                const timestamp = respData.timestamp.toMillis();
+            const now = new Date().getTime();
+            const miliDiff = now - timestamp;
+            const secDiff = Math.floor(miliDiff / 1000);
+            const minDiff = Math.floor(secDiff / 60);
+            if (secDiff < 60) {
+              tempo = `postado há ${secDiff} ${
+                secDiff === 1 ? "segundo" : "segundos"
+              } atrás`;
+            } else if (minDiff < 60) {
+              tempo = `postado há ${minDiff} ${
+                minDiff === 1 ? "minuto" : "minutos"
+              } atrás`;
+            } else if (((minDiff) => 60) && minDiff < 1440) {
+              tempo = `postado há ${Math.floor(minDiff / 60)} ${
+                Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
+              } atrás`;
+            } else if (minDiff == 1440) {
+              tempo = `postado ontem`;
+            } else {
+              time = respD.timestamp.toDate();
+              formatter = new Intl.DateTimeFormat("pt-BR", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              });
+              formatterH = new Intl.DateTimeFormat("pt-BR", {
+                hour: "numeric",
+                minute: "numeric",
+              });
+
+              tempo =
+                "postado " +
+                formatter.format(time) +
+                " às " +
+                formatterH.format(time);
+                
+            }
+            
+            resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            <div class="ballPerguntas p-4">
+            <p id=nome style="color:blue;" class="text-right"> ${respData.nomeUser}  </p> 
+            <div class="balaoPergunta">
+            <p style=color:black></p>
+            <p class="text-black text-left mb-4"> ${respData.post} </p>
+            </div>
+            <div class="react flex flex-row gap-10 justify-around mb-2">
+            <button class="w-6" onclick="like('${respData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+            </div>
+            <p class='text-black text-right mt-2'> ${tempo}</p>
+          </div>`;
+            respsQntd++;
+            console.log(respsQntd);
+            
+                
+              })
+
+              db.collection("posts")
+              .where("IDpost", "==", idComment)
+              .get()
+              .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                  // Atualize o campo desejado no documento
+                  const novoNumero = 10; // Substitua pelo novo valor
+                  doc.ref.update({
+                    respsQntd: respsQntd,
+                  })
+                  .then(function() {
+                    console.log("Número atualizado com sucesso!");
+                  })
+                  .catch(function(error) {
+                    console.error("Erro ao atualizar o número:", error);
+                  });
+                });
+              })
+              .catch(function(error) {
+                console.error("Erro ao consultar documentos:", error);
+              });
+
+            }else{
+              console.log('aposenta bb')
+            }
+          })
+          
+          });
+        } else {
+          // A consulta não retornou resultados, nenhum documento corresponde ao IDpost
+          console.log(
+            "Nenhum documento encontrado com o IDpost correspondente."
+          );
+        }
+      })
+      .catch(function (error) {
+        console.error("Erro ao executar a consulta:", error);
+      });
+  } else {
+    console.log("Valor 'ID' não encontrado na URL.");
   }
+}
+
 // firebase.initializeApp(firebaseConfig);
 
 // const storage = firebase.storage();
@@ -601,29 +865,62 @@ function showPosts() {
 //   }
 // });
 
-  function like(postUID) {
-    firebase.auth().onAuthStateChanged(function(user) {
+function like(postUID) {
+  firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-    var uid = user.uid;
-    var db = firebase.firestore();
+      var uid = user.uid;
+      var db = firebase.firestore();
 
-    db.collection('posts').where('IDpost', '==', postUID).get()
-    .then(function(querySnapshot) {
-      if (!querySnapshot.empty) {
-        querySnapshot.forEach(function(doc) {
-          
-          var dados = doc.data();
-          console.log(dados);
-  
-          
-          db.collection('posts').doc(doc.id).collection('likes').add({
-            UserUid: uid,
-          })
-        })
-      }
-    })
-    }else{
+      db.collection("posts")
+        .where("IDpost", "==", postUID)
+        .get()
+        .then(function (querySnapshot) {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(function (doc) {
+              var dados = doc.data();
+              console.log(dados);
+
+              db.collection("posts").doc(doc.id).collection("likes").add({
+                UserUid: uid,
+              });
+            });
+          }
+        });
+    } else {
       console.log(postUID);
     }
-  })
+  });
+}
+
+function confirmarExclusao(postUID) {
+  var resposta = confirm("Tem certeza de que deseja excluir?");
+  const postID = postUID;
+  if (resposta === true) {
+    excluirPost(postID);
+  } else {
+  }
+}
+
+function excluirPost(postUID) {
+  console.log(postUID);
+  var db = firebase.firestore();
+  db.collection("posts")
+    .where("IDpost", "==", postUID)
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        doc.ref
+          .delete()
+          .then(function () {
+            alert("Publicação Excluída com sucesso!");
+            window.location.reload();
+          })
+          .catch(function (error) {
+            console.error("Erro ao excluir: ", error);
+          });
+      });
+    })
+    .catch(function (error) {
+      console.error("Erro ao executar a consulta: ", error);
+    });
 }
