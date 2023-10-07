@@ -539,7 +539,7 @@ function showPosts() {
             <p class="text-black text-left mb-4"> ${postData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" onclick="like()><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6" onclick="like('${postData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
             <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
             <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
             <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
@@ -557,7 +557,7 @@ function showPosts() {
       );
     });
   }
-  // firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
 // const storage = firebase.storage();
 // const firestore = firebase.firestore();
@@ -590,13 +590,29 @@ function showPosts() {
 //   }
 // });
 
-  function like() {
-    // Gere um UID único usando a data atual
-    
-    firebase.firestore().collection('posts').doc(Postuid).set(uid).then(function() {
-        console.log('Deu certo', Postuid);
-      })
-      .catch(function(error) {
-        console.log('Deu errado', error);
-      });
-  }
+  function like(postUID) {
+    firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+    var uid = user.uid;
+    var db = firebase.firestore();
+
+    db.collection('posts').where('IDpost', '==', postUID).get()
+    .then(function(querySnapshot) {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(function(doc) {
+          
+          var dados = doc.data();
+          console.log(dados);
+  
+          
+          db.collection('posts').doc(doc.id).collection('likes').add({
+            UserUid: uid,
+          })
+        })
+      }
+    })
+    }else{
+      console.log(postUID);
+    }
+  })
+}
