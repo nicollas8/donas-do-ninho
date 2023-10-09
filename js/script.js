@@ -386,13 +386,15 @@ function atualizar() {
   });
 }
 
-function excluir() {
+function excluirConta() {
+  var resposta = confirm("Tem certeza de que deseja excluir?");
+  console.log(resposta);
+  if (resposta === true){
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var uid = user.uid;
       console.log(uid);
-      var usersCollection = firebase.firestore().collection("usuarios");
-
+      usersCollection = firebase.firestore().collection("usuarios");
       // Crie uma referência para o documento do usuário
       var userDocRef = usersCollection.doc(uid);
 
@@ -400,6 +402,8 @@ function excluir() {
       userDocRef
         .delete()
         .then(function () {
+          excluirComentarios(uid);
+          excluirPosts(uid);
           console.log("Usuário excluído do Firestore com sucesso!");
 
           // Em seguida, exclua o usuário da autenticação do Firebase
@@ -426,17 +430,93 @@ function excluir() {
       console.log("Não foi possível obter o usuário autenticado.");
     }
   });
+  }else{
+    console.log('joia');
+  }
 }
+
+function excluirComentarios(uidDoUsuario) {
+  var db = firebase.firestore();
+
+  // Primeiro, busque todos os documentos na coleção "posts" onde o usuário fez comentários.
+  db.collection("posts")
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        var postId = doc.id;
+
+        // Obtenha a lista de comentários no documento "post".
+        var respsCollectionRef = db
+          .collection("posts")
+          .doc(postId)
+          .collection("resps");
+
+        // Consulta para buscar os comentários feitos pelo usuário.
+        respsCollectionRef
+          .where("UIDusuario", "==", uidDoUsuario)
+          .get()
+          .then(function (querySnapshot) {
+            querySnapshot.forEach(function (commentDoc) {
+              // Exclua o comentário.
+              respsCollectionRef
+                .doc(commentDoc.id)
+                .delete()
+                .then(function () {
+                  console.log("Comentário excluído com sucesso!");
+                })
+                .catch(function (error) {
+                  console.error("Erro ao excluir o comentário:", error);
+                });
+            });
+          })
+          .catch(function (error) {
+            console.error(
+              "Erro ao buscar comentários do usuário:",
+              error
+            );
+          });
+      });
+    })
+    .catch(function (error) {
+      console.error(
+        "Erro ao buscar documentos na coleção 'posts':",
+        error
+      );
+    });
+}
+
+function excluirPosts(uidDoUsuario) {
+  var db = firebase.firestore();
+
+  db.collection("posts")
+  .where("UIDusuario", "==", uidDoUsuario)
+  .get()
+  .then(function (querySnapshot) {
+    querySnapshot.forEach(function (doc) {
+      postID = doc.id;
+      
+      db.collection("posts")
+      .doc(postID)
+      .delete()
+      .then(function () {
+        console.log("Postagem excluída com sucesso!");
+      })
+    })
+  })
+}
+
 
 function addPubli() {
   if (document.getElementById("publi").value != "") {
+    const button = document.getElementById("post");
+    button.disabled = true;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         var uid = user.uid;
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
         console.log(usersCollection);
-
+        
         var userQuery = usersCollection.where("uid", "==", uid);
         userQuery.get().then(function (querySnapshot) {
           if (!querySnapshot.empty) {
@@ -454,13 +534,16 @@ function addPubli() {
                 UIDusuario: uid,
                 nomeUser: userData.nome,
                 tipo: document.getElementById("select").value,
-                resps: 0,
+                respsQntd: 0,
               };
               firebase
                 .firestore()
                 .collection("posts")
                 .add(newPostData)
                 .then((docRef) => {
+                  setTimeout(function () {
+                    button.disabled = true;
+                  }, 2000);
                   alert("Publicação adicionada com sucesso!");
                   window.location.replace("tela-inicio.html");
                 })
@@ -483,6 +566,8 @@ function addResp() {
   if (document.getElementById("resp").value !== "") {
     var urlParams = new URLSearchParams(window.location.search);
     var meuValor = urlParams.get("ID");
+    const button = document.getElementById("post");
+    button.disabled = true;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         var uid = user.uid; // Mova esta linha para dentro deste bloco
@@ -512,7 +597,11 @@ function addResp() {
                 .then((querySnapshot) => {
                   querySnapshot.forEach((doc) => {
                     doc.ref.collection("resps").add(newRespData).then((docRef) => {
-                      console.log("Resposta adicionada com sucesso!");
+                      setTimeout(function () {
+                        button.disabled = false;
+                      }, 2000);
+                      alert("Resposta enviada com sucesso!");
+                      window.location.href = 'tela-comments.html' + '?ID=' + meuValor;
                     }).catch((error) => {
                       console.error("Erro ao adicionar resposta: ", error);
                     });
@@ -749,7 +838,7 @@ function comments() {
             } else if (minDiff == 1440) {
               tempo = `postado ontem`;
             } else {
-              time = respD.timestamp.toDate();
+              time = respData.timestamp.toDate();
               formatter = new Intl.DateTimeFormat("pt-BR", {
                 year: "numeric",
                 month: "numeric",
@@ -784,7 +873,7 @@ function comments() {
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
             respsQntd++;
-            console.log(respsQntd);
+            //console.log(respsQntd);
             
                 
               })
@@ -795,7 +884,6 @@ function comments() {
               .then(function(querySnapshot) {
                 querySnapshot.forEach(function(doc) {
                   // Atualize o campo desejado no documento
-                  const novoNumero = 10; // Substitua pelo novo valor
                   doc.ref.update({
                     respsQntd: respsQntd,
                   })
@@ -812,7 +900,23 @@ function comments() {
               });
 
             }else{
-              console.log('aposenta bb')
+              db.collection("posts")
+              .where("IDpost", "==", idComment)
+              .get()
+              .then(function(querySnapshot) {
+                querySnapshot.forEach(function(doc) {
+                  // Atualize o campo desejado no documento
+                  doc.ref.update({
+                    respsQntd: respsQntd,
+                  })
+                  .then(function() {
+                    console.log("Número atualizado com sucesso!");
+                  })
+                  .catch(function(error) {
+                    console.error("Erro ao atualizar o número:", error);
+                  });
+                });
+              })
             }
           })
           
@@ -923,4 +1027,14 @@ function excluirPost(postUID) {
     .catch(function (error) {
       console.error("Erro ao executar a consulta: ", error);
     });
+}
+
+function desabilitarBotao() {
+  const button = document.getElementById("");
+  button.disabled = true;
+}
+
+function reabilitarBotao() {
+  const button = document.getElementById("");
+  button.disabled = false;
 }
