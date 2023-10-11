@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do ninho</title>
+  </head>
+  <body onload="viewFavs()" class="bg-white">
+    <div class="header-mypubli flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9]">
+      <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-usuario.html'">
+      <h4 class="self-center text-white">Meus Favoritos</h4>
+    </div>
+<div id="publis" class="mb-16">
+</div>
+<nav>
+  <div class="navPerfil">
+      <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
+      <button class="navButton"><img src="../assets/play.png" alt=""></button>
+      <button class="navButton"><img src="../assets/publicação.png" alt="" onclick="location.href='tela-publi.html'"></button>
+      <button class="navButton"><img src="../assets/notficação.png" alt=""></button>
+      <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
+  </div>
+</nav>
+</body>
+  <script src="../js/script.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore-compat.js"></script> 
+    <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-auth-compat.js"></script>
+    <script src="../js/firebase-init.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</html>

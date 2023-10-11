@@ -389,49 +389,49 @@ function atualizar() {
 function excluirConta() {
   var resposta = confirm("Tem certeza de que deseja excluir?");
   console.log(resposta);
-  if (resposta === true){
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      var uid = user.uid;
-      console.log(uid);
-      usersCollection = firebase.firestore().collection("usuarios");
-      // Crie uma referência para o documento do usuário
-      var userDocRef = usersCollection.doc(uid);
+  if (resposta === true) {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        var uid = user.uid;
+        console.log(uid);
+        usersCollection = firebase.firestore().collection("usuarios");
+        // Crie uma referência para o documento do usuário
+        var userDocRef = usersCollection.doc(uid);
 
-      // Exclua o documento do usuário do Firestore
-      userDocRef
-        .delete()
-        .then(function () {
-          excluirComentarios(uid);
-          excluirPosts(uid);
-          console.log("Usuário excluído do Firestore com sucesso!");
+        // Exclua o documento do usuário do Firestore
+        userDocRef
+          .delete()
+          .then(function () {
+            excluirComentarios(uid);
+            excluirPosts(uid);
+            console.log("Usuário excluído do Firestore com sucesso!");
 
-          // Em seguida, exclua o usuário da autenticação do Firebase
-          user
-            .delete()
-            .then(function () {
-              console.log(
-                "Usuário excluído da autenticação do Firebase com sucesso!"
-              );
-              alert("Conta Excluída com sucesso!");
-              window.location.replace("tela-login.html");
-            })
-            .catch(function (error) {
-              console.error(
-                "Erro ao excluir o usuário da autenticação do Firebase:",
-                error
-              );
-            });
-        })
-        .catch(function (error) {
-          console.error("Erro ao excluir o usuário do Firestore:", error);
-        });
-    } else {
-      console.log("Não foi possível obter o usuário autenticado.");
-    }
-  });
-  }else{
-    console.log('joia');
+            // Em seguida, exclua o usuário da autenticação do Firebase
+            user
+              .delete()
+              .then(function () {
+                console.log(
+                  "Usuário excluído da autenticação do Firebase com sucesso!"
+                );
+                alert("Conta Excluída com sucesso!");
+                window.location.replace("tela-login.html");
+              })
+              .catch(function (error) {
+                console.error(
+                  "Erro ao excluir o usuário da autenticação do Firebase:",
+                  error
+                );
+              });
+          })
+          .catch(function (error) {
+            console.error("Erro ao excluir o usuário do Firestore:", error);
+          });
+      } else {
+        console.log("Não foi possível obter o usuário autenticado.");
+      }
+    });
+  } else {
+    console.log("joia");
   }
 }
 
@@ -470,18 +470,12 @@ function excluirComentarios(uidDoUsuario) {
             });
           })
           .catch(function (error) {
-            console.error(
-              "Erro ao buscar comentários do usuário:",
-              error
-            );
+            console.error("Erro ao buscar comentários do usuário:", error);
           });
       });
     })
     .catch(function (error) {
-      console.error(
-        "Erro ao buscar documentos na coleção 'posts':",
-        error
-      );
+      console.error("Erro ao buscar documentos na coleção 'posts':", error);
     });
 }
 
@@ -489,22 +483,21 @@ function excluirPosts(uidDoUsuario) {
   var db = firebase.firestore();
 
   db.collection("posts")
-  .where("UIDusuario", "==", uidDoUsuario)
-  .get()
-  .then(function (querySnapshot) {
-    querySnapshot.forEach(function (doc) {
-      postID = doc.id;
-      
-      db.collection("posts")
-      .doc(postID)
-      .delete()
-      .then(function () {
-        console.log("Postagem excluída com sucesso!");
-      })
-    })
-  })
-}
+    .where("UIDusuario", "==", uidDoUsuario)
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        postID = doc.id;
 
+        db.collection("posts")
+          .doc(postID)
+          .delete()
+          .then(function () {
+            console.log("Postagem excluída com sucesso!");
+          });
+      });
+    });
+}
 
 function addPubli() {
   if (document.getElementById("publi").value != "") {
@@ -516,7 +509,7 @@ function addPubli() {
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
         console.log(usersCollection);
-        
+
         var userQuery = usersCollection.where("uid", "==", uid);
         userQuery.get().then(function (querySnapshot) {
           if (!querySnapshot.empty) {
@@ -577,47 +570,55 @@ function addResp() {
         var RespID = firebase.firestore().collection("usuarios").doc().id;
 
         var userQuery = usersCollection.where("uid", "==", uid);
-        userQuery.get().then(function (querySnapshot) {
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach(function (doc) {
-              var userData = doc.data();
-              const newRespData = {
-                post: document.getElementById("resp").value,
-                timestamp: new Date(), // Adiciona um timestamp do servidor
-                IDresp: RespID,
-                UIDusuario: uid,
-                nomeUser: userData.nome,
-              };
+        userQuery
+          .get()
+          .then(function (querySnapshot) {
+            if (!querySnapshot.empty) {
+              querySnapshot.forEach(function (doc) {
+                var userData = doc.data();
+                const newRespData = {
+                  post: document.getElementById("resp").value,
+                  timestamp: new Date(), // Adiciona um timestamp do servidor
+                  IDresp: RespID,
+                  UIDusuario: uid,
+                  nomeUser: userData.nome,
+                };
 
-              firebase
-                .firestore()
-                .collection("posts")
-                .where("IDpost", "==", meuValor)
-                .get()
-                .then((querySnapshot) => {
-                  querySnapshot.forEach((doc) => {
-                    doc.ref.collection("resps").add(newRespData).then((docRef) => {
-                      setTimeout(function () {
-                        button.disabled = false;
-                      }, 2000);
-                      alert("Resposta enviada com sucesso!");
-                      window.location.href = 'tela-comments.html' + '?ID=' + meuValor;
-                    }).catch((error) => {
-                      console.error("Erro ao adicionar resposta: ", error);
+                firebase
+                  .firestore()
+                  .collection("posts")
+                  .where("IDpost", "==", meuValor)
+                  .get()
+                  .then((querySnapshot) => {
+                    querySnapshot.forEach((doc) => {
+                      doc.ref
+                        .collection("resps")
+                        .add(newRespData)
+                        .then((docRef) => {
+                          setTimeout(function () {
+                            button.disabled = false;
+                          }, 2000);
+                          alert("Resposta enviada com sucesso!");
+                          window.location.href =
+                            "tela-comments.html" + "?ID=" + meuValor;
+                        })
+                        .catch((error) => {
+                          console.error("Erro ao adicionar resposta: ", error);
+                        });
+                      console.log(newRespData);
                     });
-                    console.log(newRespData);
+                  })
+                  .catch(function (error) {
+                    console.error("Erro ao consultar posts:", error);
                   });
-                })
-                .catch(function (error) {
-                  console.error("Erro ao consultar posts:", error);
-                });
-            });
-          } else {
-            console.log("Nenhum documento encontrado com o UID fornecido.");
-          }
-        }).catch(function (error) {
-          console.error("Erro ao recuperar dados do usuário:", error);
-        });
+              });
+            } else {
+              console.log("Nenhum documento encontrado com o UID fornecido.");
+            }
+          })
+          .catch(function (error) {
+            console.error("Erro ao recuperar dados do usuário:", error);
+          });
       } else {
         console.log("Usuário não autenticado.");
       }
@@ -627,57 +628,101 @@ function addResp() {
   }
 }
 
-
-
 function showPosts() {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
   var db = firebase.firestore();
   // Obtenha todos os documentos da coleção 'posts'
+
+  
+
   db.collection("posts")
     .orderBy("timestamp", "desc")
     .get()
     .then(function (postsQuerySnapshot) {
       postsQuerySnapshot.forEach(function (postDoc) {
-        //console.log('Olha:',postDoc.data().post);
         var postData = postDoc.data();
-        const uiduser = postData.UIDusuario;
-
-        var tempNome;
-
-        db.collection("usuarios")
-          .doc(uiduser)
-          .get()
-          .then(function (userDoc) {
-            if (userDoc.exists) {
-              var userData = userDoc.data();
-              tempNome = userData.nome;
-              //console.log(tempNome);
-            } else {
-              console.log("foda");
-            }
-          });
+        var postID = postDoc.id;
 
         // Acesse os dados da postagem
-        const timestamp = postData.timestamp.toMillis();
+        time = postData.timestamp;
+        tempo = formatTime(time)
+        
+        publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+        <div class="ballPerguntas p-3">
+        <p id=nome style= color:black></p> ${postData.nomeUser}
+            <div class="options">
+            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
+            </div>
+            <div class="balaoPergunta">
+            <p style=color:black></p>
+            <p class="text-black text-left mb-4"> ${postData.post} </p>
+            </div>
+            <div class="react flex flex-row gap-10 justify-around mb-2">
+            <button class="w-6" id="like${postID}" onclick="react('1', '${postID}')"> ${postData.likesQntd} <img src="../assets/like.svg" alt=""></button>
+            <button class="w-6" id="deslike${postID}" onclick="react('2', '${postID}')"> ${postData.deslikesQntd} <img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6" id="fav${postID}" onclick="fav('${postID}', '${user.uid}')"> ${postData.favsQntd}<img src="../assets/favorito.svg" alt=""> </button>
+            <button class="w-6" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postData.IDpost}';"> ${postData.respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
+            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+            </div>
+            <p class='text-black text-right mt-2'> ${tempo}</p>
+          </div>`;
+          checkReact(user.uid);
+      });
+    })
+
+    .catch(function (error) {
+      console.error(
+        "Erro ao obter os documentos da subcoleção 'posts':",
+        error
+      );
+    });
+    console.log('tu tá logado')
+  }else{
+    console.log('tu nao tá logado');
+  }
+})
+}
+
+function checkReact(userUID){
+  var db = firebase.firestore();
+  db.collection("reacts")
+  .where("userUID", "==", userUID)
+  .get()
+  .then(function (reactQuerySnapshot){
+    if(!reactQuerySnapshot.empty){
+      reactQuerySnapshot.forEach( function (reactDoc){
+        if(reactDoc.data().react == 1){
+          document.getElementById("like"+reactDoc.data().postID).style.backgroundColor = "lightgreen";
+        }else if(reactDoc.data().react == 2){
+          document.getElementById("deslike"+reactDoc.data().postID).style.backgroundColor = "red";
+        }else if(reactDoc.data().react == 3){
+          document.getElementById("fav"+reactDoc.data().postID).style.backgroundColor = "yellow";
+        }
+      })
+    }
+  })
+}
+
+function formatTime(time){
+  const timestamp = time.toMillis();
         const now = new Date().getTime();
         const miliDiff = now - timestamp;
         const secDiff = Math.floor(miliDiff / 1000);
         const minDiff = Math.floor(secDiff / 60);
         if (secDiff < 60) {
-          tempo = `postado há ${secDiff} ${
-            secDiff === 1 ? "segundo" : "segundos"
-          } atrás`;
+          tempo = `postado há ${secDiff} ${secDiff === 1 ? "segundo" : "segundos"
+            } atrás`;
         } else if (minDiff < 60) {
-          tempo = `postado há ${minDiff} ${
-            minDiff === 1 ? "minuto" : "minutos"
-          } atrás`;
+          tempo = `postado há ${minDiff} ${minDiff === 1 ? "minuto" : "minutos"
+            } atrás`;
         } else if (((minDiff) => 60) && minDiff < 1440) {
-          tempo = `postado há ${Math.floor(minDiff / 60)} ${
-            Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
-          } atrás`;
-        } else if (minDiff == 1440) {
+          tempo = `postado há ${Math.floor(minDiff / 60)} ${Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
+            } atrás`;
+        } else if ((minDiff => 1440) && (minDiff <= 2880) ) {
           tempo = `postado ontem`;
         } else {
-          time = postData.timestamp.toDate();
+          time = time.toDate();
           formatter = new Intl.DateTimeFormat("pt-BR", {
             year: "numeric",
             month: "numeric",
@@ -694,35 +739,7 @@ function showPosts() {
             " às " +
             formatterH.format(time);
         }
-        publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
-        <div class="ballPerguntas p-3">
-        <p id=nome style= color:black></p> ${postData.nomeUser}
-            <div class="options">
-            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
-            </div>
-            <div class="balaoPergunta">
-            <p style=color:black></p>
-            <p class="text-black text-left mb-4"> ${postData.post} </p>
-            </div>
-            <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" onclick="like('${postData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
-            <button class="w-6" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postData.IDpost}';"> ${postData.respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
-            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
-            </div>
-            <p class='text-black text-right mt-2'> ${tempo}</p>
-          </div>`;
-        //console.log( db.collection("posts").get());
-      });
-    })
-
-    .catch(function (error) {
-      console.error(
-        "Erro ao obter os documentos da subcoleção 'posts':",
-        error
-      );
-    });
+        return tempo;
 }
 
 function comments() {
@@ -746,47 +763,12 @@ function comments() {
           // A consulta retornou resultados, então existe um documento com o IDpost correspondente
           querySnapshot.forEach(function (doc) {
             // Obtenha os dados do documento
-            
+
             const postData = doc.data();
             const postDoc = doc;
 
-            const timestamp = postData.timestamp.toMillis();
-            const now = new Date().getTime();
-            const miliDiff = now - timestamp;
-            const secDiff = Math.floor(miliDiff / 1000);
-            const minDiff = Math.floor(secDiff / 60);
-            if (secDiff < 60) {
-              tempo = `postado há ${secDiff} ${
-                secDiff === 1 ? "segundo" : "segundos"
-              } atrás`;
-            } else if (minDiff < 60) {
-              tempo = `postado há ${minDiff} ${
-                minDiff === 1 ? "minuto" : "minutos"
-              } atrás`;
-            } else if (((minDiff) => 60) && minDiff < 1440) {
-              tempo = `postado há ${Math.floor(minDiff / 60)} ${
-                Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
-              } atrás`;
-            } else if (minDiff == 1440) {
-              tempo = `postado ontem`;
-            } else {
-              time = postData.timestamp.toDate();
-              formatter = new Intl.DateTimeFormat("pt-BR", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-              });
-              formatterH = new Intl.DateTimeFormat("pt-BR", {
-                hour: "numeric",
-                minute: "numeric",
-              });
-
-              tempo =
-                "postado " +
-                formatter.format(time) +
-                " às " +
-                formatterH.format(time);
-            }
+            const time = postData.timestamp;
+            formatTime(time)
             publis.innerHTML = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
         <p id=nome style= color:black></p> ${postData.nomeUser}
@@ -807,57 +789,22 @@ function comments() {
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
 
-          const respUID = postData.IDpost;
-          console.log(respUID);
-          let respsQntd = 0;
+            const respUID = postData.IDpost;
+            console.log(respUID);
+            let respsQntd = 0;
 
-          const respsCollectionRef = postDoc.ref.collection('resps');
-          console.log(respsCollectionRef);
-          respsCollectionRef.orderBy("timestamp", "desc").get().then(function (querySnapshot) {
-            if (!querySnapshot.empty) {
-              querySnapshot.forEach(function (doc) {
-                
-                const respData = doc.data()
-                const timestamp = respData.timestamp.toMillis();
-            const now = new Date().getTime();
-            const miliDiff = now - timestamp;
-            const secDiff = Math.floor(miliDiff / 1000);
-            const minDiff = Math.floor(secDiff / 60);
-            if (secDiff < 60) {
-              tempo = `postado há ${secDiff} ${
-                secDiff === 1 ? "segundo" : "segundos"
-              } atrás`;
-            } else if (minDiff < 60) {
-              tempo = `postado há ${minDiff} ${
-                minDiff === 1 ? "minuto" : "minutos"
-              } atrás`;
-            } else if (((minDiff) => 60) && minDiff < 1440) {
-              tempo = `postado há ${Math.floor(minDiff / 60)} ${
-                Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
-              } atrás`;
-            } else if (minDiff == 1440) {
-              tempo = `postado ontem`;
-            } else {
-              time = respData.timestamp.toDate();
-              formatter = new Intl.DateTimeFormat("pt-BR", {
-                year: "numeric",
-                month: "numeric",
-                day: "numeric",
-              });
-              formatterH = new Intl.DateTimeFormat("pt-BR", {
-                hour: "numeric",
-                minute: "numeric",
-              });
-
-              tempo =
-                "postado " +
-                formatter.format(time) +
-                " às " +
-                formatterH.format(time);
-                
-            }
-            
-            resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            const respsCollectionRef = postDoc.ref.collection("resps");
+            console.log(respsCollectionRef);
+            respsCollectionRef
+              .orderBy("timestamp", "desc")
+              .get()
+              .then(function (querySnapshot) {
+                if (!querySnapshot.empty) {
+                  querySnapshot.forEach(function (doc) {
+                    const respData = doc.data();
+                    const time = respData.timestamp;
+                    formatTime(time);
+                    resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> ${respData.nomeUser}  </p> 
             <div class="balaoPergunta">
@@ -865,61 +812,59 @@ function comments() {
             <p class="text-black text-left mb-4"> ${respData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" onclick="like('${respData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
             <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
             <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
             <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
-            respsQntd++;
-            //console.log(respsQntd);
-            
-                
-              })
-
-              db.collection("posts")
-              .where("IDpost", "==", idComment)
-              .get()
-              .then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                  // Atualize o campo desejado no documento
-                  doc.ref.update({
-                    respsQntd: respsQntd,
-                  })
-                  .then(function() {
-                    console.log("Número atualizado com sucesso!");
-                  })
-                  .catch(function(error) {
-                    console.error("Erro ao atualizar o número:", error);
+                    respsQntd++;
+                    //console.log(respsQntd);
                   });
-                });
-              })
-              .catch(function(error) {
-                console.error("Erro ao consultar documentos:", error);
+
+                  db.collection("posts")
+                    .where("IDpost", "==", idComment)
+                    .get()
+                    .then(function (querySnapshot) {
+                      querySnapshot.forEach(function (doc) {
+                        // Atualize o campo desejado no documento
+                        doc.ref
+                          .update({
+                            respsQntd: respsQntd,
+                          })
+                          .then(function () {
+                            console.log("Número atualizado com sucesso!");
+                          })
+                          .catch(function (error) {
+                            console.error("Erro ao atualizar o número:", error);
+                          });
+                      });
+                    })
+                    .catch(function (error) {
+                      console.error("Erro ao consultar documentos:", error);
+                    });
+                } else {
+                  db.collection("posts")
+                    .where("IDpost", "==", idComment)
+                    .get()
+                    .then(function (querySnapshot) {
+                      querySnapshot.forEach(function (doc) {
+                        // Atualize o campo desejado no documento
+                        doc.ref
+                          .update({
+                            respsQntd: respsQntd,
+                          })
+                          .then(function () {
+                            console.log("Número atualizado com sucesso!");
+                          })
+                          .catch(function (error) {
+                            console.error("Erro ao atualizar o número:", error);
+                          });
+                      });
+                    });
+                }
               });
-
-            }else{
-              db.collection("posts")
-              .where("IDpost", "==", idComment)
-              .get()
-              .then(function(querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                  // Atualize o campo desejado no documento
-                  doc.ref.update({
-                    respsQntd: respsQntd,
-                  })
-                  .then(function() {
-                    console.log("Número atualizado com sucesso!");
-                  })
-                  .catch(function(error) {
-                    console.error("Erro ao atualizar o número:", error);
-                  });
-                });
-              })
-            }
-          })
-          
           });
         } else {
           // A consulta não retornou resultados, nenhum documento corresponde ao IDpost
@@ -969,33 +914,6 @@ function comments() {
 //   }
 // });
 
-function like(postUID) {
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      var uid = user.uid;
-      var db = firebase.firestore();
-
-      db.collection("posts")
-        .where("IDpost", "==", postUID)
-        .get()
-        .then(function (querySnapshot) {
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach(function (doc) {
-              var dados = doc.data();
-              console.log(dados);
-
-              db.collection("posts").doc(doc.id).collection("likes").add({
-                UserUid: uid,
-              });
-            });
-          }
-        });
-    } else {
-      console.log(postUID);
-    }
-  });
-}
-
 function confirmarExclusao(postUID) {
   var resposta = confirm("Tem certeza de que deseja excluir?");
   const postID = postUID;
@@ -1037,4 +955,202 @@ function desabilitarBotao() {
 function reabilitarBotao() {
   const button = document.getElementById("");
   button.disabled = false;
+}
+
+function react(reactionNum, postID) {
+  console.log(reactionNum, postID);
+
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      userUID = user.uid;
+      if (reactionNum == 1) {
+        var num = 1
+        var vs = num+1
+        reactT(num,vs,postID,userUID, postID);
+      } else {
+        //funcao deslike
+        num = 2
+        vs = num-1
+        reactT(num,vs,postID,userUID, postID);
+      }
+    }
+  });
+}
+
+function reactT(num, vs, postID,userUID,postID){
+  const db = firebase.firestore();
+        const postRef = db.collection("posts").doc(postID);
+        const reactLocation = db.collection("reacts");
+
+        if (num == 1){
+          style = "like"+postID
+          styleVs = "deslike"+postID
+        }else{
+          ind = "deslikes"
+          style = "deslike"+postID
+          styleVs = "like"+postID
+        }
+        //verificando se já tem a msm reação do msm caba
+        reactLocation.where("userUID", "==", userUID)
+        .where("react", "==", num)
+        .where("postID", "==", postID)
+        .get().then(function (querySnapshot){
+          if (!querySnapshot.empty){
+            console.log("já deu reação");
+              querySnapshot.forEach(function (doc){
+                console.log(doc.id);
+                reactLocation.doc(doc.id).delete()
+                .then (() => {
+                  console.log('Foi excluido!');
+                  document.getElementById(style).style.backgroundColor = "white";
+                })
+                .catch((error) =>{
+                  console.error("Erro ao excluir", error);
+                })
+              })
+
+          }else{
+
+            //verifica se existe uma reação contrária
+            reactLocation.where("userUID", "==", userUID)
+            .where("react", "==", vs)
+            .where("postID", "==", postID)
+            .get().then(function (querySnapshot){
+
+              if (!querySnapshot.empty){
+                console.log("Tu deu "+ styleVs+", safado")
+
+                const addReact = {
+                  userUID: userUID,
+                  react: num,
+                  timestamp: new Date(),
+                  postID: postID,
+                }
+              
+                  querySnapshot.forEach(function (doc){
+                    reactLocation.doc(doc.id).update(addReact)
+                    .then(() => {
+                      console.log("Agr é "+ style);
+                      document.getElementById(style).style.backgroundColor = "red";
+                      document.getElementById(styleVs).style.backgroundColor = "white";
+                    })
+                    .catch((error) => {
+                      console.error("Erro na atualização: ", error);
+                    })
+                  })
+              
+              }else{
+                console.log("Num deu reação ainda");
+                const addReact = {
+                  userUID: userUID,
+                  react: num,
+                  timestamp: new Date(),
+                  postID: postID,
+                }
+    
+                console.log(postRef.get());
+                postRef.get().then((doc) => {
+                  const content = doc.data();
+                  console.log(content);
+    
+                  reactLocation.add(addReact)
+                  .then((docRef) =>{
+                    console.log("Documento foi adicionado: ", docRef);
+                    document.getElementById(style).style.backgroundColor = "red";
+                  })
+                  .catch((error) => {
+                    console.error("Erro: ", error);
+                  })
+                });
+              }
+            })
+          }
+        })
+}
+
+function fav(post, userUID){
+  console.log(post, userUID);
+  
+  style = "fav"+post;
+  console.log(style);
+  const addFav = {
+    userUID: userUID,
+    react: 3,
+    timestamp: new Date(),
+    postID: post,
+  }
+  firebase.firestore().collection("reacts")
+  .where("userUID", "==", userUID)
+        .where("react", "==", 3)
+        .where("postID", "==", post)
+        .get().then(function (querySnapshot){
+          if (!querySnapshot.empty){
+            querySnapshot.forEach(function (doc){
+            firebase.firestore().collection("reacts").doc(doc.id).delete()
+            .then(() =>{
+              document.getElementById(style).style.backgroundColor = "white";
+            })  
+          })
+          }else{
+            firebase.firestore().collection("reacts").add(addFav)
+            .then(() =>{
+              document.getElementById(style).style.backgroundColor = "yellow";
+            })
+          }
+        })
+  
+
+}
+
+function logOut(){
+  firebase.auth().signOut().then(function(){
+    alert('Você saiu!');
+    window.location.replace('tela-login.html');
+  })
+}
+
+function viewFavs(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      var db = firebase.firestore();
+      db.collection('reacts')
+      .where("userUID", "==", user.uid)
+        .where("react", "==", 3)
+        .get().then( function (querySnapshot){
+          if(!querySnapshot.empty){
+            querySnapshot.forEach(function (doc){
+              console.log(doc.data().postID);
+              db.collection('posts').doc(doc.data().postID).get()
+              .then(function (doc){
+                console.log(doc.data());
+                
+                
+                postData = doc.data();
+                postID = doc.id;
+                time = postData.timestamp;
+                tempo = formatTime(time)
+                publis.innerHTML += `
+                  <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+                  <div class="ballPerguntas p-3">
+                  ${postData.nomeUser}  <button class="float-right w-6" onclick="fav('${postID}', '${user.uid}')"><img src="../assets/favorito.svg" alt=""> </button>
+                  <div class="options">
+                  <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
+                  </div>
+                  <div class="balaoPergunta">
+                  <p style=color:black></p>
+                  <p class="text-black text-left mb-4"> ${postData.post} </p>
+                  </div>
+                  <p class='text-black text-right mt-2'> ${tempo}</p> </div>
+                `;
+              })
+            })
+          }
+        })
+      console.log('minha mae nao me ama');
+
+    }else{
+
+    }})
+  
+  
 }
