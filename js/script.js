@@ -272,12 +272,12 @@ function viewPublis() {
               // O documento do usuário foi encontrado
               var userPosts = doc.data();
               console.log("dados", userPosts);
-              publis.innerHTML += `<div onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${doc.id}';" class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+              publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
           <div class="options">
             <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
           </div>
-          <div class="balaoPergunta">
+          <div class="balaoPergunta" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${doc.id}';">
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
@@ -285,7 +285,7 @@ function viewPublis() {
           <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
           <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
           <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
-          <button class="w-6" onclick="confirmarExclusao('${userPosts.IDpost}', '1')"><img src="../assets/lixeira.png" alt=""></button>
+          <button class="w-6" onclick="confirmarExclusao('${doc.id}', '1')"><img src="../assets/lixeira.png" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -730,9 +730,8 @@ function showPosts() {
         const redirect = "tela-comments.html"
         
         publis.innerHTML += formatPost(userNome,userUID,tipoPost,contPost,postID,likesQntd,deslikesQntd,favsQntd,respsQntd, redirect);
-        
-          checkReact(user.uid);
-      });
+        checkReact(user.uid)
+      })
     })
 
     .catch(function (error) {
@@ -754,14 +753,31 @@ function checkReact(userUID){
   .where("userUID", "==", userUID)
   .get()
   .then(function (reactQuerySnapshot){
+    console.log(userUID);
     if(!reactQuerySnapshot.empty){
       reactQuerySnapshot.forEach( function (reactDoc){
         if(reactDoc.data().react == 1){
-          document.getElementById("like"+reactDoc.data().postID).style.backgroundColor = "lightgreen";
+          const elemento = document.getElementById("like"+ reactDoc.data().postID);
+          if (elemento){
+            elemento.style.backgroundColor = "lightgreen";
+          }else{
+            console.error("Elemento não encontrado com o ID 'like" + reactDoc.data().postID + "'");
+          }
         }else if(reactDoc.data().react == 2){
-          document.getElementById("deslike"+reactDoc.data().postID).style.backgroundColor = "red";
+          const elemento = document.getElementById("deslike"+ reactDoc.data().postID);
+            if (elemento){
+              elemento.style.backgroundColor = "red";
+            }else{
+              console.error("Elemento não encontrado com o ID 'deslike"+ reactDoc.data().postID);
+            }
+          
         }else if(reactDoc.data().react == 3){
-          document.getElementById("fav"+reactDoc.data().postID).style.backgroundColor = "yellow";
+          const elemento = document.getElementById("fav"+reactDoc.data().postID + "'");
+            if (elemento){
+              elemento.style.backgroundColor= "yellow";
+            }else{
+              console.error("Elemento não encontrado com o ID 'fav"+ reactDoc.data().postID+ "'");
+            }
         }
       })
     }
@@ -985,20 +1001,30 @@ function excluirPost(postUID) {
   console.log(postUID);
   var db = firebase.firestore();
   db.collection("posts")
-    .where("IDpost", "==", postUID)
+    .doc(postUID)
     .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
+    .then((doc) => {
         doc.ref
           .delete()
           .then(function () {
-            alert("Publicação Excluída com sucesso!");
-            window.location.reload();
+            db.collection("reacts")
+            .where("postID", "==", postUID)
+            .get()
+            .then(function (reactSnapshot){
+              reactSnapshot.forEach(function (doc){
+                doc.ref.delete()
+                .then(() => {
+                  console.log('reações excluidas com sucesso!')
+                  alert("Publicação Excluída com sucesso!");
+                  window.location.reload();
+                });
+              });
+            });
+            
           })
           .catch(function (error) {
             console.error("Erro ao excluir: ", error);
-          });
-      });
+          });   
     })
     .catch(function (error) {
       console.error("Erro ao executar a consulta: ", error);
