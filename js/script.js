@@ -260,7 +260,7 @@ function viewPublis() {
 
       // Consulta para recuperar o documento do usuário com base no UID
       const publis = document.getElementById("publis");
-
+      const comments = document.getElementById("comments");
       firebase
         .firestore()
         .collection("posts")
@@ -272,7 +272,7 @@ function viewPublis() {
               // O documento do usuário foi encontrado
               var userPosts = doc.data();
               console.log("dados", userPosts);
-              publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+              publis.innerHTML += `<div onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${doc.id}';" class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
           <div class="options">
             <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
@@ -285,7 +285,7 @@ function viewPublis() {
           <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
           <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
           <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
-          <button class="w-6" onclick="confirmarExclusao('${userPosts.IDpost}')"><img src="../assets/lixeira.png" alt=""></button>
+          <button class="w-6" onclick="confirmarExclusao('${userPosts.IDpost}', '1')"><img src="../assets/lixeira.png" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -298,7 +298,48 @@ function viewPublis() {
           console.error("Erro ao recuperar dados do usuário:", error);
         });
 
-      // Executar a consulta
+      
+        
+            
+        firebase
+        .firestore()
+        .collection("posts")
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc){
+            const postID = doc.id;
+
+            firebase.firestore().collection("posts").doc(postID).collection("resps")
+            .where("UIDusuario", "==", uid).get()
+            .then (function (commentsSnapshot){
+              commentsSnapshot.forEach(function (commDoc){
+
+                firebase.firestore().collection("posts").doc(postID).get()
+                .then((doc) => {
+                  let nome = doc.data().nomeUser
+                
+
+                const time = commDoc.data().timestamp;
+                const tempo = formatTime(time);
+                comments.innerHTML += 
+            `<div onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${doc.id}'" class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            <div class="ballPerguntas p-4">
+            <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p> 
+            <div class="balaoPergunta">
+            <p style=color:black></p>
+            <p class="text-black text-left mb-4"> ${commDoc.data().post} </p>
+            </div>
+            <div class="react flex flex-row gap-10 justify-around mb-2">
+            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
+            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6" onclick="confirmarExclusao('${commDoc.data().IDresp}', 2)"><img src="../assets/lixeira.png" alt=""></button>
+            </div>
+          </div>`;
+              })
+              })
+            })
+          })
+        })
     } else {
       console.log("não deu certo");
     }
@@ -528,6 +569,9 @@ function addPubli() {
                 nomeUser: userData.nome,
                 tipo: document.getElementById("select").value,
                 respsQntd: 0,
+                likesQntd: 0,
+                deslikesQntd: 0,
+                favsQntd: 0,
               };
               firebase
                 .firestore()
@@ -558,7 +602,7 @@ function addPubli() {
 function addResp() {
   if (document.getElementById("resp").value !== "") {
     var urlParams = new URLSearchParams(window.location.search);
-    var meuValor = urlParams.get("ID");
+    var IDpostagem = urlParams.get("ID");
     const button = document.getElementById("post");
     button.disabled = true;
     firebase.auth().onAuthStateChanged(function (user) {
@@ -568,13 +612,11 @@ function addResp() {
         var usersCollection = firebase.firestore().collection("usuarios");
         console.log(usersCollection);
         var RespID = firebase.firestore().collection("usuarios").doc().id;
-
-        var userQuery = usersCollection.where("uid", "==", uid);
-        userQuery
+        
+          usersCollection.doc(uid)
           .get()
-          .then(function (querySnapshot) {
-            if (!querySnapshot.empty) {
-              querySnapshot.forEach(function (doc) {
+          .then((doc) => {
+            if (doc.exists) {
                 var userData = doc.data();
                 const newRespData = {
                   post: document.getElementById("resp").value,
@@ -587,31 +629,36 @@ function addResp() {
                 firebase
                   .firestore()
                   .collection("posts")
-                  .where("IDpost", "==", meuValor)
+                  .doc(IDpostagem)
                   .get()
-                  .then((querySnapshot) => {
-                    querySnapshot.forEach((doc) => {
+                  .then((doc) => {
+                    if(doc.exists){
                       doc.ref
                         .collection("resps")
                         .add(newRespData)
-                        .then((docRef) => {
+                        .then(() => {
+                            const qntdResps = doc.data().respsQntd;
+                            console.log(qntdResps);
+                            doc.ref.update({
+                              respsQntd: qntdResps+1,
+                            })
                           setTimeout(function () {
                             button.disabled = false;
                           }, 2000);
                           alert("Resposta enviada com sucesso!");
                           window.location.href =
-                            "tela-comments.html" + "?ID=" + meuValor;
+                            "tela-comments.html" + "?ID=" + IDpostagem;
                         })
                         .catch((error) => {
                           console.error("Erro ao adicionar resposta: ", error);
                         });
                       console.log(newRespData);
-                    });
+                    }
                   })
                   .catch(function (error) {
                     console.error("Erro ao consultar posts:", error);
                   });
-              });
+              
             } else {
               console.log("Nenhum documento encontrado com o UID fornecido.");
             }
@@ -626,6 +673,32 @@ function addResp() {
   } else {
     alert("Por favor, digite alguma coisa para enviar sua resposta!");
   }
+}
+
+function formatPost(userNome, userUID, tipoPost, contPost, postID, likesQntd, deslikesQntd, favsQntd, respsQntd, redirect){
+  
+  var post =`<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+  <div class="ballPerguntas p-3">
+  <p id=nome style= color:black></p> ${userNome}
+      <div class="options">
+      <h4 class="py-3 text-purple-700 text-left">${tipoPost}</h4>
+      </div>
+      <div class="balaoPergunta">
+      <p style=color:black></p>
+      <p class="text-black text-left mb-4"> ${contPost} </p>
+      </div>
+      <div class="react flex flex-row gap-10 justify-around mb-2">
+      <button class="w-6" onclick="react('1', '${postID}')"> <p id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+      <button class="w-6" onclick="react('2', '${postID}')"><p id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+      <button class="w-6" onclick="fav('${postID}', '${userUID}')"><p id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+      <button class="w-6" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> ${respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
+      
+      <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+      </div>
+      <p class='text-black text-right mt-2'> ${tempo}</p>
+    </div>`;
+
+    return post;
 }
 
 function showPosts() {
@@ -643,30 +716,21 @@ function showPosts() {
       postsQuerySnapshot.forEach(function (postDoc) {
         var postData = postDoc.data();
         var postID = postDoc.id;
-
-        // Acesse os dados da postagem
+        
         time = postData.timestamp;
         tempo = formatTime(time)
+        const userNome = postData.nomeUser
+        const userUID = user.uid
+        const tipoPost = postData.tipo
+        const contPost = postData.post
+        const likesQntd = postData.likesQntd
+        const deslikesQntd = postData.deslikesQntd
+        const favsQntd = postData.favsQntd
+        const respsQntd = postData.respsQntd
+        const redirect = "tela-comments.html"
         
-        publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
-        <div class="ballPerguntas p-3">
-        <p id=nome style= color:black></p> ${postData.nomeUser}
-            <div class="options">
-            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
-            </div>
-            <div class="balaoPergunta">
-            <p style=color:black></p>
-            <p class="text-black text-left mb-4"> ${postData.post} </p>
-            </div>
-            <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" id="like${postID}" onclick="react('1', '${postID}')"> ${postData.likesQntd} <img src="../assets/like.svg" alt=""></button>
-            <button class="w-6" id="deslike${postID}" onclick="react('2', '${postID}')"> ${postData.deslikesQntd} <img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6" id="fav${postID}" onclick="fav('${postID}', '${user.uid}')"> ${postData.favsQntd}<img src="../assets/favorito.svg" alt=""> </button>
-            <button class="w-6" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postData.IDpost}';"> ${postData.respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
-            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
-            </div>
-            <p class='text-black text-right mt-2'> ${tempo}</p>
-          </div>`;
+        publis.innerHTML += formatPost(userNome,userUID,tipoPost,contPost,postID,likesQntd,deslikesQntd,favsQntd,respsQntd, redirect);
+        
           checkReact(user.uid);
       });
     })
@@ -743,7 +807,10 @@ function formatTime(time){
 }
 
 function comments() {
-  // Obtenha o valor 'ID' da URL
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+
+    
   var urlParams = new URLSearchParams(window.location.search);
   var idComment = urlParams.get("ID");
 
@@ -752,46 +819,34 @@ function comments() {
     var db = firebase.firestore();
 
     // Referência à coleção 'posts' e consulta usando .where
-    var postsCollectionRef = db.collection("posts");
-    var query = postsCollectionRef.where("IDpost", "==", idComment);
+    var postRef = db.collection("posts").doc(idComment);
 
     // Execute a consulta
-    query
+    postRef
       .get()
-      .then(function (querySnapshot) {
-        if (!querySnapshot.empty) {
-          // A consulta retornou resultados, então existe um documento com o IDpost correspondente
-          querySnapshot.forEach(function (doc) {
-            // Obtenha os dados do documento
-
+      .then((doc) => {
+        if (doc.exists) {
             const postData = doc.data();
             const postDoc = doc;
+            
 
             const time = postData.timestamp;
-            formatTime(time)
-            publis.innerHTML = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
-        <div class="ballPerguntas p-3">
-        <p id=nome style= color:black></p> ${postData.nomeUser}
-            <div class="options">
-            <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
-            </div>
-            <div class="balaoPergunta">
-            <p style=color:black></p>
-            <p class="text-black text-left mb-4"> ${postData.post} </p>
-            </div>
-            <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" onclick="like('${postData.IDpost}')"><img src="../assets/like.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
-            <button class="w-6" onclick= "window.location.href = 'add-comment.html' + '?ID=' + '${postData.IDpost}';"><img src="../assets/comentário.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
-            </div>
-            <p class='text-black text-right mt-2'> ${tempo}</p>
-          </div>`;
-
+            tempo = formatTime(time)
+            const userNome = postData.nomeUser
+            const userUID = user.uid
+            const tipoPost = postData.tipo
+            const contPost = postData.post
+            const likesQntd = postData.likesQntd
+            const deslikesQntd = postData.deslikesQntd
+            const favsQntd = postData.favsQntd
+            const respsQntd1 = postData.respsQntd
+            const redirect = "add-comment.html"
+        
+            publis.innerHTML = formatPost(userNome,userUID,tipoPost,contPost,doc.id,likesQntd,deslikesQntd,favsQntd,respsQntd1,redirect);
+ 
             const respUID = postData.IDpost;
             console.log(respUID);
-            let respsQntd = 0;
+             let respsQntd = 0;
 
             const respsCollectionRef = postDoc.ref.collection("resps");
             console.log(respsCollectionRef);
@@ -819,67 +874,31 @@ function comments() {
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
-                    respsQntd++;
-                    //console.log(respsQntd);
-                  });
-
-                  db.collection("posts")
-                    .where("IDpost", "==", idComment)
-                    .get()
-                    .then(function (querySnapshot) {
-                      querySnapshot.forEach(function (doc) {
-                        // Atualize o campo desejado no documento
-                        doc.ref
-                          .update({
-                            respsQntd: respsQntd,
-                          })
-                          .then(function () {
-                            console.log("Número atualizado com sucesso!");
-                          })
-                          .catch(function (error) {
-                            console.error("Erro ao atualizar o número:", error);
-                          });
-                      });
-                    })
-                    .catch(function (error) {
-                      console.error("Erro ao consultar documentos:", error);
-                    });
+                  })
                 } else {
-                  db.collection("posts")
-                    .where("IDpost", "==", idComment)
-                    .get()
-                    .then(function (querySnapshot) {
-                      querySnapshot.forEach(function (doc) {
-                        // Atualize o campo desejado no documento
-                        doc.ref
-                          .update({
-                            respsQntd: respsQntd,
-                          })
-                          .then(function () {
-                            console.log("Número atualizado com sucesso!");
-                          })
-                          .catch(function (error) {
-                            console.error("Erro ao atualizar o número:", error);
-                          });
-                      });
-                    });
+                 firebase
+              .firestore()
+              .collection("posts")
+              .doc(idComment)
+              .get()
+              .then((doc) => {
+                doc.ref.update({
+                  respsQntd: 0,
+                })
+              })
                 }
               });
-          });
         } else {
-          // A consulta não retornou resultados, nenhum documento corresponde ao IDpost
           console.log(
             "Nenhum documento encontrado com o IDpost correspondente."
           );
         }
       })
-      .catch(function (error) {
-        console.error("Erro ao executar a consulta:", error);
-      });
-  } else {
-    console.log("Valor 'ID' não encontrado na URL.");
-  }
-}
+    }else{
+      console.log('Não existe');
+    }
+  }})
+    }
 
 // firebase.initializeApp(firebaseConfig);
 
@@ -914,13 +933,52 @@ function comments() {
 //   }
 // });
 
-function confirmarExclusao(postUID) {
+function confirmarExclusao(IDref, num) {
   var resposta = confirm("Tem certeza de que deseja excluir?");
-  const postID = postUID;
-  if (resposta === true) {
-    excluirPost(postID);
-  } else {
+    if (resposta === true) {
+  if (num == 1){
+    const postID = IDref;
+      excluirPost(postID);
+    } else {
+      const commentID = IDref;
+      console.log(commentID)
+      excluirComment(commentID);
+    }
+  }else{
+
   }
+}
+
+function excluirComment(commentID){
+  var db = firebase.firestore();
+
+  db.collection("posts").get()
+  .then(function (querySnapshot){
+    querySnapshot.forEach(function (doc) {
+      var postID = doc.id
+      console.log(commentID);
+    
+      db.collection("posts").doc(postID).collection("resps")
+      .where("IDresp", "==", commentID)
+      .get().then(function (commSnapshot){
+        commSnapshot.forEach(function (commDoc){
+          commDoc.ref
+          .delete()
+          .then(function () {
+            db.collection("posts").doc(postID).get()
+            .then((doc) => {
+              doc.ref.update({
+                respsQntd: doc.data().respsQntd-1,
+              }).then(function (){
+                alert("Comentário excluído com sucesso!");
+                window.location.reload();
+              })
+            })
+          })
+        })
+      })
+    })
+  })
 }
 
 function excluirPost(postUID) {
@@ -983,10 +1041,11 @@ function reactT(num, vs, postID,userUID,postID){
         const reactLocation = db.collection("reacts");
 
         if (num == 1){
+          colorInd = "lightgreen"
           style = "like"+postID
           styleVs = "deslike"+postID
         }else{
-          ind = "deslikes"
+          colorInd = "red"
           style = "deslike"+postID
           styleVs = "like"+postID
         }
@@ -1001,6 +1060,19 @@ function reactT(num, vs, postID,userUID,postID){
                 console.log(doc.id);
                 reactLocation.doc(doc.id).delete()
                 .then (() => {
+                  postRef.get().then((doc) => {
+                    if(num == 1){
+                      doc.ref.update({
+                        likesQntd: doc.data().likesQntd-1,
+                      })
+                      document.getElementById(style).textContent = doc.data().likesQntd-1;
+                    }else{
+                      doc.ref.update({
+                        deslikesQntd: doc.data().deslikesQntd-1,
+                      })
+                      document.getElementById(style).textContent = doc.data().deslikesQntd-1;
+                    }
+                  })
                   console.log('Foi excluido!');
                   document.getElementById(style).style.backgroundColor = "white";
                 })
@@ -1028,10 +1100,36 @@ function reactT(num, vs, postID,userUID,postID){
                 }
               
                   querySnapshot.forEach(function (doc){
+                    console.log(doc.data());
                     reactLocation.doc(doc.id).update(addReact)
                     .then(() => {
                       console.log("Agr é "+ style);
-                      document.getElementById(style).style.backgroundColor = "red";
+                      postRef.get().then((doc) => {
+                        console.log(doc.data())
+                        if (num == 1){
+                          doc.ref.update({
+                            likesQntd: doc.data().likesQntd+1,
+                            deslikesQntd: doc.data().deslikesQntd-1,
+                          }).then(() =>{
+                            var qntd =  doc.data().likesQntd+1
+                            var qntdvs = doc.data().deslikesQntd-1
+                            document.getElementById(style).textContent = qntd;
+                            document.getElementById(styleVs).textContent = qntdvs;
+                            console.log(doc.data());
+                          })
+                        }else{
+                          doc.ref.update({
+                            likesQntd: doc.data().likesQntd-1,
+                            deslikesQntd: doc.data().deslikesQntd+1,
+                          }).then(() =>{
+                            qntd =  doc.data().deslikesQntd+1
+                            qntdvs = doc.data().likesQntd-1
+                            document.getElementById(style).textContent = qntd;
+                            document.getElementById(styleVs).textContent = qntdvs;
+                          })
+                        }
+                      })
+                      document.getElementById(style).style.backgroundColor = colorInd;
                       document.getElementById(styleVs).style.backgroundColor = "white";
                     })
                     .catch((error) => {
@@ -1056,8 +1154,20 @@ function reactT(num, vs, postID,userUID,postID){
                   reactLocation.add(addReact)
                   .then((docRef) =>{
                     console.log("Documento foi adicionado: ", docRef);
-                    document.getElementById(style).style.backgroundColor = "red";
-                  })
+                    if (num == 1){
+                    var qntd = doc.data().likesQntd;
+                    doc.ref.update({
+                      likesQntd: qntd+1,
+                    })
+                   }else{
+                    var qntd = doc.data().deslikesQntd;
+                    doc.ref.update({
+                      deslikesQntd: qntd+1,
+                    }).then(() =>{})
+                   }
+                    document.getElementById(style).textContent = qntd+1;
+                    document.getElementById(style).style.backgroundColor = colorInd;
+                    })
                   .catch((error) => {
                     console.error("Erro: ", error);
                   })
@@ -1072,6 +1182,8 @@ function fav(post, userUID){
   console.log(post, userUID);
   
   style = "fav"+post;
+  const contadorVisual = document.getElementById(style).textContent
+
   console.log(style);
   const addFav = {
     userUID: userUID,
@@ -1088,13 +1200,32 @@ function fav(post, userUID){
             querySnapshot.forEach(function (doc){
             firebase.firestore().collection("reacts").doc(doc.id).delete()
             .then(() =>{
-              document.getElementById(style).style.backgroundColor = "white";
+              firebase.firestore().collection("posts").doc(post).get()
+                .then((doc) => {
+                  const qntdFav = doc.data().favsQntd;
+                  doc.ref.update({
+                    favsQntd: qntdFav-1,
+                  }).then(() =>{
+                    document.getElementById(style).textContent = qntdFav-1;
+                    document.getElementById(style).style.backgroundColor = "white";
+                  })
+                  
+                })
             })  
           })
           }else{
             firebase.firestore().collection("reacts").add(addFav)
             .then(() =>{
-              document.getElementById(style).style.backgroundColor = "yellow";
+                firebase.firestore().collection("posts").doc(post).get()
+                .then((doc) => {
+                  const qntdFav = doc.data().favsQntd;
+                  doc.ref.update({
+                    favsQntd: qntdFav+1,
+                  }).then(() =>{
+                    document.getElementById(style).textContent = qntdFav+1;
+                    document.getElementById(style).style.backgroundColor = "yellow";
+                  }) 
+                })
             })
           }
         })
@@ -1153,4 +1284,52 @@ function viewFavs(){
     }})
   
   
+}
+
+function pesquisa() {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+
+  const termo = document.getElementById("termo").value.toLowerCase();
+  if (termo !== "") {
+    const db = firebase.firestore();
+    let resultadosEncontrados = false; // Variável para verificar se algum resultado foi encontrado
+
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .get()
+      .then(function (querySnapshot) {
+        if (!querySnapshot.empty) {
+          publis.innerHTML = "";
+          querySnapshot.forEach(function (doc) {
+            const postData = doc.data();
+            const contentPost = postData.post.toLowerCase();
+            if (contentPost.includes(termo)) {
+              resultadosEncontrados = true;
+              var postID = doc.id;
+              time = postData.timestamp;
+              tempo = formatTime(time)
+              const userNome = postData.nomeUser
+              const userUID = user.uid
+              const tipoPost = postData.tipo
+              const contPost = postData.post
+              const likesQntd = postData.likesQntd
+              const deslikesQntd = postData.deslikesQntd
+              const favsQntd = postData.favsQntd
+              const respsQntd = postData.respsQntd
+              const redirect = "tela-comments.html"
+              publis.innerHTML += formatPost(userNome,userUID,tipoPost,contPost,postID,likesQntd,deslikesQntd,favsQntd,respsQntd, redirect);
+            }
+          });
+
+          if (!resultadosEncontrados) {
+            publis.innerHTML = "Sem resultados para sua pesquisa!";
+          }
+        }
+      });
+  } else {
+    location.reload();
+  }
+  
+}})
 }
