@@ -12,9 +12,11 @@
         <h4 class="self-center text-white">Publicações</h4>
     </div>
     <div class="create-publi flex flex-col">
-        <select name="" id="select" class="w-1/4	p-2 text-sm text-center self-auto ml-4 mt-3"> 
+        <select name="" id="tipo" class="w-1/4	p-2 text-sm text-center self-auto ml-4 mt-3"> 
+            <option value="" selected disabled> Selecione</option>
             <option value="DÚVIDA">Dúvida</option>
             <option value="DICA">Dica</option>
+            <option value="COMENTÁRIO"> Comentário </option>
         </select>
         <textarea name="publi" id="publi" cols="30" rows="10" class="m-5 p-5" placeholder="Escreva sua publicação"></textarea>
         <div class="btn-postar flex justify-end mr-5">
@@ -26,10 +28,10 @@
                <img src="../assets/galeria.png" alt="" class="w-10 h-10">
                <input type="file" name="img-publi" id="image-input" class="hidden">
            </label>
-       <select name="" id="" class="p-2 ml-4 text-center self-center">
-        <option value="">Tags</option>
-        <option value="">amamentação</option>
-        <option value="">filhos</option>
+       <select name="" id="tag" class="p-2 ml-4 text-center self-center">
+        <option value="" selected disabled>Tags</option>
+        <option value="amamentação">amamentação</option>
+        <option value="filhos">filhos</option>
        </select>
     </div>
 </body>
