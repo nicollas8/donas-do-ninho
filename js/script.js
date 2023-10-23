@@ -278,7 +278,9 @@ function viewPublis() {
           <div class="options">
             <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
           </div>
-          <div class="balaoPergunta" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${doc.id}';">
+          <div class="balaoPergunta" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
+            doc.id
+          }';">
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
@@ -294,7 +296,9 @@ function viewPublis() {
 
           <p style=color:black> ${doc.data().respsQntd}
           <img class="w-6" src="../assets/comentário.svg" alt=""></p>
-          <button class="w-6" onclick="confirmarExclusao('${doc.id}', '1')"><img src="../assets/lixeira.png" alt=""></button>
+          <button class="w-6" onclick="confirmarExclusao('${
+            doc.id
+          }', '1')"><img src="../assets/lixeira.png" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -315,29 +319,25 @@ function viewPublis() {
         .where("UIDusuario", "==", uid)
         .get()
         .then(function (querySnapshot) {
-            
           querySnapshot.forEach(function (doc) {
             const postID = doc.data().IDresp;
-            console.log(doc.data())
+            console.log(doc.data());
             firebase
-            .firestore()
-            .collection("posts")
-            .doc(postID)
-            .get()
-            .then((docPost)=> {
+              .firestore()
+              .collection("posts")
+              .doc(postID)
+              .get()
+              .then((docPost) => {
+                let nome = docPost.data().nomeUser;
 
-            
-            
-            let nome = docPost.data().nomeUser;
-
-            comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+                comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
             <div class="balaoPergunta">
             <p style=color:black></p>
-            <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
-              postID
-            }'" class="text-black text-left mb-4"> ${doc.data().post} </p>
+            <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postID}'" class="text-black text-left mb-4"> ${
+                  doc.data().post
+                } </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <p style=color:black> ${doc.data().likesQntd}
@@ -349,8 +349,8 @@ function viewPublis() {
             }', 2)"><img src="../assets/lixeira.png" alt=""></button>
             </div>
           </div>`;
+              });
           });
-        })
         });
     } else {
       console.log("não deu certo");
@@ -707,10 +707,10 @@ function formatPost(
   var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
   <div class="ballPerguntas p-3">
   <p id=nome style="color:blue;" class="text-left"> ${userNome}</p>
-      <div class="options">
-      <h4 class="py-3 text-purple-700 text-left">${tipoPost}</h4>
+  <div class="options">
+  <h4 class="py-3 text-purple-700 text-left">${tipoPost}</h4>
       </div>
-      <div class="balaoPergunta">
+      <div class="balaoPergunt a">
       <p style=color:black></p>
       <p class="text-black text-left mb-4"> ${contPost} </p>
       </div>
@@ -723,8 +723,8 @@ function formatPost(
       <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
       </div>
       <div class="flex justify-between">
-      <p style=color:green; class="text-left mb-2" onclick="sortBy('${tag}')"> ${tag}</p>
-      <p class="text-black text-left mb-2"> ${tempo}</p>
+      <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
+      <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
       </div>
     </div>`;
 
@@ -749,32 +749,32 @@ function sortBy(tag) {
               var postID = doc.id;
 
               time = postData.timestamp;
-            tempo = formatTime(time);
-            const userNome = postData.nomeUser;
-            const userUID = user.uid;
-            const tipoPost = postData.tipo;
-            const contPost = postData.post;
-            const likesQntd = postData.likesQntd;
-            const deslikesQntd = postData.deslikesQntd;
-            const favsQntd = postData.favsQntd;
-            const respsQntd = postData.respsQntd;
-            const redirect = "tela-comments.html";
-            const tag = postData.tag;
+              tempo = formatTime(time);
+              const userNome = postData.nomeUser;
+              const userUID = user.uid;
+              const tipoPost = postData.tipo;
+              const contPost = postData.post;
+              const likesQntd = postData.likesQntd;
+              const deslikesQntd = postData.deslikesQntd;
+              const favsQntd = postData.favsQntd;
+              const respsQntd = postData.respsQntd;
+              const redirect = "tela-comments.html";
+              const tag = postData.tag;
 
-            publis.innerHTML += formatPost(
-              userNome,
-              userUID,
-              tipoPost,
-              contPost,
-              postID,
-              likesQntd,
-              deslikesQntd,
-              favsQntd,
-              respsQntd,
-              redirect,
-              tag
-            );
-            checkReact(user.uid, "post");
+              publis.innerHTML += formatPost(
+                userNome,
+                userUID,
+                tipoPost,
+                contPost,
+                postID,
+                likesQntd,
+                deslikesQntd,
+                favsQntd,
+                respsQntd,
+                redirect,
+                tag
+              );
+              checkReact(user.uid, "post");
             });
           } else {
             console.log("Deu erro!");
@@ -994,7 +994,7 @@ function comments() {
                     const respData = doc.data();
                     const time = respData.timestamp;
                     formatTime(time);
-                    resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+                    resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] border-t-2 border-[#ffa9a9] rounded-t-xl bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-left"> ${respData.nomeUser}  </p>
             <div class="balaoPergunta">
@@ -1003,11 +1003,12 @@ function comments() {
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-      <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+            <button class="w-6" onclick="fav('${doc.id}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
             <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
-          </div>`;
+            </div>`;
                     checkReact(user.uid, "resp");
                   });
                 } else {
@@ -1092,20 +1093,21 @@ function excluirComment(commentID) {
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
-        doc.ref.delete().then(function (){
+        doc.ref.delete().then(function () {
           db.collection("posts")
-          .doc(commentID)
-          .get()
-          .then((doc) =>{
-            doc.ref.update({
-              respsQntd: doc.data().respsQntd - 1,
-            })
-            .then(function (){
-              alert("Comentário excluído com sucesso!");
-              window.location.reload();
-            })
-          })
-        })
+            .doc(commentID)
+            .get()
+            .then((doc) => {
+              doc.ref
+                .update({
+                  respsQntd: doc.data().respsQntd - 1,
+                })
+                .then(function () {
+                  alert("Comentário excluído com sucesso!");
+                  window.location.reload();
+                });
+            });
+        });
         console.log(commentID);
       });
     });

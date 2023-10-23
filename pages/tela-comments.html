@@ -1,29 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <title>Donas do Ninho</title> 
 </head>
 <body onload="comments()">
     <div class="page-header flex flex-row justify-between border-b-2 border-[#ffa9a9] p-3 bg-[#ffa9a9] rounded-b-xl">
-        <input type="search" name="" id="" class="w-screen ">
-        <img src="../assets/pesquisa.png" alt="" class="w-8 self-center pl-2">
+        <img src="../assets/seta.png" alt="" class="w-9 pl-2" onclick="location.href='tela-inicio.html'">
+        <h4 class="text-white self-center">Comentários</h4>
     </div>
     <div class="pageContent" id="id">
         <div id="publis">
         </div>
-        <p style="color:red; font-family: comic sans MS; font-size: 25px;"> RESPOSTAS </p>
-        <div id="resps" class="mb-16"></div>
+        <div id="resps" class="mb-16 mt-5"></div>
     </div>
     <nav>
-        <div class="navPerfil">
-            <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
-            <button class="navButton"><img src="../assets/play.png" alt=""></button>
-            <button class="navButton"><img src="../assets/publicação.png" alt="" onclick="location.href='tela-publi.html'"></button>
-            <button class="navButton"><img src="../assets/notficação.png" alt=""></button>
-            <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
+        <div class="navComment bg-[#ffa9a9] w-screen flex flex-row p-1 rounded-t-xl">
+            <input type="text" name="comment" id="resp" placeholder="Adicionar Comentário" class="m-2 p-2 w-screen">
+            <button class="self-center px-2" onclick="addResp()" id="post"><img src="../assets/setaEnvio.png" alt="" class="w-8"></button>
         </div>
       </nav>
 </body>
