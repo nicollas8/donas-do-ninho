@@ -265,6 +265,7 @@ function viewPublis() {
         .firestore()
         .collection("posts")
         .where("UIDusuario", "==", uid)
+        .where("categ", "==", "post")
         .get()
         .then(function (querySnapshot) {
           if (!querySnapshot.empty) {
@@ -281,10 +282,18 @@ function viewPublis() {
             <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
-          <button class="w-6"><img src="../assets/like.svg" alt=""></button>
-          <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
-          <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
-          <button class="w-6"><img src="../assets/comentário.svg" alt=""></button>
+          
+          <p style=color:black> ${doc.data().likesQntd}
+          <img class="w-6" src="../assets/like.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().deslikesQntd}
+          <img class="w-6" src="../assets/dislike.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().favsQntd}
+          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().respsQntd}
+          <img class="w-6" src="../assets/comentário.svg" alt=""></p>
           <button class="w-6" onclick="confirmarExclusao('${doc.id}', '1')"><img src="../assets/lixeira.png" alt=""></button>
           </div>
         </div>
@@ -301,51 +310,47 @@ function viewPublis() {
       firebase
         .firestore()
         .collection("posts")
+        .orderBy("timestamp", "desc")
+        .where("categ", "==", "resp")
+        .where("UIDusuario", "==", uid)
         .get()
         .then(function (querySnapshot) {
+            
           querySnapshot.forEach(function (doc) {
-            const postID = doc.id;
-
+            const postID = doc.data().IDresp;
+            console.log(doc.data())
             firebase
-              .firestore()
-              .collection("posts")
-              .doc(postID)
-              .collection("resps")
-              .where("UIDusuario", "==", uid)
-              .get()
-              .then(function (commentsSnapshot) {
-                commentsSnapshot.forEach(function (commDoc) {
-                  firebase
-                    .firestore()
-                    .collection("posts")
-                    .doc(postID)
-                    .get()
-                    .then((doc) => {
-                      let nome = doc.data().nomeUser;
+            .firestore()
+            .collection("posts")
+            .doc(postID)
+            .get()
+            .then((docPost)=> {
 
-                      const time = commDoc.data().timestamp;
-                      const tempo = formatTime(time);
-                      comments.innerHTML += `<div onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
-                        doc.id
-                      }'" class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            
+            
+            let nome = docPost.data().nomeUser;
+
+            comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
             <div class="balaoPergunta">
             <p style=color:black></p>
-            <p class="text-black text-left mb-4"> ${commDoc.data().post} </p>
+            <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
+              postID
+            }'" class="text-black text-left mb-4"> ${doc.data().post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
+            <p style=color:black> ${doc.data().likesQntd}
+            <img class="w-6" src="../assets/like.svg" alt=""> </p>
+            <p style=color:black> ${doc.data().deslikesQntd}
+            <img class="w-6" src="../assets/dislike.svg" alt=""> </p>
             <button class="w-6" onclick="confirmarExclusao('${
-              commDoc.data().IDresp
+              doc.data().IDresp
             }', 2)"><img src="../assets/lixeira.png" alt=""></button>
             </div>
           </div>`;
-                    });
-                });
-              });
           });
+        })
         });
     } else {
       console.log("não deu certo");
@@ -411,7 +416,6 @@ function atualizar() {
       var updateData = {};
       if (nome) {
         updateData.nome = nome;
-        
       }
 
       // Se a biografia foi fornecida, adicione-a ao objeto de atualização
@@ -419,59 +423,55 @@ function atualizar() {
         updateData.biografia = biografia;
       }
 
-
-
       // Atualize o documento do usuário com os dados atualizados
       postsCollection
-          .where("UIDusuario", "==", uid)
-          .get()
-          .then(function (querySnapshot) {
+        .where("UIDusuario", "==", uid)
+        .get()
+        .then(function (querySnapshot) {
+          postsCollection.get().then(function (postsSnapshot) {
+            postsSnapshot.forEach(function (doc) {
+              postID = doc.id;
 
-            postsCollection.get()
-            .then(function (postsSnapshot){
-              postsSnapshot.forEach(function (doc){
-                postID = doc.id
-
-                postsCollection
+              postsCollection
                 .doc(postID)
                 .collection("resps")
                 .where("UIDusuario", "==", uid)
                 .get()
-                .then(function (respsSnapshot){
-                  if (!respsSnapshot.empty){
-                    respsSnapshot.forEach(function (doc){
-                      console.log(doc.data())
+                .then(function (respsSnapshot) {
+                  if (!respsSnapshot.empty) {
+                    respsSnapshot.forEach(function (doc) {
+                      console.log(doc.data());
                       doc.ref.update({
-                        nomeUser:nome
-                      })
-                    })
+                        nomeUser: nome,
+                      });
+                    });
                   }
-                })
-
-              })
-            })
-            
-
-
-
-            querySnapshot.forEach(function (doc) {
-              console.log(doc.data().post);
-              doc.ref.update({
-                nomeUser: nome,
-              }).then(function (){
-                userDocRef
-                .update(updateData)
-                .then(function () {
-                alert("Dados Atualizados com Sucesso!");
-                window.location.replace("tela-usuario.html");
-                })
-                .catch(function (error) {
-                  console.error("Erro ao atualizar os dados do usuário:", error);
                 });
+            });
+          });
+
+          querySnapshot.forEach(function (doc) {
+            console.log(doc.data().post);
+            doc.ref
+              .update({
+                nomeUser: nome,
               })
-            })
-        })
-      
+              .then(function () {
+                userDocRef
+                  .update(updateData)
+                  .then(function () {
+                    alert("Dados Atualizados com Sucesso!");
+                    window.location.replace("tela-usuario.html");
+                  })
+                  .catch(function (error) {
+                    console.error(
+                      "Erro ao atualizar os dados do usuário:",
+                      error
+                    );
+                  });
+              });
+          });
+        });
     } else {
       console.log("Não foi possível obter o usuário autenticado.");
     }
@@ -494,7 +494,6 @@ function excluirConta() {
         userDocRef
           .delete()
           .then(function () {
-            excluirComentarios(uid);
             excluirPosts(uid);
             console.log("Usuário excluído do Firestore com sucesso!");
 
@@ -527,50 +526,6 @@ function excluirConta() {
   }
 }
 
-function excluirComentarios(uidDoUsuario) {
-  var db = firebase.firestore();
-
-  // Primeiro, busque todos os documentos na coleção "posts" onde o usuário fez comentários.
-  db.collection("posts")
-    .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
-        var postId = doc.id;
-
-        // Obtenha a lista de comentários no documento "post".
-        var respsCollectionRef = db
-          .collection("posts")
-          .doc(postId)
-          .collection("resps");
-
-        // Consulta para buscar os comentários feitos pelo usuário.
-        respsCollectionRef
-          .where("UIDusuario", "==", uidDoUsuario)
-          .get()
-          .then(function (querySnapshot) {
-            querySnapshot.forEach(function (commentDoc) {
-              // Exclua o comentário.
-              respsCollectionRef
-                .doc(commentDoc.id)
-                .delete()
-                .then(function () {
-                  console.log("Comentário excluído com sucesso!");
-                })
-                .catch(function (error) {
-                  console.error("Erro ao excluir o comentário:", error);
-                });
-            });
-          })
-          .catch(function (error) {
-            console.error("Erro ao buscar comentários do usuário:", error);
-          });
-      });
-    })
-    .catch(function (error) {
-      console.error("Erro ao buscar documentos na coleção 'posts':", error);
-    });
-}
-
 function excluirPosts(uidDoUsuario) {
   var db = firebase.firestore();
 
@@ -593,13 +548,13 @@ function excluirPosts(uidDoUsuario) {
 
 function addPubli() {
   if (document.getElementById("publi").value == "") {
-    alert("Por favor, digite algo para enviar!")
-  } else if (document.getElementById("tipo").value == ""){
+    alert("Por favor, digite algo para enviar!");
+  } else if (document.getElementById("tipo").value == "") {
     alert("Por favor, selecione um tipo de publicação!");
-  }else if (document.getElementById("tag").value == ""){
-    alert("Por favor, selecione uma tag!")
-  }else{
-  const button = document.getElementById("post");
+  } else if (document.getElementById("tag").value == "") {
+    alert("Por favor, selecione uma tag!");
+  } else {
+    const button = document.getElementById("post");
     button.disabled = true;
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
@@ -630,6 +585,7 @@ function addPubli() {
                 favsQntd: 0,
                 tag: document.getElementById("tag").value,
                 nomeUser: userData.nome,
+                categ: "post",
               };
               firebase
                 .firestore()
@@ -667,7 +623,7 @@ function addResp() {
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
         console.log(usersCollection);
-        var RespID = firebase.firestore().collection("usuarios").doc().id;
+        var RespID = IDpostagem;
 
         usersCollection
           .doc(uid)
@@ -681,6 +637,9 @@ function addResp() {
                 IDresp: RespID,
                 UIDusuario: uid,
                 nomeUser: userData.nome,
+                deslikesQntd: 0,
+                likesQntd: 0,
+                categ: "resp",
               };
 
               firebase
@@ -690,8 +649,9 @@ function addResp() {
                 .get()
                 .then((doc) => {
                   if (doc.exists) {
-                    doc.ref
-                      .collection("resps")
+                    firebase
+                      .firestore()
+                      .collection("posts")
                       .add(newRespData)
                       .then(() => {
                         const qntdResps = doc.data().respsQntd;
@@ -746,7 +706,7 @@ function formatPost(
 ) {
   var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
   <div class="ballPerguntas p-3">
-  <p id=nome style= color:black></p> ${userNome}
+  <p id=nome style="color:blue;" class="text-left"> ${userNome}</p>
       <div class="options">
       <h4 class="py-3 text-purple-700 text-left">${tipoPost}</h4>
       </div>
@@ -755,40 +715,40 @@ function formatPost(
       <p class="text-black text-left mb-4"> ${contPost} </p>
       </div>
       <div class="react flex flex-row gap-10 justify-around mb-2">
-      <button class="w-6" onclick="react('1', '${postID}')"> <p id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-      <button class="w-6" onclick="react('2', '${postID}')"><p id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+      <button class="w-6" onclick="react('1', '${postID}', 'post')"> <p id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+      <button class="w-6" onclick="react('2', '${postID}', 'post')"><p id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
       <button class="w-6" onclick="fav('${postID}', '${userUID}')"><p id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
       <button class="w-6" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> ${respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
 
       <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
       </div>
-      <div style="display:flex; flex-direction:row;">
-      <p style='color: green; margin-right: 5rem'class='text-left mt-2' onclick="sortBy('${tag}')"> ${tag}</p>
-      <p class='text-black text-right mt-2'> ${tempo}</p>
+      <div class="flex justify-between">
+      <p style=color:green; class="text-left mb-2" onclick="sortBy('${tag}')"> ${tag}</p>
+      <p class="text-black text-left mb-2"> ${tempo}</p>
       </div>
     </div>`;
 
   return post;
 }
 
-function sortBy(tag){
+function sortBy(tag) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-  const db = firebase.firestore()
-  const publis = document.getElementById("publis");
+      const db = firebase.firestore();
+      const publis = document.getElementById("publis");
 
-  db.collection("posts")
-  .where("tag", "==", tag)
-  .get()
-  .then(function (querySnapshot){
-    if (!querySnapshot.empty){
-      publis.innerHTML = "";
-      querySnapshot.forEach(function (doc){
-        console.log(doc.data())
-        var postData = doc.data();
-            var postID = doc.id;
+      db.collection("posts")
+        .where("tag", "==", tag)
+        .get()
+        .then(function (querySnapshot) {
+          if (!querySnapshot.empty) {
+            publis.innerHTML = "";
+            querySnapshot.forEach(function (doc) {
+              console.log(doc.data());
+              var postData = doc.data();
+              var postID = doc.id;
 
-            time = postData.timestamp;
+              time = postData.timestamp;
             tempo = formatTime(time);
             const userNome = postData.nomeUser;
             const userUID = user.uid;
@@ -814,27 +774,29 @@ function sortBy(tag){
               redirect,
               tag
             );
-            checkReact(user.uid);
-      })
-    }else{
-      console.log("Deu erro!")
+            checkReact(user.uid, "post");
+            });
+          } else {
+            console.log("Deu erro!");
+          }
+        });
     }
-  })
-}})
+  });
 }
-
 
 function showPosts() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var db = firebase.firestore();
+      const postsRef = db.collection("posts");
       // Obtenha todos os documentos da coleção 'posts'
 
-      db.collection("posts")
+      postsRef
+        .where("categ", "==", "post")
         .orderBy("timestamp", "desc")
         .get()
-        .then(function (postsQuerySnapshot) {
-          postsQuerySnapshot.forEach(function (postDoc) {
+        .then((postsQuerySnapshot) => {
+          postsQuerySnapshot.forEach((postDoc) => {
             var postData = postDoc.data();
             var postID = postDoc.id;
 
@@ -864,7 +826,7 @@ function showPosts() {
               redirect,
               tag
             );
-            checkReact(user.uid);
+            checkReact(user.uid, "post");
           });
         })
 
@@ -881,10 +843,11 @@ function showPosts() {
   });
 }
 
-function checkReact(userUID) {
+function checkReact(userUID, local) {
   var db = firebase.firestore();
   db.collection("reacts")
     .where("userUID", "==", userUID)
+    .where("categ", "==", local)
     .get()
     .then(function (reactQuerySnapshot) {
       console.log(userUID);
@@ -940,6 +903,16 @@ function formatTime(time) {
   const miliDiff = now - timestamp;
   const secDiff = Math.floor(miliDiff / 1000);
   const minDiff = Math.floor(secDiff / 60);
+  time = time.toDate();
+  formatter = new Intl.DateTimeFormat("pt-BR", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
+  formatterH = new Intl.DateTimeFormat("pt-BR", {
+    hour: "numeric",
+    minute: "numeric",
+  });
   if (secDiff < 60) {
     tempo = `postado há ${secDiff} ${
       secDiff === 1 ? "segundo" : "segundos"
@@ -948,24 +921,13 @@ function formatTime(time) {
     tempo = `postado há ${minDiff} ${
       minDiff === 1 ? "minuto" : "minutos"
     } atrás`;
-  } else if (((minDiff) => 60) && minDiff < 1440) {
+  } else if (minDiff >= 60 && minDiff < 1440) {
     tempo = `postado há ${Math.floor(minDiff / 60)} ${
       Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
     } atrás`;
-  } else if (((minDiff) => 1440) && minDiff <= 2880) {
-    tempo = `postado ontem`;
+  } else if (minDiff >= 1440 && minDiff <= 2160) {
+    tempo = `postado ontem às ` + formatterH.format(time);
   } else {
-    time = time.toDate();
-    formatter = new Intl.DateTimeFormat("pt-BR", {
-      year: "numeric",
-      month: "numeric",
-      day: "numeric",
-    });
-    formatterH = new Intl.DateTimeFormat("pt-BR", {
-      hour: "numeric",
-      minute: "numeric",
-    });
-
     tempo =
       "postado " + formatter.format(time) + " às " + formatterH.format(time);
   }
@@ -1001,6 +963,7 @@ function comments() {
             const deslikesQntd = postData.deslikesQntd;
             const favsQntd = postData.favsQntd;
             const respsQntd1 = postData.respsQntd;
+            const tag = postData.tag;
             const redirect = "add-comment.html";
 
             publis.innerHTML = formatPost(
@@ -1013,16 +976,16 @@ function comments() {
               deslikesQntd,
               favsQntd,
               respsQntd1,
-              redirect
+              redirect,
+              tag
             );
-
+            checkReact(user.uid, "post");
             const respUID = postData.IDpost;
             console.log(respUID);
             let respsQntd = 0;
 
-            const respsCollectionRef = postDoc.ref.collection("resps");
-            console.log(respsCollectionRef);
-            respsCollectionRef
+            db.collection("posts")
+              .where("IDresp", "==", doc.id)
               .orderBy("timestamp", "desc")
               .get()
               .then(function (querySnapshot) {
@@ -1033,19 +996,19 @@ function comments() {
                     formatTime(time);
                     resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
-            <p id=nome style="color:blue;" class="text-right"> ${respData.nomeUser}  </p>
+            <p id=nome style="color:blue;" class="text-left"> ${respData.nomeUser}  </p>
             <div class="balaoPergunta">
             <p style=color:black></p>
             <p class="text-black text-left mb-4"> ${respData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6"><img src="../assets/like.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6"><img src="../assets/favorito.svg" alt=""></button>
+            <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+      <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
             <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
           </div>`;
+                    checkReact(user.uid, "resp");
                   });
                 } else {
                   firebase
@@ -1125,36 +1088,25 @@ function excluirComment(commentID) {
   var db = firebase.firestore();
 
   db.collection("posts")
+    .where("IDresp", "==", commentID)
     .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
-        var postID = doc.id;
-        console.log(commentID);
-
-        db.collection("posts")
-          .doc(postID)
-          .collection("resps")
-          .where("IDresp", "==", commentID)
+        doc.ref.delete().then(function (){
+          db.collection("posts")
+          .doc(commentID)
           .get()
-          .then(function (commSnapshot) {
-            commSnapshot.forEach(function (commDoc) {
-              commDoc.ref.delete().then(function () {
-                db.collection("posts")
-                  .doc(postID)
-                  .get()
-                  .then((doc) => {
-                    doc.ref
-                      .update({
-                        respsQntd: doc.data().respsQntd - 1,
-                      })
-                      .then(function () {
-                        alert("Comentário excluído com sucesso!");
-                        window.location.reload();
-                      });
-                  });
-              });
-            });
-          });
+          .then((doc) =>{
+            doc.ref.update({
+              respsQntd: doc.data().respsQntd - 1,
+            })
+            .then(function (){
+              alert("Comentário excluído com sucesso!");
+              window.location.reload();
+            })
+          })
+        })
+        console.log(commentID);
       });
     });
 }
@@ -1201,8 +1153,8 @@ function reabilitarBotao() {
   button.disabled = false;
 }
 
-function react(reactionNum, postID) {
-  console.log(reactionNum, postID);
+function react(reactionNum, postID, type) {
+  console.log(reactionNum, postID, type);
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -1210,18 +1162,17 @@ function react(reactionNum, postID) {
       if (reactionNum == 1) {
         var num = 1;
         var vs = num + 1;
-        reactT(num, vs, postID, userUID, postID);
       } else {
-        //funcao deslike
         num = 2;
         vs = num - 1;
-        reactT(num, vs, postID, userUID, postID);
       }
+
+      reactP(num, vs, postID, userUID, type);
     }
   });
 }
 
-function reactT(num, vs, postID, userUID, postID) {
+function reactP(num, vs, postID, userUID, type) {
   const db = firebase.firestore();
   const postRef = db.collection("posts").doc(postID);
   const reactLocation = db.collection("reacts");
@@ -1284,10 +1235,8 @@ function reactT(num, vs, postID, userUID, postID) {
               console.log("Tu deu " + styleVs + ", safado");
 
               const addReact = {
-                userUID: userUID,
                 react: num,
                 timestamp: new Date(),
-                postID: postID,
               };
 
               querySnapshot.forEach(function (doc) {
@@ -1344,6 +1293,7 @@ function reactT(num, vs, postID, userUID, postID) {
                 react: num,
                 timestamp: new Date(),
                 postID: postID,
+                categ: type,
               };
 
               console.log(postRef.get());
@@ -1522,6 +1472,7 @@ function pesquisa() {
         let resultadosEncontrados = false; // Variável para verificar se algum resultado foi encontrado
 
         db.collection("posts")
+          .where("categ", "==", "post")
           .orderBy("timestamp", "desc")
           .get()
           .then(function (querySnapshot) {
