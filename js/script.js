@@ -1527,3 +1527,6 @@ function pesquisa() {
     }
   });
 }
+
+const toggleMenu = () => 
+  document.body.classList.toggle("open")  

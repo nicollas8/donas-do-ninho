@@ -6,10 +6,26 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <title>Donas do ninho</title>
 </head>
 <body class="tela-user" onload="att()">
   <header class="box-perfil">
+    <div class="overlay">
+    </div>
+    <button class="burger" onclick="toggleMenu()">
+      <span class="material-symbols-outlined">menu</span>
+      <span class="material-symbols-outlined">close</span>
+    </button>
+    <aside>
+      <div class="buttonPerfil">
+        <button id="editPerfil" onclick="location.href='tela-editPerfil.html'">Editar Perfil</button>
+        <button id="verNivel" onclick="location.href='tela-nivel.html'"> Ver nível </button>
+        <button id="" onclick="location.href='view-publi.html'"> Publicações </button>
+        <button onclick="location.href='view-favs.html'"> favoritos</button>
+      </div>
+      <button  id="btnLogOut" class="text-red-700" onclick="logOut()"> Sair </button>
+    </aside>
     <img src="../assets/perfil-usuário.png" alt="">
   </header>
   <main class="boxUser">
@@ -38,15 +54,6 @@
       </div>
     </div>
   </main>
-  <footer class="btnPerfil">
-    <button id="editPerfil" onclick="location.href='tela-editPerfil.html'">Editar Perfil</button>
-    <button id="verNivel" onclick="location.href='tela-nivel.html'"> Ver nível </button>
-  </footer>
-  <div class="btnPerfil2">
-    <button id="" onclick="location.href='view-publi.html'"> Publicações </button>
-    <button id="" onclick="logOut()"> Sair </button>
-    <button onclick="location.href='view-favs.html'"> favoritos</button>
-  </div>
   <nav>
     <div class="navPerfil">
         <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
@@ -56,10 +63,11 @@
         <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
     </div>
   </nav>
-
+</body>
 <script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
 <script src="../js/firebase-init.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
 </html>
