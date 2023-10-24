@@ -80,7 +80,7 @@ function getErrorMessage(error) {
   return error.message;
 }
 
-function recoverySenha() {
+function recoverySenha() {''
   location.href = "../pages/recuperar-senha.html";
 }
 
@@ -344,6 +344,8 @@ function viewPublis() {
             <img class="w-6" src="../assets/like.svg" alt=""> </p>
             <p style=color:black> ${doc.data().deslikesQntd}
             <img class="w-6" src="../assets/dislike.svg" alt=""> </p>
+            <p style=color:black> ${doc.data().favsQntd}
+          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
             <button class="w-6" onclick="confirmarExclusao('${
               doc.data().IDresp
             }', 2)"><img src="../assets/lixeira.png" alt=""></button>
@@ -639,6 +641,7 @@ function addResp() {
                 nomeUser: userData.nome,
                 deslikesQntd: 0,
                 likesQntd: 0,
+                favsQntd: 0,
                 categ: "resp",
               };
 
@@ -717,7 +720,7 @@ function formatPost(
       <div class="react flex flex-row gap-10 justify-around mb-2">
       <button class="w-6" onclick="react('1', '${postID}', 'post')"> <p id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
       <button class="w-6" onclick="react('2', '${postID}', 'post')"><p id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-      <button class="w-6" onclick="fav('${postID}', '${userUID}')"><p id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+      <button class="w-6" onclick="fav('${postID}', '${userUID}', 'post')"><p id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
       <button class="w-6" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> ${respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
 
       <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
@@ -880,7 +883,7 @@ function checkReact(userUID, local) {
             }
           } else if (reactDoc.data().react == 3) {
             const elemento = document.getElementById(
-              "fav" + reactDoc.data().postID + "'"
+              "fav" + reactDoc.data().postID
             );
             if (elemento) {
               elemento.style.backgroundColor = "yellow";
@@ -1004,7 +1007,7 @@ function comments() {
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
             <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6" onclick="fav('${doc.id}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+            <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
             <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
@@ -1334,7 +1337,7 @@ function reactP(num, vs, postID, userUID, type) {
     });
 }
 
-function fav(post, userUID) {
+function fav(post, userUID, type) {
   console.log(post, userUID);
 
   style = "fav" + post;
@@ -1346,6 +1349,7 @@ function fav(post, userUID) {
     react: 3,
     timestamp: new Date(),
     postID: post,
+    categ: type,
   };
   firebase
     .firestore()
