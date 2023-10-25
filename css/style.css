@@ -482,7 +482,7 @@ textarea {
   right: 0;
   display: grid;
   place-items: center;
-  padding: 0;
+  padding: 0.5rem;
   background: transparent;
   border: 0;
 }

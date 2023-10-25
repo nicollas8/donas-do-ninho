@@ -234,7 +234,7 @@ function comparePassword() {
 }
 
 function previewFile() {
-  const preview = document.getElementById("fotoPerfil");
+  const preview = document.getElementById("fotoPubli");
   const file = document.getElementById("loadImage").files[0];
   const reader = new FileReader();
 
@@ -247,9 +247,11 @@ function previewFile() {
   );
 
   if (file) {
+    preview.style.display = 'block'
     reader.readAsDataURL(file);
   }
 }
+
 function viewPublis() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -367,7 +369,7 @@ function att() {
       //console.log(uid);
       var usersCollection = firebase.firestore().collection("usuarios");
       var userRef = firebase.firestore().collection("usuarios").doc(uid);
-
+      var img = document.querySelector("#imgPerfil")
       //console.log("vamo ver ele:" + userRef.collection('posts'));
 
       // Consulta para recuperar o documento do usuário com base no UID
@@ -388,6 +390,7 @@ function att() {
                 userData.tipoMom;
               document.getElementById("bio-user").textContent =
                 userData.biografia;
+                img.setAttribute('src', '')
             });
           } else {
             console.log("Nenhum usuário encontrado com o UID fornecido.");
@@ -400,7 +403,7 @@ function att() {
   });
 }
 
-function atualizar() {
+function atualizar(URL) {
   var nome = document.getElementById("nameNew").value;
   var biografia = document.getElementById("biografia").value;
 
@@ -423,6 +426,10 @@ function atualizar() {
       // Se a biografia foi fornecida, adicione-a ao objeto de atualização
       if (biografia) {
         updateData.biografia = biografia;
+      }
+
+      if(URL){
+        updateData.url = URL;
       }
 
       // Atualize o documento do usuário com os dados atualizados
@@ -548,7 +555,7 @@ function excluirPosts(uidDoUsuario) {
     });
 }
 
-function addPubli() {
+function addPubli(url) {
   if (document.getElementById("publi").value == "") {
     alert("Por favor, digite algo para enviar!");
   } else if (document.getElementById("tipo").value == "") {
@@ -588,6 +595,7 @@ function addPubli() {
                 tag: document.getElementById("tag").value,
                 nomeUser: userData.nome,
                 categ: "post",
+                url: url
               };
               firebase
                 .firestore()
@@ -705,26 +713,39 @@ function formatPost(
   favsQntd,
   respsQntd,
   redirect,
-  tag
+  tag,
+  img
 ) {
+
+  if (img){
+    var imgCarregado = "style='display:flex'"
+  }else{
+    var imgCarregado = "style='display:none'"
+  }
+
+
   var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
   <div class="ballPerguntas p-3">
-  <p id=nome style="color:blue;" class="text-left"> ${userNome}</p>
+  <div class="cardTittle flex flex-row justify-between">
+    <p id=nome style="color:blue;" class="text-left"> ${userNome}</p>
+    <h4 class=" text-purple-700 self-center">${tipoPost}</h4>
+  </div>
   <div class="options">
-  <h4 class="py-3 text-purple-700 text-left">${tipoPost}</h4>
+  </div>
+  <div class="balaoPergunt a">
+  <p style=color:black></p>
+  <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
+  <div class="w-50 h-full flex justify-center border-2 border-black rounded-xl py-2" ${imgCarregado}>
+    <img src="${img}" class="w-1/2 h-52 mb-3" ${imgCarregado}>
+  </div>
       </div>
-      <div class="balaoPergunt a">
-      <p style=color:black></p>
-      <p class="text-black text-left mb-4"> ${contPost} </p>
-      </div>
-      <div class="react flex flex-row gap-10 justify-around mb-2">
-      <button class="w-6" onclick="react('1', '${postID}', 'post')"> <p id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-      <button class="w-6" onclick="react('2', '${postID}', 'post')"><p id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-      <button class="w-6" onclick="fav('${postID}', '${userUID}', 'post')"><p id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
-      <button class="w-6" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> ${respsQntd}<img src="../assets/comentário.svg" alt=""> </button>
-
-      <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
-      </div>
+        <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
+          <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+          <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+          <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+          <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../assets/comentário.svg" alt=""> </button>
+          <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
+        </div>
       <div class="flex justify-between">
       <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
       <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
@@ -815,6 +836,7 @@ function showPosts() {
             const respsQntd = postData.respsQntd;
             const redirect = "tela-comments.html";
             const tag = postData.tag;
+            const img = postData.url;
 
             publis.innerHTML += formatPost(
               userNome,
@@ -827,7 +849,8 @@ function showPosts() {
               favsQntd,
               respsQntd,
               redirect,
-              tag
+              tag,
+              img
             );
             checkReact(user.uid, "post");
           });
@@ -1039,39 +1062,6 @@ function comments() {
     }
   });
 }
-
-// firebase.initializeApp(firebaseConfig);
-
-// const storage = firebase.storage();
-// const firestore = firebase.firestore();
-
-// // Lidar com o envio do formulário
-
-// const buttonimg = document.getElementById("buttonimg");
-// const imageInput = document.getElementById("image-input");
-
-// buttonimg.addEventListener("click", async (e) => {
-//   e.preventDefault();
-
-//   const file = imageInput.files[0];
-//   console.log(file);
-
-//   if (file) {
-//     // Faça o upload da imagem para o Firebase Storage
-//     const storageRef = storage.ref().child(`img/${file.name}`);
-//     await storageRef.put(file);
-
-//     // Obtenha a URL de download da imagem
-//     const downloadURL = await storageRef.getDownloadURL();
-
-//     // Armazene a URL no Firestore
-//     await firestore.collection("img").add({ url: downloadURL });
-
-//     alert("Imagem enviada com sucesso!");
-//   } else {
-//     alert("Selecione uma imagem antes de enviar.");
-//   }
-// });
 
 function confirmarExclusao(IDref, num) {
   var resposta = confirm("Tem certeza de que deseja excluir?");
@@ -1530,3 +1520,57 @@ function pesquisa() {
 
 const toggleMenu = () => 
   document.body.classList.toggle("open")  
+
+  
+firebase.initializeApp(firebaseConfig);
+
+const storage = firebase.storage();
+const firestore = firebase.firestore();
+
+// Lidar com o envio do formulário
+
+const buttonimg = document.getElementById("post");
+const buttonimgPerfil = document.getElementById("post2");
+const imageInput = document.getElementById("loadImage");
+
+buttonimg.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const file = imageInput.files[0];
+  console.log(file);
+
+  if (file) {
+    // Faça o upload da imagem para o Firebase Storage
+    const storageRef = storage.ref().child(`img/${file.name}`);
+    await storageRef.put(file);
+
+    // Obtenha a URL de download da imagem
+    const downloadURL = await storageRef.getDownloadURL();
+    addPubli(downloadURL)
+    // Armazene a URL no Firestore
+    alert("Imagem enviada com sucesso!");
+  } else {
+    alert("Selecione uma imagem antes de enviar.");
+  }
+});
+
+buttonimgPerfil.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const file = imageInput.files[0];
+  console.log(file);
+
+  if (file) {
+    // Faça o upload da imagem para o Firebase Storage
+    const storageRef = storage.ref().child(`img/${file.name}`);
+    await storageRef.put(file);
+
+    // Obtenha a URL de download da imagem
+    const URL = await storageRef.getDownloadURL();
+    atualizar(URL)
+    // Armazene a URL no Firestore
+    alert("Imagem enviada com sucesso!");
+  } else {
+    alert("Selecione uma imagem antes de enviar.");
+  }
+});
