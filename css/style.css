@@ -370,6 +370,7 @@ textarea {
   justify-content: center;
   background-color: #ffa9a9;
   border-radius: 0 0 4rem 4rem;
+  margin-bottom: 4rem;
 }
 
 .box-perfil img {
@@ -413,19 +414,20 @@ textarea {
   justify-content: center;
 }
 
-.btnPerfil2 {
+.buttonEditPerfil {
   display: flex;
   padding-bottom: 6rem;
   justify-content: center;
+  margin-top: 2rem;
+  gap: 2rem;
 }
-.btnPerfil2 button {
+.buttonEditPerfil button {
   background-color: #ffa9a9;
   box-shadow: 2px 2px 6px rgb(248, 105, 105);
   padding: 0.8rem;
   color: whitesmoke;
   border: none;
   border-radius: 2rem;
-  margin: 0 0.8rem;
 }
 
 
@@ -558,8 +560,14 @@ aside {
 
 #imgPerfil{
   border-radius: 50% 50%;
-  width: 200px;
-  height: 250px;
+  width: 150px;
+  height: 200px;
+}
+
+#fotoPubli {
+  border-radius: 50% 50%;
+  width: 150px;
+  height: 200px;
 }
 
 #teste{

@@ -235,6 +235,9 @@ function comparePassword() {
 }
 
 function previewFile() {
+  
+  
+  
   const preview = document.getElementById("fotoPubli");
   const file = document.getElementById("loadImage").files[0];
   const reader = new FileReader();
@@ -718,8 +721,8 @@ function formatPost(
   <div class="ballPerguntas p-3">
   <div class="cardTittle flex flex-row justify-between">
   <div class="flex flex-row justify-between">
-   <img class="self-center"style=" width: 50px; height: 50px; clip-path: circle(50% at 50% 50%);"src="${fotoUser}" >
-   <p id=nome style="color:blue;" class="text-left self-center"> ${userNome}</p>
+   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" >
+   <p id=nome class="text-left self-center text-blue-800"> ${userNome}</p>
   </div>
    
     
@@ -730,8 +733,8 @@ function formatPost(
   <div class="balaoPergunt a">
   <p style=color:black></p>
   <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
-  <div class="w-50 h-full flex justify-center border-2 border-black rounded-xl py-2" ${imgCarregado}>
-    <img src="${img}" class="w-1/2 h-52 mb-3">
+  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
+    <img src="${img}" class="w-full h-1/4 mb-3">
   </div>
       </div>
         <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
