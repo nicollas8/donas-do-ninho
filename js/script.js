@@ -244,24 +244,36 @@ function comparePassword() {
   }
 }
 
+function previewFilePerfil() {
+
+  const previewPerfil = document.getElementById("imgPerfil");
+  const filePerfil = document.getElementById("loadImagePerfil").files[0];
+  const reader = new FileReader();
+
+  reader.addEventListener("load", () => {
+    previewPerfil.src = reader.result; 
+  }, 
+    false
+  ); 
+    if (filePerfil) {
+    previewPerfil.style.display = "block"
+    reader.readAsDataURL(filePerfil)
+  }
+}
+
 function previewFile() {
   
   const preview = document.getElementById("fotoPubli");
-  const previewPerfil = document.getElementById("fotoPerfil");
   const file = document.getElementById("loadImage").files[0];
   const reader = new FileReader();
-
-  reader.addEventListener(
-    "load",
-    () => {
-      preview.src = reader.result;
-      previewPerfil.src = reader.result;
+  
+  reader.addEventListener("load",() => {
+    preview.src = reader.result;
     },
     false
   );
 
   if (file) {
-    previewPerfil.style.display = "block"
     preview.style.display = "block";
     reader.readAsDataURL(file);
   }
@@ -1598,7 +1610,7 @@ if (buttonimg) {
 const buttonimgPerfil = document.getElementById("post2")
   ? document.getElementById("post2")
   : null;
-const imageInput = document.getElementById("loadImage");
+const imageInput = document.getElementById("loadImagePerfil");
 
 if (buttonimgPerfil) {
   buttonimgPerfil.addEventListener("click", async (e) => {
