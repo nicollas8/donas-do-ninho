@@ -236,9 +236,8 @@ function comparePassword() {
 
 function previewFile() {
   
-  
-  
   const preview = document.getElementById("fotoPubli");
+  const previewPerfil = document.getElementById("fotoPerfil");
   const file = document.getElementById("loadImage").files[0];
   const reader = new FileReader();
 
@@ -246,11 +245,13 @@ function previewFile() {
     "load",
     () => {
       preview.src = reader.result;
+      previewPerfil.src = reader.result;
     },
     false
   );
 
   if (file) {
+    previewPerfil.style.display = "block"
     preview.style.display = "block";
     reader.readAsDataURL(file);
   }
@@ -1029,19 +1030,18 @@ function comments() {
                     formatTime(time);
                     resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] border-t-2 border-[#ffa9a9] rounded-t-xl bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
-            <div class="flex flex-row justify-between">
-            <img class="self-center" style=" width: 50px; height: 50px; clip-path: circle(50% at 50% 50%);" src="${respData.fotoUser}">
+            <div class="flex flex-row">
+            <img class="self-center w-12 h-12 mr-2 rounded-full" src="${respData.fotoUser}">
             <p id=nome style="color:blue;" class="text-left self-center"> ${respData.nomeUser}  </p>
             </div>
-            <div class="balaoPergunta">
-            <p style=color:black></p>
-            <p class="text-black text-left mb-4"> ${respData.post} </p>
+            <div class="balaoPergunta flex flex-row">
+            <p class="text-black mt-4 mb-3 ml-2"> ${respData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-            <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-            <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
-            <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+              <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
             </div>`;
