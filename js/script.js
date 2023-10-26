@@ -1558,8 +1558,8 @@ function pesquisa() {
 
 const toggleMenu = () => document.body.classList.toggle("open");
 
-firebase.initializeApp(firebaseConfig);
 
+firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const firestore = firebase.firestore();
 
@@ -1619,3 +1619,26 @@ if (buttonimgPerfil) {
       }
   });
 }
+
+function nivel(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      var nivel = document.getElementById("fotoNivel").src;
+      console.log(nivel);
+
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .get()
+      .then((doc) => {
+        src = "../assets/lvl"+ doc.data().nivel +"Icon.svg"
+        nivel = src;
+        console.log(nivel)
+        document.getElementById("fotoNivel").src = nivel;
+      }
+      )
+      
+    
+    }
+  })
+  }
