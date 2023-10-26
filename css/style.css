@@ -554,3 +554,14 @@ aside {
   width: 100%;
   border-radius: 1rem;
 }
+
+
+#imgPerfil{
+  border-radius: 50% 50%;
+  width: 200px;
+  height: 250px;
+}
+
+#teste{
+  background-size: cover;
+}

@@ -80,7 +80,8 @@ function getErrorMessage(error) {
   return error.message;
 }
 
-function recoverySenha() {''
+function recoverySenha() {
+  "";
   location.href = "../pages/recuperar-senha.html";
 }
 
@@ -247,7 +248,7 @@ function previewFile() {
   );
 
   if (file) {
-    preview.style.display = 'block'
+    preview.style.display = "block";
     reader.readAsDataURL(file);
   }
 }
@@ -349,7 +350,7 @@ function viewPublis() {
             <p style=color:black> ${doc.data().favsQntd}
           <img class="w-6" src="../assets/favorito.svg" alt=""></p>
             <button class="w-6" onclick="confirmarExclusao('${
-              doc.data().IDresp
+              doc.id
             }', 2)"><img src="../assets/lixeira.png" alt=""></button>
             </div>
           </div>`;
@@ -369,7 +370,7 @@ function att() {
       //console.log(uid);
       var usersCollection = firebase.firestore().collection("usuarios");
       var userRef = firebase.firestore().collection("usuarios").doc(uid);
-      var img = document.querySelector("#imgPerfil")
+      var img = document.querySelector("#imgPerfil");
       //console.log("vamo ver ele:" + userRef.collection('posts'));
 
       // Consulta para recuperar o documento do usuário com base no UID
@@ -390,7 +391,12 @@ function att() {
                 userData.tipoMom;
               document.getElementById("bio-user").textContent =
                 userData.biografia;
-                img.setAttribute('src', '')
+                if (userData.url){
+                  var foto = userData.url
+                }else{
+                  var foto = "../assets/perfil-usuário.png"
+                }
+                img.setAttribute("src", foto);
             });
           } else {
             console.log("Nenhum usuário encontrado com o UID fornecido.");
@@ -419,8 +425,10 @@ function atualizar(URL) {
 
       // Atualize os campos desejados no documento do usuário
       var updateData = {};
+      var updateDataPosts = {};
       if (nome) {
         updateData.nome = nome;
+        updateDataPosts.nomeUser = nome;
       }
 
       // Se a biografia foi fornecida, adicione-a ao objeto de atualização
@@ -428,58 +436,39 @@ function atualizar(URL) {
         updateData.biografia = biografia;
       }
 
-      if(URL){
+      if (URL) {
         updateData.url = URL;
+        updateDataPosts.fotoUser = URL;
       }
+      
 
       // Atualize o documento do usuário com os dados atualizados
-      postsCollection
-        .where("UIDusuario", "==", uid)
-        .get()
-        .then(function (querySnapshot) {
-          postsCollection.get().then(function (postsSnapshot) {
-            postsSnapshot.forEach(function (doc) {
-              postID = doc.id;
-
-              postsCollection
-                .doc(postID)
-                .collection("resps")
-                .where("UIDusuario", "==", uid)
-                .get()
-                .then(function (respsSnapshot) {
-                  if (!respsSnapshot.empty) {
-                    respsSnapshot.forEach(function (doc) {
-                      console.log(doc.data());
-                      doc.ref.update({
-                        nomeUser: nome,
-                      });
+      userDocRef
+        .update(updateData)
+        .then(function () {
+          postsCollection
+            .where("UIDusuario", "==", uid)
+            .get()
+            .then(function (querySnapshot) {
+              if(!querySnapshot.empty){
+                querySnapshot.forEach(function (doc) {
+                  console.log(doc.data().post);
+                  doc.ref
+                    .update({updateDataPosts})
+                    .then(function () {
+                      alert("Dados Atualizados com Sucesso!");
+                      window.location.replace("tela-usuario.html");
                     });
-                  }
                 });
+              }else{
+                alert("Dados Atualizados com Sucesso!");
+                window.location.replace("tela-usuario.html");
+              }
+              
             });
-          });
-
-          querySnapshot.forEach(function (doc) {
-            console.log(doc.data().post);
-            doc.ref
-              .update({
-                nomeUser: nome,
-              })
-              .then(function () {
-                userDocRef
-                  .update(updateData)
-                  .then(function () {
-                    alert("Dados Atualizados com Sucesso!");
-                    window.location.replace("tela-usuario.html");
-                  })
-                  .catch(function (error) {
-                    console.error(
-                      "Erro ao atualizar os dados do usuário:",
-                      error
-                    );
-                  });
-              });
-          });
+        })
+        .catch(function (error) {
+          console.error("Erro ao atualizar os dados do usuário:", error);
         });
     } else {
       console.log("Não foi possível obter o usuário autenticado.");
@@ -595,7 +584,8 @@ function addPubli(url) {
                 tag: document.getElementById("tag").value,
                 nomeUser: userData.nome,
                 categ: "post",
-                url: url
+                url: url,
+                fotoUser: userData.url,
               };
               firebase
                 .firestore()
@@ -651,6 +641,7 @@ function addResp() {
                 likesQntd: 0,
                 favsQntd: 0,
                 categ: "resp",
+                fotoUser: userData.url
               };
 
               firebase
@@ -714,20 +705,24 @@ function formatPost(
   respsQntd,
   redirect,
   tag,
-  img
+  img,
+  fotoUser
 ) {
-
-  if (img){
-    var imgCarregado = "style='display:flex'"
-  }else{
-    var imgCarregado = "style='display:none'"
+  if (img) {
+    var imgCarregado = "style='display:flex'";
+  } else {
+    var imgCarregado = "style='display:none'";
   }
-
 
   var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
   <div class="ballPerguntas p-3">
   <div class="cardTittle flex flex-row justify-between">
-    <p id=nome style="color:blue;" class="text-left"> ${userNome}</p>
+  <div class="flex flex-row justify-between">
+   <img class="self-center"style=" width: 50px; height: 50px; clip-path: circle(50% at 50% 50%);"src="${fotoUser}" >
+   <p id=nome style="color:blue;" class="text-left self-center"> ${userNome}</p>
+  </div>
+   
+    
     <h4 class=" text-purple-700 self-center">${tipoPost}</h4>
   </div>
   <div class="options">
@@ -736,7 +731,7 @@ function formatPost(
   <p style=color:black></p>
   <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
   <div class="w-50 h-full flex justify-center border-2 border-black rounded-xl py-2" ${imgCarregado}>
-    <img src="${img}" class="w-1/2 h-52 mb-3" ${imgCarregado}>
+    <img src="${img}" class="w-1/2 h-52 mb-3">
   </div>
       </div>
         <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
@@ -784,6 +779,8 @@ function sortBy(tag) {
               const respsQntd = postData.respsQntd;
               const redirect = "tela-comments.html";
               const tag = postData.tag;
+              const img = postData.url;
+              const imgPerfil = postData.fotoUser;
 
               publis.innerHTML += formatPost(
                 userNome,
@@ -796,7 +793,9 @@ function sortBy(tag) {
                 favsQntd,
                 respsQntd,
                 redirect,
-                tag
+                tag,
+                img,
+                imgPerfil
               );
               checkReact(user.uid, "post");
             });
@@ -837,7 +836,7 @@ function showPosts() {
             const redirect = "tela-comments.html";
             const tag = postData.tag;
             const img = postData.url;
-
+            const fotoUser = postData.fotoUser
             publis.innerHTML += formatPost(
               userNome,
               userUID,
@@ -850,7 +849,8 @@ function showPosts() {
               respsQntd,
               redirect,
               tag,
-              img
+              img,
+              fotoUser
             );
             checkReact(user.uid, "post");
           });
@@ -991,6 +991,8 @@ function comments() {
             const respsQntd1 = postData.respsQntd;
             const tag = postData.tag;
             const redirect = "add-comment.html";
+            const img = postData.url;
+            const fotoUser = postData.fotoUser
 
             publis.innerHTML = formatPost(
               userNome,
@@ -1003,7 +1005,9 @@ function comments() {
               favsQntd,
               respsQntd1,
               redirect,
-              tag
+              tag,
+              img,
+              fotoUser
             );
             checkReact(user.uid, "post");
             const respUID = postData.IDpost;
@@ -1022,7 +1026,10 @@ function comments() {
                     formatTime(time);
                     resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] border-t-2 border-[#ffa9a9] rounded-t-xl bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
-            <p id=nome style="color:blue;" class="text-left"> ${respData.nomeUser}  </p>
+            <div class="flex flex-row justify-between">
+            <img class="self-center" style=" width: 50px; height: 50px; clip-path: circle(50% at 50% 50%);" src="${respData.fotoUser}">
+            <p id=nome style="color:blue;" class="text-left self-center"> ${respData.nomeUser}  </p>
+            </div>
             <div class="balaoPergunta">
             <p style=color:black></p>
             <p class="text-black text-left mb-4"> ${respData.post} </p>
@@ -1080,29 +1087,43 @@ function confirmarExclusao(IDref, num) {
 
 function excluirComment(commentID) {
   var db = firebase.firestore();
+  console.log(commentID)
 
   db.collection("posts")
-    .where("IDresp", "==", commentID)
+    .doc(commentID)
     .get()
-    .then(function (querySnapshot) {
-      querySnapshot.forEach(function (doc) {
+    .then((doc) => {
+        console.log(doc.data)
+        const postRef = doc.data().IDresp;
         doc.ref.delete().then(function () {
-          db.collection("posts")
-            .doc(commentID)
-            .get()
-            .then((doc) => {
-              doc.ref
-                .update({
-                  respsQntd: doc.data().respsQntd - 1,
+                db.collection("posts")
+                .doc(postRef).get()
+                .then((Postdoc) =>{
+                  Postdoc.ref.update({
+                    respsQntd: Postdoc.data().respsQntd - 1,
+                  }).then(function () {
+                    db.collection("reacts")
+                    .where("postID", "==", commentID)
+                    .get()
+                    .then(function (querySnapshot){
+                      contagem = querySnapshot.size
+                      if (!querySnapshot.empty){
+                        querySnapshot.forEach(function (Reactdoc){
+                          Reactdoc.ref.delete();
+                          contagem--
+                        })
+                      }else{
+                        alert("Publicação Excluída com sucesso!");
+                        window.location.reload();
+                      }
+                    })
+                  })
                 })
-                .then(function () {
-                  alert("Comentário excluído com sucesso!");
-                  window.location.reload();
-                });
-            });
+              
+            
         });
         console.log(commentID);
-      });
+      
     });
 }
 
@@ -1117,17 +1138,24 @@ function excluirPost(postUID) {
         .delete()
         .then(function () {
           db.collection("reacts")
-            .where("postID", "==", postUID)
-            .get()
-            .then(function (reactSnapshot) {
+          .where("postID", "==", postUID)
+          .get()
+          .then(function (reactSnapshot) {
+            contagem = reactSnapshot.size 
+            if (!reactSnapshot.empty) {
               reactSnapshot.forEach(function (doc) {
-                doc.ref.delete().then(() => {
-                  console.log("reações excluidas com sucesso!");
-                  alert("Publicação Excluída com sucesso!");
-                  window.location.reload();
-                });
+                doc.ref.delete();
+                console.log("Reações encontradas:", reactSnapshot.size);
+                 contagem--
               });
-            });
+            } else {
+              alert("Publicação Excluída com sucesso!");
+              window.location.reload();
+            }
+
+            // Após o forEach, você pode recarregar a página
+
+          });
         })
         .catch(function (error) {
           console.error("Erro ao excluir: ", error);
@@ -1518,10 +1546,8 @@ function pesquisa() {
   });
 }
 
-const toggleMenu = () => 
-  document.body.classList.toggle("open")  
+const toggleMenu = () => document.body.classList.toggle("open");
 
-  
 firebase.initializeApp(firebaseConfig);
 
 const storage = firebase.storage();
@@ -1529,48 +1555,57 @@ const firestore = firebase.firestore();
 
 // Lidar com o envio do formulário
 
-const buttonimg = document.getElementById("post");
-const buttonimgPerfil = document.getElementById("post2");
+const buttonimg = document.getElementById("post")
+  ? document.getElementById("post")
+  : null;
+
+if (buttonimg) {
+  buttonimg.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const file = imageInput.files[0];
+    console.log(file);
+
+    if (file) {
+      // Faça o upload da imagem para o Firebase Storage
+      const storageRef = storage.ref().child(`img/${file.name}`);
+      await storageRef.put(file);
+
+      // Obtenha a URL de download da imagem
+      const downloadURL = await storageRef.getDownloadURL();
+      addPubli(downloadURL);
+      // Armazene a URL no Firestore
+      alert("Imagem enviada com sucesso!");
+    } else {
+      addPubli("")
+    }
+  });
+}
+
+const buttonimgPerfil = document.getElementById("post2")
+  ? document.getElementById("post2")
+  : null;
 const imageInput = document.getElementById("loadImage");
 
-buttonimg.addEventListener("click", async (e) => {
-  e.preventDefault();
+if (buttonimgPerfil) {
+  buttonimgPerfil.addEventListener("click", async (e) => {
+    e.preventDefault();
 
-  const file = imageInput.files[0];
-  console.log(file);
+    const file = imageInput.files[0];
+    console.log(file);
 
-  if (file) {
-    // Faça o upload da imagem para o Firebase Storage
-    const storageRef = storage.ref().child(`img/${file.name}`);
-    await storageRef.put(file);
+    if (file) {
+      // Faça o upload da imagem para o Firebase Storage
+      const storageRef = storage.ref().child(`img/${file.name}`);
+      await storageRef.put(file);
 
-    // Obtenha a URL de download da imagem
-    const downloadURL = await storageRef.getDownloadURL();
-    addPubli(downloadURL)
-    // Armazene a URL no Firestore
-    alert("Imagem enviada com sucesso!");
-  } else {
-    alert("Selecione uma imagem antes de enviar.");
-  }
-});
+      // Obtenha a URL de download da imagem
+      const URL = await storageRef.getDownloadURL();
+        atualizar(URL);
 
-buttonimgPerfil.addEventListener("click", async (e) => {
-  e.preventDefault();
-
-  const file = imageInput.files[0];
-  console.log(file);
-
-  if (file) {
-    // Faça o upload da imagem para o Firebase Storage
-    const storageRef = storage.ref().child(`img/${file.name}`);
-    await storageRef.put(file);
-
-    // Obtenha a URL de download da imagem
-    const URL = await storageRef.getDownloadURL();
-    atualizar(URL)
-    // Armazene a URL no Firestore
-    alert("Imagem enviada com sucesso!");
-  } else {
-    alert("Selecione uma imagem antes de enviar.");
-  }
-});
+        
+      }else{
+        atualizar();
+      }
+  });
+}
