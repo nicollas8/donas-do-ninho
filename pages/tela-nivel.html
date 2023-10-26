@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <title>Nível</title
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body>
+<body onload="nivel()">
   <div class="w-screen h-screen bg-white flex-col justify-center items-center inline-flex">
     <div class="self-stretch grow shrink basis-0 flex-col justify-start items-center gap-5 inline-flex">
       <div class="self-stretch p-2 bg-rose-100 justify-start items-center gap-7 inline-flex">
@@ -19,7 +17,7 @@
       </div>
       <div class="flex-col justify-start items-center gap-9 flex">
         <div class="justify-start items-start gap-[25.20px] inline-flex">
-          <img class="Image14 w-[189px] h-[189px] rounded-[55.88px]" src="https://via.placeholder.com/189x189" />
+          <img id="fotoNivel"class="Image14 w-[350px] h-[350px] rounded-[55.88px]" src=""/>
         </div>
         <div class="text-center text-black text-lg font-normal font-['Roboto']">Mãe Coruja</div>
         <div class="flex-col justify-start items-start gap-3 flex">
@@ -38,4 +36,12 @@
     </div>
   </div>
 </body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
+<script src="https://unpkg.com/@phosphor-icons/web"></script>
 </html>

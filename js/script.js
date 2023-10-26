@@ -104,6 +104,7 @@ const buttonCreateAccount = document.getElementById("btnCadInfo")
   ? document.getElementById("btnCadInfo")
   : null;
 if (buttonCreateAccount) {
+  
   buttonCreateAccount.addEventListener("click", () => {
     const formData = {
       nome: document.getElementById("nome").value,
@@ -144,7 +145,15 @@ if (buttonCreateAccount) {
         .createUserWithEmailAndPassword(formData.email, formData.senha)
         .then((data) => {
           const uid = data.user.uid;
-
+          var tipo =formData.tipoMom
+  
+          if (tipo == "Mãe"){
+            var nivel = 1;
+          }else if(tipo == "Gestante"){
+            var nivel = 6
+          }else if(tipo == "Não sou mãe"){
+            var nivel = 0;
+          }
           const users = firebase.firestore().collection("usuarios");
           users
             .doc(uid)
@@ -153,6 +162,7 @@ if (buttonCreateAccount) {
               nome: formData.nome,
               dataNascimento: formData.data,
               tipoMom: formData.tipoMom,
+              nivel: nivel,
             })
             .then(() => {
               alert("conta criada com sucesso");
@@ -1551,8 +1561,8 @@ function pesquisa() {
 
 const toggleMenu = () => document.body.classList.toggle("open");
 
-firebase.initializeApp(firebaseConfig);
 
+firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const firestore = firebase.firestore();
 
@@ -1612,3 +1622,26 @@ if (buttonimgPerfil) {
       }
   });
 }
+
+function nivel(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      var nivel = document.getElementById("fotoNivel").src;
+      console.log(nivel);
+
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .get()
+      .then((doc) => {
+        src = "../assets/lvl"+ doc.data().nivel +"Icon.svg"
+        nivel = src;
+        console.log(nivel)
+        document.getElementById("fotoNivel").src = nivel;
+      }
+      )
+      
+    
+    }
+  })
+  }
