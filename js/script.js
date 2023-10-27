@@ -163,6 +163,7 @@ if (buttonCreateAccount) {
               dataNascimento: formData.data,
               tipoMom: formData.tipoMom,
               nivel: nivel,
+              url: "../assets/noPhoto.png"
             })
             .then(() => {
               alert("conta criada com sucesso");
@@ -392,7 +393,15 @@ function viewPublis() {
 function att() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      var uid = user.uid;
+      var urlParams = new URLSearchParams(window.location.search);
+      var IDpostagem = urlParams.get("ID");
+      
+      if (IDpostagem){
+        var uid = IDpostagem
+      }else{
+        var uid = user.uid;
+      }
+      
       //console.log(uid);
       var usersCollection = firebase.firestore().collection("usuarios");
       var userRef = firebase.firestore().collection("usuarios").doc(uid);
@@ -732,7 +741,8 @@ function formatPost(
   redirect,
   tag,
   img,
-  fotoUser
+  fotoUser,
+  donoUID
 ) {
   if (img) {
     var imgCarregado = "style='display:flex'";
@@ -743,7 +753,7 @@ function formatPost(
   var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
   <div class="ballPerguntas p-3">
   <div class="cardTittle flex flex-row justify-between">
-  <div class="flex flex-row justify-between">
+  <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
    <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" >
    <p id=nome class="text-left self-center text-blue-800"> ${userNome}</p>
   </div>
@@ -863,6 +873,7 @@ function showPosts() {
             const tag = postData.tag;
             const img = postData.url;
             const fotoUser = postData.fotoUser
+            const UIDdonoPost = postData.UIDusuario;
             publis.innerHTML += formatPost(
               userNome,
               userUID,
@@ -876,7 +887,8 @@ function showPosts() {
               redirect,
               tag,
               img,
-              fotoUser
+              fotoUser,
+              UIDdonoPost
             );
             checkReact(user.uid, "post");
           });
@@ -1583,12 +1595,12 @@ const firestore = firebase.firestore();
 const buttonimg = document.getElementById("post")
   ? document.getElementById("post")
   : null;
-
+  const imageInputPubli = document.getElementById("loadImage");
 if (buttonimg) {
   buttonimg.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const file = imageInput.files[0];
+    const file = imageInputPubli.files[0];
     console.log(file);
 
     if (file) {
@@ -1638,8 +1650,6 @@ if (buttonimgPerfil) {
 function nivel(){
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      var nivel = document.getElementById("fotoNivel").src;
-      console.log(nivel);
 
       firebase.firestore()
       .collection("usuarios")
@@ -1647,13 +1657,42 @@ function nivel(){
       .get()
       .then((doc) => {
         src = "../assets/lvl"+ doc.data().nivel +"Icon.svg"
-        nivel = src;
-        console.log(nivel)
-        document.getElementById("fotoNivel").src = nivel;
+        document.getElementById("fotoNivel").src = src;
+        document.getElementById("nivelMae").textContent = "Nível: "+ doc.data().nivel
+        const lvl = doc.data().nivel
+        checarNivel(lvl);
       }
       )
       
     
     }
   })
+  }
+
+  function checarNivel(nivel){
+    firebase.firestore()
+    .collection("nivel")
+    .where("nvl", "==", nivel)
+    .get()
+    .then(function (querySnapshot){
+      if(!querySnapshot.empty){
+        querySnapshot.forEach(function (doc) {
+          document.getElementById("tituloMae").textContent = doc.data().titulo
+          document.getElementById("descTitulo").textContent = doc.data().desc
+          doc.data()
+          document.getElementById("lvlBar")
+        })
+      }
+    })
+  }
+
+  function acessarPerfil(donoUID){
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (donoUID == user.uid){
+        window.location.href='tela-usuario.html';
+      }else{
+        window.location.href='tela-usuarioOutro.html' + '?ID=' + donoUID
+      }
+    })
+    
   }
