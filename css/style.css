@@ -213,8 +213,7 @@ p {
 
 /* footer perfil  */
 
-nav {
-  z-index: 3;
+.nav {
   position: fixed;
   bottom: 0;
 }
@@ -358,44 +357,45 @@ textarea {
 
 .tela-user {
   width: 100%;
+  background-color: #fff;
   height: 100vh;
-  background-color: #ffffff;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 
 .box-perfil {
-  z-index: 4;
-  position: fixed;
-  margin-bottom: 1rem;
-  width: 100vw;
-  top: 0;
   display: flex;
-  align-items: center;
   justify-content: center;
-  background-color: #ffa9a9;
   border-radius: 0 0 4rem 4rem;
-  margin-bottom: 4rem;
+  background-color: #ffa9a9;
+  width: 100vw;
 }
 
 .box-perfil img {
   padding: 2rem 0 2rem 0;
-  width: 30vw;
+  width: 20vw;
 }
 
 .boxUser {
-  z-index: 3;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  gap: 20px;
   height: 100vh;
-  gap: 1.5rem;
 }
 
-.inputInfo {
+.groupInputPerfil {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inputInfo, .inputInfoPerfil {
   display: flex;
   flex-direction: column;
   width: 90vw;
@@ -425,12 +425,13 @@ textarea {
 
 .buttonEditPerfil {
   display: flex;
-  padding-bottom: 6rem;
   justify-content: center;
+  align-items: center;
   margin-top: 2rem;
   gap: 2rem;
 }
-.buttonEditPerfil button {
+
+.boxUser button {
   background-color: #ffa9a9;
   box-shadow: 2px 2px 6px rgb(248, 105, 105);
   padding: 0.8rem;
@@ -438,7 +439,6 @@ textarea {
   border: none;
   border-radius: 2rem;
 }
-
 
 .btnPerfil button {
   background-color: #ffa9a9;
@@ -473,17 +473,6 @@ textarea {
 .inputIcon i {
   padding-left: 1rem;
   align-self: center;
-}
-
-.inputInfoPerfil {
-  display: flex;
-  flex-direction: column;
-  width: 90vw;
-}
-
-.options-publi {
-  position: fixed;
-  bottom: 0;
 }
 
 .burger {
@@ -566,18 +555,17 @@ aside {
   border-radius: 1rem;
 }
 
-
 #imgPerfil{
   border-radius: 50% 50%;
   width: 150px;
   height: 200px;
 }
-
+/* 
 #fotoPerfil {
   border-radius: 50% 50%;
   width: 150px;
   height: 200px;
-}
+} */
 
 #fotoPubli {
   width: 90vw;
