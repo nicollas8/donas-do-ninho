@@ -22,11 +22,12 @@
         <button id="editPerfil" onclick="location.href='tela-editPerfil.html'">Editar Perfil</button>
         <button id="verNivel" onclick="location.href='tela-nivel.html'"> Ver nível </button>
         <button id="" onclick="location.href='view-publi.html'"> Publicações </button>
+        <button onclick="location.href='tela-interesses.html'"> Escolher seus Interesses</button>
         <button onclick="location.href='view-favs.html'"> favoritos</button>
       </div>
       <button  id="btnLogOut" class="text-red-700" onclick="logOut()"> Sair </button>
     </aside>
-    <img id="imgPerfil" src="../assets/perfil-usuário.png" alt="">
+    <img id="imgPerfil" src="../assets/noPhoto.png" alt="">
   </header>
   <main class="boxUser">
     <div class="inputInfo">
@@ -62,10 +63,11 @@
     <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
   </nav>
 </body>
-<script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
-<script src="../js/firebase-init.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
 </html>

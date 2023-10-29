@@ -6,9 +6,10 @@
     <link rel="stylesheet" href="../css/style.css">
     <title>Donas do Ninho</title> 
 </head>
-<body onload="showPostsInicio()">
-    <div class="page-header flex flex-col items-center border-b-2 border-[#ffa9a9] p-3 bg-[#ffa9a9] rounded-b-xl">
-        <p class="text-2xl text-pink-700 font-cursive">DONAS DO NINHO</p>
+<body onload="showPosts()">
+    <div class="page-header flex flex-row justify-between border-b-2 border-[#ffa9a9] p-3 bg-[#ffa9a9] rounded-b-xl">
+        <input type="search" name="" id="termo" class="w-screen ">
+        <img src="../assets/pesquisa.png" alt="" class="w-8 self-center pl-2" onclick="pesquisa()">
     </div>
     <div class="pageContent" id="id">
         <div id="publis" class="mb-16">

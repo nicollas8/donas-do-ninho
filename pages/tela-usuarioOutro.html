@@ -11,7 +11,7 @@
 </head>
 <body class="tela-user" onload="att()">
   <header class="box-perfil">
-    <img id="imgPerfil" src="../assets/perfil-usuário.png" alt="">
+    <img id="imgPerfil" src="../assets/noPhoto.png" alt="">
   </header>
   <main class="boxUser">
     <div class="inputInfo">
@@ -38,6 +38,9 @@
         <span class="bio-user" id="bio-user"> </span>
       </div>
     </div>
+
+    <button onclick="enterPublis()"> Ver Publicações</button>
+  </div>
   </main>
   <nav class="navPerfil">
     <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
@@ -47,10 +50,11 @@
     <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
   </nav>
 </body>
-<script src="../js/script.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
 <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
-<script src="../js/firebase-init.js"></script>
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
 </html>

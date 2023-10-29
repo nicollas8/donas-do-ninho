@@ -8,31 +8,25 @@
   <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
   <title>Donas do ninho</title>
 </head>
-<body class="tela-user">
+<body class="tela-user" onload="addInter()">
   <header class="box-perfil">
-    <label type="file" class="">
-      <img src="../assets/noPhoto.png" alt="" id="imgPerfil" class="">
-      <input type="file" name="file" class="hidden" id="loadImagePerfil" onchange="previewFilePerfil()">
-    </label>
+      <img src="" alt="" id="imgPerfil" class="">
   </header>
   <main class="boxUser">
-      <div class="inputInfoPerfil">
-          <label for=""> Alterar Nome </label>
-          <div class="inputIcon">
-              <i class="fi fi-rr-id-badge"></i>
-              <input type="text" name="nameNew" id="nameNew" placeholder="Alterar Nome">
-          </div>
-      </div>
-      <div class="inputInfoPerfil">
-          <label for=""> Adicionar Biografia </label>
-              <div class="inputIcon">
-                  <i class="fi fi-rs-book-open-cover"></i>
-                  <input type="text" name="biografia" id="biografia" placeholder="Biografia (Opcional)">
-              </div>
-        </div>
+    SELECIONE SEUS INTERESSES AGORA
+    <div class="grid grid-cols-2 gap-4">
+        <button id=Filhos onclick="toggleInterest('Filhos')"> Filhos </button>
+        <button id=Amamentação onclick="toggleInterest('Amamentação')"> Amamentação </button>
+        <button id=Gestação onclick="toggleInterest('Gestação')"> Gestação </button>
+        <button id=Medicação onclick="toggleInterest('Medicação')"> Medicação </button>
+        <button id=Cuidados onclick="toggleInterest('Cuidados')"> Cuidados </button>
+        <button id=Planejamento onclick="toggleInterest('Planejamento')"> Planejamento </button>
+        <button id=Saúde onclick="toggleInterest('Saúde')"> Saúde </button>
+        <button id=Promoções onclick="toggleInterest('Promoções')"> Promoções </button>
+    </div>
+      
         <div class="buttonEditPerfil">
-          <button id="post2">Atualizar dados</button>
-          <button onclick="excluirConta()"> Excluir Conta</button>
+          <button id="send" onclick="sendInterest()">Atualizar dados</button>
         </div>
   </main>
   <nav class="navPerfil">

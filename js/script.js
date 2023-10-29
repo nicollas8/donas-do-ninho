@@ -398,6 +398,7 @@ function att() {
       
       if (IDpostagem){
         var uid = IDpostagem
+        
       }else{
         var uid = user.uid;
       }
@@ -442,6 +443,65 @@ function att() {
         });
     }
   });
+}
+
+function showPostsUser(user){
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  const posts = document.getElementById("posts");
+
+  firebase.firestore()
+  .collection("posts")
+  .where("UIDusuario", "==", IDpostagem)
+  .get().then(function (querySnapshot){
+    if(!querySnapshot.empty){
+      querySnapshot.forEach(function (postDoc){
+        
+        
+        var postData = postDoc.data();
+            var postID = postDoc.id;
+
+            time = postData.timestamp;
+            tempo = formatTime(time);
+            const userUID = user.uid;
+            const tipoPost = postData.tipo;
+            const contPost = postData.post;
+            const likesQntd = postData.likesQntd;
+            const deslikesQntd = postData.deslikesQntd;
+            const favsQntd = postData.favsQntd;
+            const respsQntd = postData.respsQntd;
+            const redirect = "tela-comments.html";
+            const tag = postData.tag;
+            const img = postData.url;
+            posts.innerHTML += 
+            `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            <div class="ballPerguntas p-3">
+              <h4 class=" text-purple-700 self-center text-rig">${tipoPost}</h4>
+            </div>
+            <div class="options">
+            </div>
+            <div class="balaoPergunt a">
+            <p style=color:black></p>
+            <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
+            <div class="flex justify-center py-2 h-1/4" >
+              <img src="${img}" class="w-full h-1/4 mb-3">
+            </div>
+                </div>
+                  <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
+                    <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
+                    <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../assets/comentário.svg" alt=""> </button>
+                    <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
+                  </div>
+                <div class="flex justify-between">
+                <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
+                <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
+                </div>
+              </div>`
+      })
+    }
+  })
 }
 
 function atualizar(URL) {
@@ -489,7 +549,7 @@ function atualizar(URL) {
                 querySnapshot.forEach(function (doc) {
                   console.log(doc.data().post);
                   doc.ref
-                    .update({updateDataPosts})
+                    .update(updateDataPosts)
                     .then(function () {
                       alert("Dados Atualizados com Sucesso!");
                       window.location.replace("tela-usuario.html");
@@ -754,7 +814,7 @@ function formatPost(
   <div class="ballPerguntas p-3">
   <div class="cardTittle flex flex-row justify-between">
   <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
-   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" >
+   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="  background-color: grey;">
    <p id=nome class="text-left self-center text-blue-800"> ${userNome}</p>
   </div>
    
@@ -914,7 +974,7 @@ function checkReact(userUID, local) {
     .where("categ", "==", local)
     .get()
     .then(function (reactQuerySnapshot) {
-      console.log(userUID);
+      //console.log(userUID);
       if (!reactQuerySnapshot.empty) {
         reactQuerySnapshot.forEach(function (reactDoc) {
           if (reactDoc.data().react == 1) {
@@ -1065,7 +1125,7 @@ function comments() {
                     resps.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] border-t-2 border-[#ffa9a9] rounded-t-xl bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <div class="flex flex-row">
-            <img class="self-center w-12 h-12 mr-2 rounded-full" src="${respData.fotoUser}">
+            <img class="self-center w-12 h-12 mr-2 rounded-full" src="${respData.fotoUser}" style="background-color: grey;">
             <p id=nome style="color:blue;" class="text-left self-center"> ${respData.nomeUser}  </p>
             </div>
             <div class="balaoPergunta flex flex-row">
@@ -1660,7 +1720,39 @@ function nivel(){
         document.getElementById("fotoNivel").src = src;
         document.getElementById("nivelMae").textContent = "Nível: "+ doc.data().nivel
         const lvl = doc.data().nivel
+        const xp = doc.data().xp;
+        if (lvl == 1){
+          var xpMulti = 20;
+        }else if(lvl == 2){
+          var xpMulti = 10;
+        }else if(lvl == 3){
+          var xpMulti = 8;
+        }else if(lvl == 4){
+          var xpMulti = 5;
+        }else if(lvl == 5){
+          var xpMulti = 4;
+        }
+        const xpBar = xp*xpMulti
+        console.log(xpBar)
+        
+        document.getElementById("lvlBar").style.width = xpBar +"px"
+        
         checarNivel(lvl);
+        if (document.getElementById("lvlBar").style.width >= "200px"){
+          if (lvl != 5){
+            doc.ref.update({
+              xp: 0,
+              nivel: doc.data().nivel+1,
+            }).then(function (){
+              window.location.reload();
+            })
+          }else{
+            console.log("Você chegou no nível máximo!")
+          }
+          
+        }
+        
+        
       }
       )
       
@@ -1696,3 +1788,254 @@ function nivel(){
     })
     
   }
+  
+function enterPublis(){
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  window.location.href='tela-publisOutro.html' + '?ID=' + IDpostagem
+  console.log(IDpostagem)
+}
+
+function voltarOutro(){
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  window.location.href='tela-usuarioOutro.html' + '?ID=' + IDpostagem
+}
+
+function viewPublisOutro() {
+      var urlParams = new URLSearchParams(window.location.search);
+      var uidOutro = urlParams.get("ID");
+      
+
+      // Consulta para recuperar o documento do usuário com base no UID
+      const publis = document.getElementById("publis");
+      const comments = document.getElementById("comments");
+      firebase
+        .firestore()
+        .collection("posts")
+        .where("UIDusuario", "==", uidOutro)
+        .where("categ", "==", "post")
+        .get()
+        .then(function (querySnapshot) {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach(function (doc) {
+              // O documento do usuário foi encontrado
+              var userPosts = doc.data();
+
+              if (userPosts.url) {
+                var imgCarregado = "style='display:flex'";
+              } else {
+                var imgCarregado = "style='display:none'";
+              }
+              publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+        <div class="ballPerguntas p-3">
+          <div class="options">
+            <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
+          </div>
+          <div class="balaoPergunta" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
+            doc.id
+          }';">
+            <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
+            <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
+            <img src="${userPosts.url}" class="w-full h-1/4 mb-3">
+            </div>
+          </div>
+          <div class="react flex flex-row gap-10 justify-around mb-2">
+          
+          <p style=color:black> ${doc.data().likesQntd}
+          <img class="w-6" src="../assets/like.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().deslikesQntd}
+          <img class="w-6" src="../assets/dislike.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().favsQntd}
+          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+
+          <p style=color:black> ${doc.data().respsQntd}
+          <img class="w-6" src="../assets/comentário.svg" alt=""></p>
+          <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+          </div>
+        </div>
+      </div>`;
+            });
+          } else {
+            console.log("Nenhum usuário encontrado com o UID fornecido.");
+          }
+        })
+        .catch(function (error) {
+          console.error("Erro ao recuperar dados do usuário:", error);
+        });
+
+      firebase
+        .firestore()
+        .collection("posts")
+        .orderBy("timestamp", "desc")
+        .where("categ", "==", "resp")
+        .where("UIDusuario", "==", uidOutro)
+        .get()
+        .then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            const postID = doc.data().IDresp;
+            console.log(doc.data());
+            firebase
+              .firestore()
+              .collection("posts")
+              .doc(postID)
+              .get()
+              .then((docPost) => {
+                let nome = docPost.data().nomeUser;
+
+                comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            <div class="ballPerguntas p-4">
+            <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
+            <div class="balaoPergunta">
+            <p style=color:black></p>
+            <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postID}'" class="text-black text-left mb-4"> ${
+                  doc.data().post
+                } </p>
+            </div>
+            <div class="react flex flex-row gap-10 justify-around mb-2">
+            <p style=color:black> ${doc.data().likesQntd}
+            <img class="w-6" src="../assets/like.svg" alt=""> </p>
+            <p style=color:black> ${doc.data().deslikesQntd}
+            <img class="w-6" src="../assets/dislike.svg" alt=""> </p>
+            <p style=color:black> ${doc.data().favsQntd}
+          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+            <button class="w-6"> <img src="../assets/três-pontos.svg" alt=""></button>
+            </div>
+          </div>`;
+              });
+          });
+        });
+}
+
+function addInter(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .get()
+      .then((doc) =>{
+        doc.data().interesses.forEach(function (interesse){
+          document.getElementById(interesse).style.backgroundColor = "blue"
+        })
+        
+        document.getElementById("imgPerfil").src = doc.data().url
+      })
+    }
+  })
+
+}
+
+var interesses = [];
+
+function toggleInterest(interestNumber) {
+            var button = document.getElementById(interestNumber);
+            var index = interesses.indexOf(interestNumber);
+
+            if (button.style.backgroundColor == "blue"){
+              button.style.backgroundColor = "";
+              interesses.splice(index, 1);
+              button.style.backgroundColor = "";
+            }else{
+              if (index !== -1) {
+                interesses.splice(index, 1);
+                button.style.backgroundColor = "";
+            } else {
+                interesses.push(interestNumber);
+                button.style.backgroundColor = "blue";
+            }
+            }
+            console.log(interesses)
+           
+}
+
+function sendInterest(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .get()
+      .then((doc) =>{
+        doc.ref.update({
+          interesses: interesses,
+        }).then(function(){
+          alert("Interesses Atualizados com sucesso!");
+          window.location.href="tela-usuario.html";
+        })
+        console.log(doc.data().interesses[2])
+      })
+    }
+  })
+
+}
+
+function showPostsInicio(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      var db = firebase.firestore();
+      const postsRef = db.collection("posts");
+      db.collection("usuarios").doc(user.uid)
+      .get().then((doc) => {
+        num = 0
+        doc.data().interesses.forEach(function (interesse){
+          num++
+          var interest = interesse;
+          console.log(interest)
+        
+
+          postsRef
+          .where("categ", "==", "post")
+          .where("tag", "==", interesse)
+          .orderBy("timestamp", "desc")
+          .get()
+          .then((postsQuerySnapshot) => {
+          postsQuerySnapshot.forEach((postDoc) => {
+            console.log(postDoc.data());
+            var postData = postDoc.data();
+            var postID = postDoc.id;
+
+            time = postData.timestamp;
+            tempo = formatTime(time);
+            const userNome = postData.nomeUser;
+            const userUID = user.uid;
+            const tipoPost = postData.tipo;
+            const contPost = postData.post;
+            const likesQntd = postData.likesQntd;
+            const deslikesQntd = postData.deslikesQntd;
+            const favsQntd = postData.favsQntd;
+            const respsQntd = postData.respsQntd;
+            const redirect = "tela-comments.html";
+            const tag = postData.tag;
+            const img = postData.url;
+            const fotoUser = postData.fotoUser
+            const UIDdonoPost = postData.UIDusuario;
+            publis.innerHTML += formatPost(
+              userNome,
+              userUID,
+              tipoPost,
+              contPost,
+              postID,
+              likesQntd,
+              deslikesQntd,
+              favsQntd,
+              respsQntd,
+              redirect,
+              tag,
+              img,
+              fotoUser,
+              UIDdonoPost
+            );
+            checkReact(user.uid, "post");
+          })
+        })
+      })
+      })
+
+      
+      
+    }
+  })
+}
