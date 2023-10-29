@@ -104,7 +104,6 @@ const buttonCreateAccount = document.getElementById("btnCadInfo")
   ? document.getElementById("btnCadInfo")
   : null;
 if (buttonCreateAccount) {
-  
   buttonCreateAccount.addEventListener("click", () => {
     const formData = {
       nome: document.getElementById("nome").value,
@@ -145,13 +144,13 @@ if (buttonCreateAccount) {
         .createUserWithEmailAndPassword(formData.email, formData.senha)
         .then((data) => {
           const uid = data.user.uid;
-          var tipo =formData.tipoMom
-  
-          if (tipo == "Mãe"){
+          var tipo = formData.tipoMom;
+
+          if (tipo == "Mãe") {
             var nivel = 1;
-          }else if(tipo == "Gestante"){
-            var nivel = 6
-          }else if(tipo == "Não sou mãe"){
+          } else if (tipo == "Gestante") {
+            var nivel = 6;
+          } else if (tipo == "Não sou mãe") {
             var nivel = 0;
           }
           const users = firebase.firestore().collection("usuarios");
@@ -163,7 +162,7 @@ if (buttonCreateAccount) {
               dataNascimento: formData.data,
               tipoMom: formData.tipoMom,
               nivel: nivel,
-              url: "../assets/noPhoto.png"
+              url: "../assets/noPhoto.png",
             })
             .then(() => {
               alert("conta criada com sucesso");
@@ -246,30 +245,32 @@ function comparePassword() {
 }
 
 function previewFilePerfil() {
-
   const previewPerfil = document.getElementById("imgPerfil");
   const filePerfil = document.getElementById("loadImagePerfil").files[0];
   const reader = new FileReader();
 
-  reader.addEventListener("load", () => {
-    previewPerfil.src = reader.result; 
-  }, 
+  reader.addEventListener(
+    "load",
+    () => {
+      previewPerfil.src = reader.result;
+    },
     false
-  ); 
-    if (filePerfil) {
-    previewPerfil.style.display = "block"
-    reader.readAsDataURL(filePerfil)
+  );
+  if (filePerfil) {
+    previewPerfil.style.display = "block";
+    reader.readAsDataURL(filePerfil);
   }
 }
 
 function previewFile() {
-  
   const preview = document.getElementById("fotoPubli");
   const file = document.getElementById("loadImage").files[0];
   const reader = new FileReader();
-  
-  reader.addEventListener("load",() => {
-    preview.src = reader.result;
+
+  reader.addEventListener(
+    "load",
+    () => {
+      preview.src = reader.result;
     },
     false
   );
@@ -395,14 +396,13 @@ function att() {
     if (user) {
       var urlParams = new URLSearchParams(window.location.search);
       var IDpostagem = urlParams.get("ID");
-      
-      if (IDpostagem){
-        var uid = IDpostagem
-        
-      }else{
+
+      if (IDpostagem) {
+        var uid = IDpostagem;
+      } else {
         var uid = user.uid;
       }
-      
+
       //console.log(uid);
       var usersCollection = firebase.firestore().collection("usuarios");
       var userRef = firebase.firestore().collection("usuarios").doc(uid);
@@ -427,12 +427,12 @@ function att() {
                 userData.tipoMom;
               document.getElementById("bio-user").textContent =
                 userData.biografia;
-                if (userData.url){
-                  var foto = userData.url
-                }else{
-                  var foto = "../assets/perfil-usuário.png"
-                }
-                img.setAttribute("src", foto);
+              if (userData.url) {
+                var foto = userData.url;
+              } else {
+                var foto = "../assets/perfil-usuário.png";
+              }
+              img.setAttribute("src", foto);
             });
           } else {
             console.log("Nenhum usuário encontrado com o UID fornecido.");
@@ -445,36 +445,35 @@ function att() {
   });
 }
 
-function showPostsUser(user){
+function showPostsUser(user) {
   var urlParams = new URLSearchParams(window.location.search);
   var IDpostagem = urlParams.get("ID");
   const posts = document.getElementById("posts");
 
-  firebase.firestore()
-  .collection("posts")
-  .where("UIDusuario", "==", IDpostagem)
-  .get().then(function (querySnapshot){
-    if(!querySnapshot.empty){
-      querySnapshot.forEach(function (postDoc){
-        
-        
-        var postData = postDoc.data();
-            var postID = postDoc.id;
+  firebase
+    .firestore()
+    .collection("posts")
+    .where("UIDusuario", "==", IDpostagem)
+    .get()
+    .then(function (querySnapshot) {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(function (postDoc) {
+          var postData = postDoc.data();
+          var postID = postDoc.id;
 
-            time = postData.timestamp;
-            tempo = formatTime(time);
-            const userUID = user.uid;
-            const tipoPost = postData.tipo;
-            const contPost = postData.post;
-            const likesQntd = postData.likesQntd;
-            const deslikesQntd = postData.deslikesQntd;
-            const favsQntd = postData.favsQntd;
-            const respsQntd = postData.respsQntd;
-            const redirect = "tela-comments.html";
-            const tag = postData.tag;
-            const img = postData.url;
-            posts.innerHTML += 
-            `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+          time = postData.timestamp;
+          tempo = formatTime(time);
+          const userUID = user.uid;
+          const tipoPost = postData.tipo;
+          const contPost = postData.post;
+          const likesQntd = postData.likesQntd;
+          const deslikesQntd = postData.deslikesQntd;
+          const favsQntd = postData.favsQntd;
+          const respsQntd = postData.respsQntd;
+          const redirect = "tela-comments.html";
+          const tag = postData.tag;
+          const img = postData.url;
+          posts.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-3">
               <h4 class=" text-purple-700 self-center text-rig">${tipoPost}</h4>
             </div>
@@ -498,10 +497,10 @@ function showPostsUser(user){
                 <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
                 <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
                 </div>
-              </div>`
-      })
-    }
-  })
+              </div>`;
+        });
+      }
+    });
 }
 
 function atualizar(URL) {
@@ -535,7 +534,6 @@ function atualizar(URL) {
         updateData.url = URL;
         updateDataPosts.fotoUser = URL;
       }
-      
 
       // Atualize o documento do usuário com os dados atualizados
       userDocRef
@@ -545,21 +543,18 @@ function atualizar(URL) {
             .where("UIDusuario", "==", uid)
             .get()
             .then(function (querySnapshot) {
-              if(!querySnapshot.empty){
+              if (!querySnapshot.empty) {
                 querySnapshot.forEach(function (doc) {
                   console.log(doc.data().post);
-                  doc.ref
-                    .update(updateDataPosts)
-                    .then(function () {
-                      alert("Dados Atualizados com Sucesso!");
-                      window.location.replace("tela-usuario.html");
-                    });
+                  doc.ref.update(updateDataPosts).then(function () {
+                    alert("Dados Atualizados com Sucesso!");
+                    window.location.replace("tela-usuario.html");
+                  });
                 });
-              }else{
+              } else {
                 alert("Dados Atualizados com Sucesso!");
                 window.location.replace("tela-usuario.html");
               }
-              
             });
         })
         .catch(function (error) {
@@ -690,8 +685,22 @@ function addPubli(url) {
                   setTimeout(function () {
                     button.disabled = true;
                   }, 2000);
-                  alert("Publicação adicionada com sucesso!");
-                  window.location.replace("tela-inicio.html");
+                  firebase
+                    .firestore()
+                    .collection("usuarios")
+                    .doc(uid)
+                    .get()
+                    .then((userDoc) => {
+                      userDoc.ref
+                        .update({
+                          xp: userDoc.data().xp + 5,
+                        })
+                        .then(function () {
+                          console.log("XP Concedido papai");
+                          alert("Publicação adicionada com sucesso!");
+                          window.location.replace("tela-inicio.html");
+                        });
+                    });
                 })
                 .catch((error) => {
                   console.error("Erro ao adicionar a publicação:", error);
@@ -736,7 +745,7 @@ function addResp() {
                 likesQntd: 0,
                 favsQntd: 0,
                 categ: "resp",
-                fotoUser: userData.url
+                fotoUser: userData.url,
               };
 
               firebase
@@ -932,7 +941,7 @@ function showPosts() {
             const redirect = "tela-comments.html";
             const tag = postData.tag;
             const img = postData.url;
-            const fotoUser = postData.fotoUser
+            const fotoUser = postData.fotoUser;
             const UIDdonoPost = postData.UIDusuario;
             publis.innerHTML += formatPost(
               userNome,
@@ -984,11 +993,12 @@ function checkReact(userUID, local) {
             if (elemento) {
               elemento.style.backgroundColor = "lightgreen";
             } else {
-              console.error(
-                "Elemento não encontrado com o ID 'like" +
-                  reactDoc.data().postID +
-                  "'"
-              );
+              console
+                .warn
+                // "Elemento não encontrado com o ID 'like" +
+                //   reactDoc.data().postID +
+                //   "'"
+                ();
             }
           } else if (reactDoc.data().react == 2) {
             const elemento = document.getElementById(
@@ -997,10 +1007,11 @@ function checkReact(userUID, local) {
             if (elemento) {
               elemento.style.backgroundColor = "red";
             } else {
-              console.error(
-                "Elemento não encontrado com o ID 'deslike" +
-                  reactDoc.data().postID
-              );
+              console
+                .warn
+                // "Elemento não encontrado com o ID 'deslike" +
+                //   reactDoc.data().postID
+                ();
             }
           } else if (reactDoc.data().react == 3) {
             const elemento = document.getElementById(
@@ -1009,11 +1020,12 @@ function checkReact(userUID, local) {
             if (elemento) {
               elemento.style.backgroundColor = "yellow";
             } else {
-              console.error(
-                "Elemento não encontrado com o ID 'fav" +
-                  reactDoc.data().postID +
-                  "'"
-              );
+              console
+                .warn
+                // "Elemento não encontrado com o ID 'fav" +
+                //   reactDoc.data().postID +
+                //   "'"
+                ();
             }
           }
         });
@@ -1090,7 +1102,7 @@ function comments() {
             const tag = postData.tag;
             const redirect = "add-comment.html";
             const img = postData.url;
-            const fotoUser = postData.fotoUser
+            const fotoUser = postData.fotoUser;
 
             publis.innerHTML = formatPost(
               userNome,
@@ -1184,43 +1196,43 @@ function confirmarExclusao(IDref, num) {
 
 function excluirComment(commentID) {
   var db = firebase.firestore();
-  console.log(commentID)
+  console.log(commentID);
 
   db.collection("posts")
     .doc(commentID)
     .get()
     .then((doc) => {
-        console.log(doc.data)
-        const postRef = doc.data().IDresp;
-        doc.ref.delete().then(function () {
-                db.collection("posts")
-                .doc(postRef).get()
-                .then((Postdoc) =>{
-                  Postdoc.ref.update({
-                    respsQntd: Postdoc.data().respsQntd - 1,
-                  }).then(function () {
-                    db.collection("reacts")
-                    .where("postID", "==", commentID)
-                    .get()
-                    .then(function (querySnapshot){
-                      contagem = querySnapshot.size
-                      if (!querySnapshot.empty){
-                        querySnapshot.forEach(function (Reactdoc){
-                          Reactdoc.ref.delete();
-                          contagem--
-                        })
-                      }else{
-                        alert("Publicação Excluída com sucesso!");
-                        window.location.reload();
-                      }
-                    })
-                  })
-                })
-              
-            
-        });
-        console.log(commentID);
-      
+      console.log(doc.data);
+      const postRef = doc.data().IDresp;
+      doc.ref.delete().then(function () {
+        db.collection("posts")
+          .doc(postRef)
+          .get()
+          .then((Postdoc) => {
+            Postdoc.ref
+              .update({
+                respsQntd: Postdoc.data().respsQntd - 1,
+              })
+              .then(function () {
+                db.collection("reacts")
+                  .where("postID", "==", commentID)
+                  .get()
+                  .then(function (querySnapshot) {
+                    contagem = querySnapshot.size;
+                    if (!querySnapshot.empty) {
+                      querySnapshot.forEach(function (Reactdoc) {
+                        Reactdoc.ref.delete();
+                        contagem--;
+                      });
+                    } else {
+                      alert("Publicação Excluída com sucesso!");
+                      window.location.reload();
+                    }
+                  });
+              });
+          });
+      });
+      console.log(commentID);
     });
 }
 
@@ -1235,24 +1247,23 @@ function excluirPost(postUID) {
         .delete()
         .then(function () {
           db.collection("reacts")
-          .where("postID", "==", postUID)
-          .get()
-          .then(function (reactSnapshot) {
-            contagem = reactSnapshot.size 
-            if (!reactSnapshot.empty) {
-              reactSnapshot.forEach(function (doc) {
-                doc.ref.delete();
-                console.log("Reações encontradas:", reactSnapshot.size);
-                 contagem--
-              });
-            } else {
-              alert("Publicação Excluída com sucesso!");
-              window.location.reload();
-            }
+            .where("postID", "==", postUID)
+            .get()
+            .then(function (reactSnapshot) {
+              contagem = reactSnapshot.size;
+              if (!reactSnapshot.empty) {
+                reactSnapshot.forEach(function (doc) {
+                  doc.ref.delete();
+                  console.log("Reações encontradas:", reactSnapshot.size);
+                  contagem--;
+                });
+              } else {
+                alert("Publicação Excluída com sucesso!");
+                window.location.reload();
+              }
 
-            // Após o forEach, você pode recarregar a página
-
-          });
+              // Após o forEach, você pode recarregar a página
+            });
         })
         .catch(function (error) {
           console.error("Erro ao excluir: ", error);
@@ -1323,9 +1334,26 @@ function reactP(num, vs, postID, userUID, type) {
             .then(() => {
               postRef.get().then((doc) => {
                 if (num == 1) {
-                  doc.ref.update({
-                    likesQntd: doc.data().likesQntd - 1,
-                  });
+                  doc.ref
+                    .update({
+                      likesQntd: doc.data().likesQntd - 1,
+                    })
+                    .then(function () {
+                      if (doc.data().UIDusuario != userUID) {
+                        db.collection("usuarios")
+                          .doc(doc.data().UIDusuario)
+                          .get()
+                          .then((userDoc) => {
+                            userDoc.ref
+                              .update({
+                                xp: userDoc.data().xp - 5,
+                              })
+                              .then(function () {
+                                console.log("XP Concedido papai");
+                              });
+                          });
+                      }
+                    });
                   document.getElementById(style).textContent =
                     doc.data().likesQntd - 1;
                 } else {
@@ -1394,6 +1422,20 @@ function reactP(num, vs, postID, userUID, type) {
                             document.getElementById(style).textContent = qntd;
                             document.getElementById(styleVs).textContent =
                               qntdvs;
+                            if (doc.data().UIDusuario != userUID) {
+                              db.collection("usuarios")
+                                .doc(doc.data().UIDusuario)
+                                .get()
+                                .then((userDoc) => {
+                                  userDoc.ref
+                                    .update({
+                                      xp: userDoc.data().xp - 5,
+                                    })
+                                    .then(function () {
+                                      console.log("XP Concedido papai");
+                                    });
+                                });
+                            }
                           });
                       }
                     });
@@ -1427,9 +1469,26 @@ function reactP(num, vs, postID, userUID, type) {
                     console.log("Documento foi adicionado: ", docRef);
                     if (num == 1) {
                       var qntd = doc.data().likesQntd;
-                      doc.ref.update({
-                        likesQntd: qntd + 1,
-                      });
+                      doc.ref
+                        .update({
+                          likesQntd: qntd + 1,
+                        })
+                        .then(function () {
+                          if (doc.data().UIDusuario != userUID) {
+                            db.collection("usuarios")
+                              .doc(doc.data().UIDusuario)
+                              .get()
+                              .then((userDoc) => {
+                                userDoc.ref
+                                  .update({
+                                    xp: userDoc.data().xp + 5,
+                                  })
+                                  .then(function () {
+                                    console.log("XP Concedido papai");
+                                  });
+                              });
+                          }
+                        });
                     } else {
                       var qntd = doc.data().deslikesQntd;
                       doc.ref
@@ -1494,9 +1553,27 @@ function fav(post, userUID, type) {
                       favsQntd: qntdFav - 1,
                     })
                     .then(() => {
-                      document.getElementById(style).textContent = qntdFav - 1;
-                      document.getElementById(style).style.backgroundColor =
-                        "white";
+                      if (doc.data().UIDusuario != userUID) {
+                        firebase
+                          .firestore()
+                          .collection("usuarios")
+                          .doc(doc.data().UIDusuario)
+                          .get()
+                          .then((userDoc) => {
+                            userDoc.ref
+                              .update({
+                                xp: userDoc.data().xp - 10,
+                              })
+                              .then(function () {
+                                console.log("XP Concedido papai");
+                                document.getElementById(style).textContent =
+                                  qntdFav - 1;
+                                document.getElementById(
+                                  style
+                                ).style.backgroundColor = "white";
+                              });
+                          });
+                      }
                     });
                 });
             });
@@ -1519,9 +1596,27 @@ function fav(post, userUID, type) {
                     favsQntd: qntdFav + 1,
                   })
                   .then(() => {
-                    document.getElementById(style).textContent = qntdFav + 1;
-                    document.getElementById(style).style.backgroundColor =
-                      "yellow";
+                    if (doc.data().UIDusuario != userUID) {
+                      firebase
+                        .firestore()
+                        .collection("usuarios")
+                        .doc(doc.data().UIDusuario)
+                        .get()
+                        .then((userDoc) => {
+                          userDoc.ref
+                            .update({
+                              xp: userDoc.data().xp + 10,
+                            })
+                            .then(function () {
+                              console.log("XP Concedido papai");
+                              document.getElementById(style).textContent =
+                                qntdFav + 1;
+                              document.getElementById(
+                                style
+                              ).style.backgroundColor = "yellow";
+                            });
+                        });
+                    }
                   });
               });
           });
@@ -1616,6 +1711,10 @@ function pesquisa() {
                   const favsQntd = postData.favsQntd;
                   const respsQntd = postData.respsQntd;
                   const redirect = "tela-comments.html";
+                  const tag = postData.tag;
+                  const img = postData.url;
+                  const fotoUser = postData.fotoUser;
+                  const UIDdonoPost = postData.UIDusuario;
                   publis.innerHTML += formatPost(
                     userNome,
                     userUID,
@@ -1626,8 +1725,13 @@ function pesquisa() {
                     deslikesQntd,
                     favsQntd,
                     respsQntd,
-                    redirect
+                    redirect,
+                    tag,
+                    img,
+                    fotoUser,
+                    UIDdonoPost
                   );
+                  checkReact(user.uid, "post");
                 }
               });
 
@@ -1645,7 +1749,6 @@ function pesquisa() {
 
 const toggleMenu = () => document.body.classList.toggle("open");
 
-
 firebase.initializeApp(firebaseConfig);
 const storage = firebase.storage();
 const firestore = firebase.firestore();
@@ -1655,7 +1758,7 @@ const firestore = firebase.firestore();
 const buttonimg = document.getElementById("post")
   ? document.getElementById("post")
   : null;
-  const imageInputPubli = document.getElementById("loadImage");
+const imageInputPubli = document.getElementById("loadImage");
 if (buttonimg) {
   buttonimg.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -1674,7 +1777,7 @@ if (buttonimg) {
       // Armazene a URL no Firestore
       alert("Imagem enviada com sucesso!");
     } else {
-      addPubli("")
+      addPubli("");
     }
   });
 }
@@ -1698,136 +1801,133 @@ if (buttonimgPerfil) {
 
       // Obtenha a URL de download da imagem
       const URL = await storageRef.getDownloadURL();
-        atualizar(URL);
-
-        
-      }else{
-        atualizar();
-      }
+      atualizar(URL);
+    } else {
+      atualizar();
+    }
   });
 }
 
-function nivel(){
+function nivel() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-
-      firebase.firestore()
-      .collection("usuarios")
-      .doc(user.uid)
-      .get()
-      .then((doc) => {
-        src = "../assets/lvl"+ doc.data().nivel +"Icon.svg"
-        document.getElementById("fotoNivel").src = src;
-        document.getElementById("nivelMae").textContent = "Nível: "+ doc.data().nivel
-        const lvl = doc.data().nivel
-        const xp = doc.data().xp;
-        if (lvl == 1){
-          var xpMulti = 20;
-        }else if(lvl == 2){
-          var xpMulti = 10;
-        }else if(lvl == 3){
-          var xpMulti = 8;
-        }else if(lvl == 4){
-          var xpMulti = 5;
-        }else if(lvl == 5){
-          var xpMulti = 4;
-        }
-        const xpBar = xp*xpMulti
-        console.log(xpBar)
-        
-        document.getElementById("lvlBar").style.width = xpBar +"px"
-        
-        checarNivel(lvl);
-        if (document.getElementById("lvlBar").style.width >= "200px"){
-          if (lvl != 5){
-            doc.ref.update({
-              xp: 0,
-              nivel: doc.data().nivel+1,
-            }).then(function (){
-              window.location.reload();
-            })
-          }else{
-            console.log("Você chegou no nível máximo!")
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          src = "../assets/lvl" + doc.data().nivel + "Icon.svg";
+          document.getElementById("fotoNivel").src = src;
+          document.getElementById("nivelMae").textContent =
+            "Nível: " + doc.data().nivel;
+          const lvl = doc.data().nivel;
+          const xp = doc.data().xp;
+          if (lvl == 1) {
+            var xpMulti = 20;
+          } else if (lvl == 2) {
+            var xpMulti = 10;
+          } else if (lvl == 3) {
+            var xpMulti = 8;
+          } else if (lvl == 4) {
+            var xpMulti = 5;
+          } else if (lvl == 5) {
+            var xpMulti = 4;
           }
-          
-        }
-        
-        
-      }
-      )
-      
-    
-    }
-  })
-  }
+          const conta = xp / 10;
+          const xpBar = conta * xpMulti;
+          console.log(xp);
+          console.log(xpBar);
 
-  function checarNivel(nivel){
-    firebase.firestore()
+          document.getElementById("lvlBar").style.width = xpBar + "px";
+
+          checarNivel(lvl);
+          if (xpBar >= 200) {
+            if (lvl != 5) {
+              xpGain = 0;
+              doc.ref
+                .update({
+                  xp: xpGain,
+                  nivel: doc.data().nivel + 1,
+                })
+                .then(function () {
+                  window.location.reload();
+                });
+            } else {
+              console.log("Você chegou no nível máximo!");
+            }
+          }
+        });
+    }
+  });
+}
+
+function checarNivel(nivel) {
+  firebase
+    .firestore()
     .collection("nivel")
     .where("nvl", "==", nivel)
     .get()
-    .then(function (querySnapshot){
-      if(!querySnapshot.empty){
+    .then(function (querySnapshot) {
+      if (!querySnapshot.empty) {
         querySnapshot.forEach(function (doc) {
-          document.getElementById("tituloMae").textContent = doc.data().titulo
-          document.getElementById("descTitulo").textContent = doc.data().desc
-          doc.data()
-          document.getElementById("lvlBar")
-        })
+          document.getElementById("tituloMae").textContent = doc.data().titulo;
+          document.getElementById("descTitulo").textContent = doc.data().desc;
+          doc.data();
+          document.getElementById("lvlBar");
+        });
       }
-    })
-  }
-
-  function acessarPerfil(donoUID){
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (donoUID == user.uid){
-        window.location.href='tela-usuario.html';
-      }else{
-        window.location.href='tela-usuarioOutro.html' + '?ID=' + donoUID
-      }
-    })
-    
-  }
-  
-function enterPublis(){
-  var urlParams = new URLSearchParams(window.location.search);
-  var IDpostagem = urlParams.get("ID");
-  window.location.href='tela-publisOutro.html' + '?ID=' + IDpostagem
-  console.log(IDpostagem)
+    });
 }
 
-function voltarOutro(){
+function acessarPerfil(donoUID) {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (donoUID == user.uid) {
+      window.location.href = "tela-usuario.html";
+    } else {
+      window.location.href = "tela-usuarioOutro.html" + "?ID=" + donoUID;
+    }
+  });
+}
+
+function enterPublis() {
   var urlParams = new URLSearchParams(window.location.search);
   var IDpostagem = urlParams.get("ID");
-  window.location.href='tela-usuarioOutro.html' + '?ID=' + IDpostagem
+  window.location.href = "tela-publisOutro.html" + "?ID=" + IDpostagem;
+  console.log(IDpostagem);
+}
+
+function voltarOutro() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  window.location.href = "tela-usuarioOutro.html" + "?ID=" + IDpostagem;
 }
 
 function viewPublisOutro() {
-      var urlParams = new URLSearchParams(window.location.search);
-      var uidOutro = urlParams.get("ID");
-      
+  var urlParams = new URLSearchParams(window.location.search);
+  var uidOutro = urlParams.get("ID");
 
-      // Consulta para recuperar o documento do usuário com base no UID
-      const publis = document.getElementById("publis");
-      const comments = document.getElementById("comments");
-      firebase
-        .firestore()
-        .collection("posts")
-        .where("UIDusuario", "==", uidOutro)
-        .where("categ", "==", "post")
-        .get()
-        .then(function (querySnapshot) {
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach(function (doc) {
-              // O documento do usuário foi encontrado
-              var userPosts = doc.data();
+  // Consulta para recuperar o documento do usuário com base no UID
+  const publis = document.getElementById("publis");
+  const comments = document.getElementById("comments");
+  firebase
+    .firestore()
+    .collection("posts")
+    .where("UIDusuario", "==", uidOutro)
+    .where("categ", "==", "post")
+    .get()
+    .then(function (querySnapshot) {
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(function (doc) {
+          // O documento do usuário foi encontrado
+          var userPosts = doc.data();
 
-              if (userPosts.url) {
-                var imgCarregado = "style='display:flex'";
-              } else {
-                var imgCarregado = "style='display:none'";
-              }
-              publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+          if (userPosts.url) {
+            var imgCarregado = "style='display:flex'";
+          } else {
+            var imgCarregado = "style='display:none'";
+          }
+          publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
           <div class="options">
             <h4 class="py-2 text-purple-700">${userPosts.tipo}</h4>
@@ -1857,42 +1957,42 @@ function viewPublisOutro() {
           </div>
         </div>
       </div>`;
-            });
-          } else {
-            console.log("Nenhum usuário encontrado com o UID fornecido.");
-          }
-        })
-        .catch(function (error) {
-          console.error("Erro ao recuperar dados do usuário:", error);
         });
+      } else {
+        console.log("Nenhum usuário encontrado com o UID fornecido.");
+      }
+    })
+    .catch(function (error) {
+      console.error("Erro ao recuperar dados do usuário:", error);
+    });
 
-      firebase
-        .firestore()
-        .collection("posts")
-        .orderBy("timestamp", "desc")
-        .where("categ", "==", "resp")
-        .where("UIDusuario", "==", uidOutro)
-        .get()
-        .then(function (querySnapshot) {
-          querySnapshot.forEach(function (doc) {
-            const postID = doc.data().IDresp;
-            console.log(doc.data());
-            firebase
-              .firestore()
-              .collection("posts")
-              .doc(postID)
-              .get()
-              .then((docPost) => {
-                let nome = docPost.data().nomeUser;
+  firebase
+    .firestore()
+    .collection("posts")
+    .orderBy("timestamp", "desc")
+    .where("categ", "==", "resp")
+    .where("UIDusuario", "==", uidOutro)
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        const postID = doc.data().IDresp;
+        console.log(doc.data());
+        firebase
+          .firestore()
+          .collection("posts")
+          .doc(postID)
+          .get()
+          .then((docPost) => {
+            let nome = docPost.data().nomeUser;
 
-                comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            comments.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
             <div class="balaoPergunta">
             <p style=color:black></p>
             <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postID}'" class="text-black text-left mb-4"> ${
-                  doc.data().post
-                } </p>
+              doc.data().post
+            } </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <p style=color:black> ${doc.data().likesQntd}
@@ -1904,138 +2004,163 @@ function viewPublisOutro() {
             <button class="w-6"> <img src="../assets/três-pontos.svg" alt=""></button>
             </div>
           </div>`;
-              });
           });
-        });
+      });
+    });
 }
 
-function addInter(){
+function addInter() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      firebase.firestore()
-      .collection("usuarios")
-      .doc(user.uid)
-      .get()
-      .then((doc) =>{
-        doc.data().interesses.forEach(function (interesse){
-          document.getElementById(interesse).style.backgroundColor = "blue"
-        })
-        
-        document.getElementById("imgPerfil").src = doc.data().url
-      })
-    }
-  })
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          var img = document.querySelector("#imgPerfil");
+          if (doc.data().interesses) {
+            doc.data().interesses.forEach(function (interesse) {
+              document.getElementById(interesse).style.backgroundColor = "blue";
+            });
+          }
+          document.getElementById("imgPerfil").src = doc.data().url;
 
+          if (doc.data().url) {
+            var foto = doc.data().url;
+          } else {
+            var foto = "../assets/perfil-usuário.png";
+          }
+          img.setAttribute("src", foto);
+        });
+    }
+  });
 }
 
 var interesses = [];
 
 function toggleInterest(interestNumber) {
-            var button = document.getElementById(interestNumber);
-            var index = interesses.indexOf(interestNumber);
+  var button = document.getElementById(interestNumber);
+  var index = interesses.indexOf(interestNumber);
 
-            if (button.style.backgroundColor == "blue"){
-              button.style.backgroundColor = "";
-              interesses.splice(index, 1);
-              button.style.backgroundColor = "";
-            }else{
-              if (index !== -1) {
-                interesses.splice(index, 1);
-                button.style.backgroundColor = "";
-            } else {
-                interesses.push(interestNumber);
-                button.style.backgroundColor = "blue";
-            }
-            }
-            console.log(interesses)
-           
+  if (button.style.backgroundColor == "blue") {
+    button.style.backgroundColor = "";
+    interesses.splice(index, 1);
+    button.style.backgroundColor = "";
+  } else {
+    if (index !== -1) {
+      interesses.splice(index, 1);
+      button.style.backgroundColor = "";
+    } else {
+      interesses.push(interestNumber);
+      button.style.backgroundColor = "blue";
+    }
+  }
+  console.log(interesses);
 }
 
-function sendInterest(){
+function sendInterest() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      firebase.firestore()
-      .collection("usuarios")
-      .doc(user.uid)
-      .get()
-      .then((doc) =>{
-        doc.ref.update({
-          interesses: interesses,
-        }).then(function(){
-          alert("Interesses Atualizados com sucesso!");
-          window.location.href="tela-usuario.html";
-        })
-        console.log(doc.data().interesses[2])
-      })
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          doc.ref
+            .update({
+              interesses: interesses,
+            })
+            .then(function () {
+              alert("Interesses Atualizados com sucesso!");
+              window.location.href = "tela-usuario.html";
+            });
+        });
     }
-  })
-
+  });
 }
 
-function showPostsInicio(){
+function showPostsInicio() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
-      db.collection("usuarios").doc(user.uid)
-      .get().then((doc) => {
-        num = 0
-        doc.data().interesses.forEach(function (interesse){
-          num++
-          var interest = interesse;
-          console.log(interest)
-        
+      db.collection("usuarios")
+        .doc(user.uid)
+        .get()
+        .then((doc) => {
+          num = 0;
 
-          postsRef
-          .where("categ", "==", "post")
-          .where("tag", "==", interesse)
-          .orderBy("timestamp", "desc")
-          .get()
-          .then((postsQuerySnapshot) => {
-          postsQuerySnapshot.forEach((postDoc) => {
-            console.log(postDoc.data());
-            var postData = postDoc.data();
-            var postID = postDoc.id;
+          var interesses = doc.data().interesses;
 
-            time = postData.timestamp;
-            tempo = formatTime(time);
-            const userNome = postData.nomeUser;
-            const userUID = user.uid;
-            const tipoPost = postData.tipo;
-            const contPost = postData.post;
-            const likesQntd = postData.likesQntd;
-            const deslikesQntd = postData.deslikesQntd;
-            const favsQntd = postData.favsQntd;
-            const respsQntd = postData.respsQntd;
-            const redirect = "tela-comments.html";
-            const tag = postData.tag;
-            const img = postData.url;
-            const fotoUser = postData.fotoUser
-            const UIDdonoPost = postData.UIDusuario;
-            publis.innerHTML += formatPost(
-              userNome,
-              userUID,
-              tipoPost,
-              contPost,
-              postID,
-              likesQntd,
-              deslikesQntd,
-              favsQntd,
-              respsQntd,
-              redirect,
-              tag,
-              img,
-              fotoUser,
-              UIDdonoPost
-            );
-            checkReact(user.uid, "post");
-          })
-        })
-      })
-      })
+          var queries = interesses.map(function (interesse) {
+            return postsRef
+              .where("categ", "==", "post")
+              .where("tag", "==", interesse)
+              .get();
+          });
 
-      
-      
+          Promise.all(queries).then(function (querySnapshots) {
+            var posts = [];
+            querySnapshots.forEach(function (querySnapshot) {
+              querySnapshot.forEach(function (doc) {
+                posts.push(doc.data());
+              });
+            });
+
+            posts.sort(function (a, b) {
+              return b.timestamp - a.timestamp;
+            });
+            var i = 0;
+
+            posts.forEach(function (postData) {
+              firebase
+                .firestore()
+                .collection("posts")
+                .where("IDpost", "==", postData.IDpost)
+                .get()
+                .then(function (querySnapshot) {
+                  querySnapshot.forEach(function (dados) {
+                    var postID = dados.id;
+
+                    time = postData.timestamp;
+                    tempo = formatTime(time);
+                    const userNome = postData.nomeUser;
+                    const userUID = user.uid;
+                    const tipoPost = postData.tipo;
+                    const contPost = postData.post;
+                    const likesQntd = postData.likesQntd;
+                    const deslikesQntd = postData.deslikesQntd;
+                    const favsQntd = postData.favsQntd;
+                    const respsQntd = postData.respsQntd;
+                    const redirect = "tela-comments.html";
+                    const tag = postData.tag;
+                    const img = postData.url;
+                    const fotoUser = postData.fotoUser;
+                    const UIDdonoPost = postData.UIDusuario;
+                    publis.innerHTML += formatPost(
+                      userNome,
+                      userUID,
+                      tipoPost,
+                      contPost,
+                      postID,
+                      likesQntd,
+                      deslikesQntd,
+                      favsQntd,
+                      respsQntd,
+                      redirect,
+                      tag,
+                      img,
+                      fotoUser,
+                      UIDdonoPost
+                    );
+                    checkReact(user.uid, "post");
+                  });
+                });
+            });
+          });
+        });
     }
-  })
+  });
 }
