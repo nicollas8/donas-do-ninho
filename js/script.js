@@ -824,11 +824,11 @@ function formatPost(
   <div class="cardTittle flex flex-row justify-between">
   <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
    <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="  background-color: grey;">
-   <p id=nome class="text-left self-center text-blue-800"> ${userNome}</p>
+   <p id=nome class="text-left self-center text-black"> ${userNome}</p>
   </div>
    
     
-    <h4 class=" text-purple-700 self-center">${tipoPost}</h4>
+    <h4 class=" text-red-700 self-center">${tipoPost}</h4>
   </div>
   <div class="options">
   </div>
@@ -847,7 +847,7 @@ function formatPost(
           <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
-      <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
+      <p class="text-left mb-2 text-orange-600" onclick="sortBy('${tag}')"> ${tag}</p>
       <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
       </div>
     </div>`;

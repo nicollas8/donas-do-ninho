@@ -76,6 +76,25 @@ select {
   color: var(--cor-erros);
 }
 
+.checkTermos {
+  display: flex;
+  flex-direction: row;
+  margin: 10px 0 0 10px;
+  gap: 8px;
+}
+
+.checkTermos input[type ="checkbox"]{
+  appearance: auto;
+}
+
+.checkTermos label {
+  align-self: center;
+}
+
+.checkTermos a {
+  text-decoration: none;
+}
+
 .btn {
   margin-top: 2rem;
   background: var(--cor-logo);
