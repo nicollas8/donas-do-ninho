@@ -2167,7 +2167,14 @@ function showPostsInicio() {
 }
 
 function pedindo(uid) {
-  
+  if ('serviceWorker' in navigator){
+    navigator.serviceWorker.register('../js/firebase-messaging-sw.js')
+    .then(function (registration){
+      console.log('Service Worker registrado')
+    }).catch(function (error){
+      console.log('Erro ao adicionar: ', error)
+    })
+  }
 
   console.log(messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' }))
 
