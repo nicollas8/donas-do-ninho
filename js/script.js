@@ -2167,49 +2167,46 @@ function showPostsInicio() {
 }
 
 function pedindo(uid) {
-  if ('serviceWorker' in navigator){
+  if ('serviceWorker' in navigator) {
     if (window.location.hostname === '127.0.0.1') {
-      var url = '/js/firebase-messaging-sw.js'
-    }else{
-      var url = 'https://nicollas8.github.io/donas-do-ninho/js/firebase-messaging-sw.js'
-    } 
-    navigator.serviceWorker.register(url)
-    .then(function (registration){
-      console.log('Service Worker registrado', registration)
-    }).catch(function (error){
-      console.log('Erro ao adicionar: ', error)
-    })
-  }
-
-  console.log(messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' }))
-
-  messaging
-  .getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' })
-  .then((currentToken) => {
-    if (currentToken) {
-      // Você obteve um token de notificação.
-      firebase.firestore()
-      .collection('usuarios')
-      .doc(uid)
-      .get()
-      .then((doc) =>{
-        doc.ref.update({
-          token: currentToken,
-        })
-      })
-
-      console.log("Token atual:", currentToken);
+      var url = '/js/firebase-messaging-sw.js';
     } else {
-      // Nenhum token disponível, solicite permissão ao usuário.
-      return messaging.requestPermission();
+      var url = 'https://nicollas8.github.io/donas-do-ninho/js/firebase-messaging-sw.js';
     }
-  }).then(() => {
-    console.log("Permissão concedida.");
-  })
-  .catch((err) => {
-    console.log("Erro ao solicitar permissão:", err);
-  });
-
+    
+    navigator.serviceWorker.register(url)
+      .then(function (registration) {
+        console.log('Service Worker registrado', registration);
+        
+        // Solicite o token após o registro do Service Worker
+        return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
+      })
+      .then((currentToken) => {
+        if (currentToken) {
+          // Você obteve um token de notificação.
+          firebase.firestore()
+            .collection('usuarios')
+            .doc(uid)
+            .get()
+            .then((doc) => {
+              doc.ref.update({
+                token: currentToken,
+              });
+            });
+          
+          console.log("Token atual:", currentToken);
+        } else {
+          // Nenhum token disponível, solicite permissão ao usuário.
+          return messaging.requestPermission();
+        }
+      })
+      .then(() => {
+        console.log("Permissão concedida.");
+      })
+      .catch((err) => {
+        console.log("Erro ao solicitar permissão:", err);
+      });
+  }
 }
 
 function tetes(){
