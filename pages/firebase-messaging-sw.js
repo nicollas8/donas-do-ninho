@@ -1,24 +1,34 @@
+// firebase-messaging-sw.js
+
 importScripts('https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js');
 importScripts('https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js');
 
-firebase.initializeApp({
+const firebaseConfig = {
     apiKey: "AIzaSyB2J40UU-zVhIF5uvHgsyYyAd-qIegz5QQ",
     authDomain: "donasdoninho.firebaseapp.com",
     projectId: "donasdoninho",
     storageBucket: "donasdoninho.appspot.com",
     messagingSenderId: "775885688659",
-    appId: "1:775885688659:web:93a137be1d6443b9041ba6",
-    measurementId: "G-6H97D5FZNE"
-});
+    appId: "1:775885688659:web:93a137be1d6443b9041ba6"
+};
 
+firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(function(payload) {
-  const notificationTitle = payload.notification.title;
-  const notificationOptions = {
-    body: payload.notification.body,
-    icon: payload.notification.icon,
+self.addEventListener('notificationclick', function(event) {
+  // Lidar com o clique na notificação, se necessário.
+  // Pode redirecionar o usuário para um URL, por exemplo.
+  // Exemplo: clients.openWindow('https://example.com');
+});
+
+self.addEventListener('push', function(event) {
+  const options = {
+    body: event.data.text(),
+    icon: '/assets/logoAPP.svg', // Ícone da notificação
+    badge: '/assets/noPhoto.png', // Ícone de contagem (pode ser nulo)
   };
 
-  self.registration.showNotification(notificationTitle, notificationOptions);
+  event.waitUntil(
+    self.registration.showNotification('Título da Notificação', options)
+  );
 });

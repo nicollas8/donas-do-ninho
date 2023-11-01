@@ -2167,15 +2167,10 @@ function showPostsInicio() {
 }
 
 function pedindo(uid) {
-  if (window.location.hostname == '127.0.0.1') {
-    var url = '/firebase-messaging-sw.js';
-  } else {
-    var url = '/firebase-messaging-sw.js';
-  }
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(url)
-      .then( (registration) => {
-        console.log('Service Worker registrado', registration, url);
+    navigator.serviceWorker.register('firebase-messaging-sw.js')
+      .then(function (registration) {
+        console.log('Service Worker registrado', registration);
         
         // Solicite o token após o registro do Service Worker
         return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
