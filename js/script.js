@@ -2168,9 +2168,9 @@ function showPostsInicio() {
 
 function pedindo(uid) {
   if ('serviceWorker' in navigator){
-    navigator.serviceWorker.register('../js/firebase-messaging-sw.js')
+    navigator.serviceWorker.register('/firebase-messaging-sw.js')
     .then(function (registration){
-      console.log('Service Worker registrado')
+      console.log('Service Worker registrado', registration)
     }).catch(function (error){
       console.log('Erro ao adicionar: ', error)
     })
