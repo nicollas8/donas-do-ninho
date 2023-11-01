@@ -2084,7 +2084,7 @@ function sendInterest() {
 function showPostsInicio() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      pedindo()
+      pedindo(user.uid)
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       db.collection("usuarios")
@@ -2166,7 +2166,8 @@ function showPostsInicio() {
   });
 }
 
-function pedindo() {
+function pedindo(uid) {
+  
 
   console.log(messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' }))
 
@@ -2175,6 +2176,16 @@ function pedindo() {
   .then((currentToken) => {
     if (currentToken) {
       // Você obteve um token de notificação.
+      firebase.firestore()
+      .collection('usuarios')
+      .doc(uid)
+      .get()
+      .then((doc) =>{
+        doc.ref.update({
+          token: currentToken,
+        })
+      })
+
       console.log("Token atual:", currentToken);
     } else {
       // Nenhum token disponível, solicite permissão ao usuário.
@@ -2190,10 +2201,12 @@ function pedindo() {
 }
 
 function tetes(){
+  
   messaging.requestPermission()
   .then(function () {
     console.log("Foi concedido");
     return messaging.getToken();
+    
   })
   .then(function (token){
     console.log("token: ", token)
