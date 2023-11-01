@@ -2173,9 +2173,7 @@ function pedindo(uid) {
     var url = '../firebase-messaging-sw.js';
   }
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(url, {
-      scope:'/'
-    })
+    navigator.serviceWorker.register(url)
       .then( (registration) => {
         console.log('Service Worker registrado', registration, url);
         
