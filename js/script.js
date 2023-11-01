@@ -2173,7 +2173,9 @@ function pedindo(uid) {
     var url = 'https://nicollas8.github.io/donas-do-ninho/firebase-messaging-sw.js';
   }
   if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register(url)
+    navigator.serviceWorker.register(url, {
+      scope:'/'
+    })
       .then( (registration) => {
         console.log('Service Worker registrado', registration, url);
         
