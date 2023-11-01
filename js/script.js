@@ -2167,16 +2167,15 @@ function showPostsInicio() {
 }
 
 function pedindo(uid) {
+  if (window.location.hostname == '127.0.0.1') {
+    var url = '../firebase-messaging-sw.js';
+  } else {
+    var url = 'https://nicollas8.github.io/donas-do-ninho/firebase-messaging-sw.js';
+  }
   if ('serviceWorker' in navigator) {
-    if (window.location.hostname === '127.0.0.1') {
-      var url = '/js/firebase-messaging-sw.js';
-    } else {
-      var url = 'https://nicollas8.github.io/donas-do-ninho/js/firebase-messaging-sw.js';
-    }
-    
     navigator.serviceWorker.register(url)
-      .then(function (registration) {
-        console.log('Service Worker registrado', registration);
+      .then( (registration) => {
+        console.log('Service Worker registrado', registration, url);
         
         // Solicite o token após o registro do Service Worker
         return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
