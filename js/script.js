@@ -2168,9 +2168,9 @@ function showPostsInicio() {
 
 function pedindo(uid) {
   if (window.location.hostname == '127.0.0.1') {
-    var url = '../firebase-messaging-sw.js';
+    var url = '/firebase-messaging-sw.js';
   } else {
-    var url = '../firebase-messaging-sw.js';
+    var url = '/firebase-messaging-sw.js';
   }
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register(url)
