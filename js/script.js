@@ -2168,7 +2168,12 @@ function showPostsInicio() {
 
 function pedindo(uid) {
   if ('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/js/firebase-messaging-sw.js')
+    if (window.location.hostname === '127.0.0.1') {
+      var url = '/js/firebase-messaging-sw.js'
+    }else{
+      var url = 'https://nicollas8.github.io/donas-do-ninho/js/firebase-messaging-sw.js'
+    } 
+    navigator.serviceWorker.register(url)
     .then(function (registration){
       console.log('Service Worker registrado', registration)
     }).catch(function (error){
