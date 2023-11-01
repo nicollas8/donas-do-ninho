@@ -1,4 +1,4 @@
-// TELA LOGIN
+const messaging = firebase.messaging();
 
 function onChangeEmail() {
   toggleBtnDisabled();
@@ -918,7 +918,7 @@ function showPosts() {
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       // Obtenha todos os documentos da coleção 'posts'
-
+      
       postsRef
         .where("categ", "==", "post")
         .orderBy("timestamp", "desc")
@@ -2084,6 +2084,7 @@ function sendInterest() {
 function showPostsInicio() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+      pedindo()
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       db.collection("usuarios")
@@ -2164,3 +2165,41 @@ function showPostsInicio() {
     }
   });
 }
+
+function pedindo() {
+
+  console.log(messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' }))
+
+  messaging
+  .getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' })
+  .then((currentToken) => {
+    if (currentToken) {
+      // Você obteve um token de notificação.
+      console.log("Token atual:", currentToken);
+    } else {
+      // Nenhum token disponível, solicite permissão ao usuário.
+      return messaging.requestPermission();
+    }
+  }).then(() => {
+    console.log("Permissão concedida.");
+  })
+  .catch((err) => {
+    console.log("Erro ao solicitar permissão:", err);
+  });
+
+}
+
+function tetes(){
+  messaging.requestPermission()
+  .then(function () {
+    console.log("Foi concedido");
+    return messaging.getToken();
+  })
+  .then(function (token){
+    console.log("token: ", token)
+  })
+  .catch(function (error){
+    console.error("Deu problema ", error)
+  })
+}
+
