@@ -636,6 +636,8 @@ function excluirPosts(uidDoUsuario) {
 }
 
 function addPubli(url) {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
   if (document.getElementById("publi").value == "") {
     alert("Por favor, digite algo para enviar!");
   } else if (document.getElementById("tipo").value == "") {
@@ -645,8 +647,7 @@ function addPubli(url) {
   } else {
     const button = document.getElementById("post");
     button.disabled = true;
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
+    
         var uid = user.uid;
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
@@ -711,9 +712,11 @@ function addPubli(url) {
             alert("deu erro");
           }
         });
-      }
-    });
+      
+    
   }
+}
+});
 }
 
 function addResp() {
@@ -1480,6 +1483,7 @@ function reactP(num, vs, postID, userUID, type) {
                               .doc(doc.data().UIDusuario)
                               .get()
                               .then((userDoc) => {
+                                addNotify(doc.id, userUID, doc.data().UIDusuario, 'like')
                                 userDoc.ref
                                   .update({
                                     xp: userDoc.data().xp + 5,
@@ -2085,7 +2089,7 @@ function sendInterest() {
 function showPostsInicio() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      pedindo(user.uid)
+      // pedindo(user.uid)
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       db.collection("usuarios")
@@ -2167,56 +2171,104 @@ function showPostsInicio() {
   });
 }
 
-function pedindo(uid) {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('firebase-messaging-sw.js')
-      .then(function (registration) {
-        console.log('Service Worker registrado', registration);
+// function pedindo(uid) {
+//   if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('firebase-messaging-sw.js')
+//       .then(function (registration) {
+//         console.log('Service Worker registrado', registration);
         
-        // Solicite o token após o registro do Service Worker
-        return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
-      })
-      .then((currentToken) => {
-        if (currentToken) {
-          // Você obteve um token de notificação.
-          firebase.firestore()
-            .collection('usuarios')
-            .doc(uid)
-            .get()
-            .then((doc) => {
-              doc.ref.update({
-                token: currentToken,
-              });
-            });
+//         // Solicite o token após o registro do Service Worker
+//         return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
+//       })
+//       .then((currentToken) => {
+//         if (currentToken) {
+//           // Você obteve um token de notificação.
+//           firebase.firestore()
+//             .collection('usuarios')
+//             .doc(uid)
+//             .get()
+//             .then((doc) => {
+//               doc.ref.update({
+//                 token: currentToken,
+//               });
+//             });
           
-          console.log("Token atual:", currentToken);
-        } else {
-          // Nenhum token disponível, solicite permissão ao usuário.
-          return messaging.requestPermission();
-        }
-      })
-      .then(() => {
-        console.log("Permissão concedida.");
-      })
-      .catch((err) => {
-        console.log("Erro ao solicitar permissão:", err);
-      });
-  }
-}
+//           console.log("Token atual:", currentToken);
+//         } else {
+//           // Nenhum token disponível, solicite permissão ao usuário.
+//           return messaging.requestPermission();
+//         }
+//       })
+//       .then(() => {
+//         console.log("Permissão concedida.");
+//       })
+//       .catch((err) => {
+//         console.log("Erro ao solicitar permissão:", err);
+//       });
+//   }
+// }
 
-function tetes(){
-  
-  messaging.requestPermission()
-  .then(function () {
-    console.log("Foi concedido");
-    return messaging.getToken();
+function formatNotify(time, UID, commentID, type){
+  tempo =formatTime(time)
+  console.log(tempo, UID, commentID, type)
+
+  firebase.firestore()
+  .collection("usuarios")
+  .doc(UID)
+  .get()
+  .then((doc)=> {
+    console.log(doc.data().nome)
+    var content = `
+    <div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+    <div class="flex flex-row p-3">
+    <img class="self-center w-12 h-12 rounded-full mr-2" src="" style="  background-color: grey;">
+    <p class="text-left self-center text-black"> ${commentID} </p>
+    </div>
+    </div>`
     
   })
-  .then(function (token){
-    console.log("token: ", token)
-  })
-  .catch(function (error){
-    console.error("Deu problema ", error)
-  })
+  return content;
 }
 
+function notis(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      const notis = document.getElementById('notis')
+      
+
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .collection("notificações")
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty){
+            querySnapshot.forEach((doc) => {
+              console.log(doc.data())
+              notis.innerHTML += formatNotify(doc.data().timestamp, doc.data().UID, doc.data().commentID, doc.data().type)
+            })
+          
+        }else{
+          console.log("Não tem coisa dentro")
+        }
+      })
+
+    }
+  });
+}
+
+function addNotify(commentID, userUID, uid, tipo){
+
+
+  const db = firebase.firestore();
+  const userRef = db.collection("usuarios").doc(uid)
+  const notifyRef = userRef.collection("notificações")
+
+  const dados = {
+    commentID: commentID,
+    UID: userUID,
+    timestamp: new Date(),
+    type: tipo
+  }
+  notifyRef.add(dados)
+}
