@@ -1851,9 +1851,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    const buttonimgPerfil = document.getElementById("post2")
-      ? document.getElementById("post2")
-      : null;
+    const buttonimgPerfil = document.getElementById("post2");
     const imageInput = document.getElementById("loadImagePerfil");
 
     if (buttonimgPerfil) {
@@ -1864,13 +1862,47 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log(file);
 
         if (file) {
-          // Faça o upload da imagem para o Firebase Storage
-          const storageRef = storage.ref().child(`img/${file.name}`);
-          await storageRef.put(file);
+          // Exiba a imagem no elemento de pré-visualização
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            // Crie uma div para exibir a imagem para corte
+            const imagePreview = document.createElement("div");
+            imagePreview.innerHTML = `<img id="cropperImage" src="${e.target.result}">`;
+            document.body.appendChild(imagePreview);
 
-          // Obtenha a URL de download da imagem
-          const URL = await storageRef.getDownloadURL();
-          atualizar(URL);
+            // Inicialize o cropper
+            const cropperImage = document.getElementById("cropperImage");
+            const cropper = new Cropper(cropperImage, {
+              aspectRatio: 1, // Pode ajustar para a proporção desejada (1 para quadrado)
+              viewMode: 1, // Pode ajustar a visualização de acordo com suas necessidades
+            });
+
+            // Quando o usuário pressionar o botão de corte
+            const cropButton = document.createElement("button");
+            cropButton.textContent = "Crop";
+            document.body.appendChild(cropButton);
+
+            cropButton.addEventListener("click", async () => {
+              // Obtenha a imagem recortada
+              const croppedCanvas = cropper.getCroppedCanvas();
+
+              // Converta o canvas em Blob
+              croppedCanvas.toBlob(async (blob) => {
+                // Faça o upload da imagem recortada para o Firebase Storage
+                const storageRef = storage.ref().child(`img/${file.name}`);
+                await storageRef.put(blob);
+
+                // Obtenha a URL de download da imagem
+                const URL = await storageRef.getDownloadURL();
+                atualizar(URL);
+
+                // Remova a pré-visualização e o botão de corte
+                document.body.removeChild(imagePreview);
+                document.body.removeChild(cropButton);
+              });
+            });
+          };
+          reader.readAsDataURL(file);
         } else {
           atualizar();
         }
