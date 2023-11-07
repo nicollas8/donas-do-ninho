@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do Ninho</title>
+</head>
+<body class="h-screen w-full bg-white">
+    <header class="flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
+        <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-inicio.html'">
+        <p class= "text-white self-center">Configuração</p>
+    </header>
+    <main class="flex flex-col mt-8 fixed">
+        <div class="menuConfig flex flex-col gap-6 w-full">
+            <div class="flex flex-row">
+                    <img src="../assets/user.svg" alt="" class="w-10 p-2">
+                    <div class="flex flex-col self-center">
+                        <a href="" class="">Informações da conta</a>
+                        <p class="text-gray-700">Veja as Informações do seu perfil</p>
+                    </div>
+            </div>
+            <div class="flex flex-row">
+                <img src="../assets/bell.svg" alt="" class="w-10 p-2">
+                <div class="flex flex-col self-center">
+                    <a href="" class="">Notificações</a>
+                    <p class="text-gray-700">Selecione os tipos de notificação que você recebe</p>
+                </div>
+            </div>
+            <div class="flex flex-row">
+                <img src="../assets/shield-check.svg" alt="" class="w-10 p-2">
+                <div class="flex flex-col self-center">
+                    <a href="" class="">Políticas de privacidade</a>
+                    <span class="text-gray-700">Saiba mais sobre as nossas políticas de privacidade e suporte</span>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-4 justify-center fixed bottom-10 right-10">
+            <img src="../assets/exit.svg" alt="" class="w-6">
+            <button onclick="logOut()" class=""> Sair </button>
+        </div>
+    </main>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
+</html>

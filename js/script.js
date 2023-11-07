@@ -312,7 +312,8 @@ function viewPublis() {
           <div class="balaoPergunta" onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${
             doc.id
           }';">
-            <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
+          <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
+            <img src="${userPosts.url}" class="w-full">
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
           
@@ -636,6 +637,8 @@ function excluirPosts(uidDoUsuario) {
 }
 
 function addPubli(url) {
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
   if (document.getElementById("publi").value == "") {
     alert("Por favor, digite algo para enviar!");
   } else if (document.getElementById("tipo").value == "") {
@@ -645,8 +648,7 @@ function addPubli(url) {
   } else {
     const button = document.getElementById("post");
     button.disabled = true;
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
+    
         var uid = user.uid;
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
@@ -711,9 +713,11 @@ function addPubli(url) {
             alert("deu erro");
           }
         });
-      }
-    });
+      
+    
   }
+}
+});
 }
 
 function addResp() {
