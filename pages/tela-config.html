@@ -2,41 +2,40 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
     <title>Donas do Ninho</title>
 </head>
-<body class="h-screen w-full bg-white">
-    <header class="flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
+<body class="bg-white">
+    <header class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
         <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-inicio.html'">
-        <p class= "text-white self-center">Configuração</p>
+        <h4 class="self-center text-white">Configurações</h4>
     </header>
-    <main class="flex flex-col mt-8 fixed">
-        <div class="menuConfig flex flex-col gap-6 w-full">
-            <div class="flex flex-row">
-                    <img src="../assets/user.svg" alt="" class="w-10 p-2">
-                    <div class="flex flex-col self-center">
-                        <a href="" class="">Informações da conta</a>
-                        <p class="text-gray-700">Veja as Informações do seu perfil</p>
-                    </div>
-            </div>
-            <div class="flex flex-row">
-                <img src="../assets/bell.svg" alt="" class="w-10 p-2">
-                <div class="flex flex-col self-center">
-                    <a href="" class="">Notificações</a>
-                    <p class="text-gray-700">Selecione os tipos de notificação que você recebe</p>
-                </div>
-            </div>
-            <div class="flex flex-row">
-                <img src="../assets/shield-check.svg" alt="" class="w-10 p-2">
-                <div class="flex flex-col self-center">
-                    <a href="" class="">Políticas de privacidade</a>
-                    <span class="text-gray-700">Saiba mais sobre as nossas políticas de privacidade e suporte</span>
-                </div>
+    <main class="flex flex-col gap-3 p-2">
+        <div class="flex flex-row gap-2">
+            <img src="../assets/user.svg" alt="" class="w-8">
+            <div class="flex flex-col self-center">
+                <a href="info-conta.html">Informações da conta</a>
+                <span>Ver suas Informações pessoais</span>
             </div>
         </div>
-        <div class="flex gap-4 justify-center fixed bottom-10 right-10">
-            <img src="../assets/exit.svg" alt="" class="w-6">
-            <button onclick="logOut()" class=""> Sair </button>
+        <div class="flex flex-row gap-2">
+            <img src="../assets/bell.svg" alt="" class="w-7">
+            <div class="flex flex-col self-center">
+                <a href="gerenciar-noticacao.html">Notificações</a>
+                <span>Gerencie quais notificações você irá receber</span>
+            </div>
+        </div>
+        <div class="flex flex-row gap-2">
+            <img src="../assets/shield-check.svg" alt="" class="w-8">
+            <div class="flex flex-col self-center">
+                <a href="politicas-privacidade.html">Políticas de privacidade</a>
+                <span>Visualize suas políticas de privacidade</span>
+            </div>
+        </div>
+        <div class="flex flex-row gap-2 fixed bottom-3 right-3">
+            <img src="../assets/exit.svg" alt="" class="w-5">
+            <buttom class="self-center" onclick="logOut()">Sair</buttom>
         </div>
     </main>
 </body>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do Ninho</title>
+</head>
+<body onload="att()">
+    <header class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
+        <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-inicio.html'">
+        <h4 class="self-center text-white">Configurações</h4>
+    </header>
+    <main>
+        <div>
+            <span>Nome</span>
+            <span id="nome-user" name="nome-user"></span>
+        </div>
+        <div>
+            <span>Data de nascimento</span>
+            <span id="data-user" name="data-user"></span>
+        </div>
+    </main>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
+</html>
