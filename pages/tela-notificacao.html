@@ -6,19 +6,29 @@
     <link rel="stylesheet" href="../css/style.css">
     <title>Donas do Ninho</title> 
 </head>
-<body onload="showPostsInicio()" class="bg-white">
+
+<div id="loader-container" class="loader-container">
+    <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+  </div>
+  
+<body onload="notis()" class="bg-white">
     <div class="page-header flex flex-col items-center border-b-2 border-[#ffa9a9] p-1 bg-[#ffa9a9] rounded-b-2xl">
         <img onclick='notify()' src="../assets/logoAPP.svg" alt="" class="w-20">
     </div>
     <div class="pageContent" id="id">
-        <div id="publis" class="mb-16">
+        <div id="notis" class="mb-16">
         </div>
     </div>
     <nav class="navPerfil nav">
         <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
         <button class="navButton"><img src="../assets/pesquisar.png" alt="" onclick="location.href='tela-descubra.html'"></button>
         <button class="navButton"><img src="../assets/publicação.png  " alt="" onclick="location.href='tela-publi.html'"></button>
-        <button class="navButton"><img src="../assets/notficação.png" alt="" onclick="location.href='tela-notificacao.html'"></button>
+        <div>
+            <button class="navButton">
+              <span class="contador"></span> <!-- Mova o contador para dentro do botão -->
+              <img src="../assets/notficação.png" alt="" onclick="location.href='tela-notificacao.html'">
+            </button>
+          </div>
         <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
       </nav>
 </body>

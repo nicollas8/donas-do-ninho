@@ -392,6 +392,7 @@ function viewPublis() {
 }
 
 function att() {
+  renderNots()
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var urlParams = new URLSearchParams(window.location.search);
@@ -760,21 +761,29 @@ function addResp() {
                       .collection("posts")
                       .add(newRespData)
                       .then(() => {
-                        const qntdResps = doc.data().respsQntd;
-                        console.log(qntdResps);
-                        doc.ref.update({
-                          respsQntd: qntdResps + 1,
-                        });
-                        setTimeout(function () {
-                          button.disabled = false;
-                        }, 2000);
-                        alert("Resposta enviada com sucesso!");
-                        window.location.href =
-                          "tela-comments.html" + "?ID=" + IDpostagem;
-                      })
-                      .catch((error) => {
-                        console.error("Erro ao adicionar resposta: ", error);
-                      });
+                        firebase.firestore().collection("usuarios")
+                        .doc(doc.data().UIDusuario)
+                        .collection("notificações")
+                        .get()
+                        .then(() => {
+                            addNotify(doc.id,user.uid,doc.data().UIDusuario,'com') 
+                            const qntdResps = doc.data().respsQntd;
+                            console.log(qntdResps);
+                            doc.ref.update({
+                              respsQntd: qntdResps + 1,
+                            });
+                            setTimeout(function () {
+                              button.disabled = false;
+                            }, 2000);
+                            alert("Resposta enviada com sucesso!");
+                            window.location.href =
+                              "tela-comments.html" + "?ID=" + IDpostagem;
+                          })
+                          .catch((error) => {
+                            console.error("Erro ao adicionar resposta: ", error);
+                          });
+                          })
+                        
                     console.log(newRespData);
                   }
                 })
@@ -913,12 +922,13 @@ function sortBy(tag) {
 }
 
 function showPosts() {
+  renderNots()
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       // Obtenha todos os documentos da coleção 'posts'
-      
+
       postsRef
         .where("categ", "==", "post")
         .orderBy("timestamp", "desc")
@@ -1403,6 +1413,21 @@ function reactP(num, vs, postID, userUID, type) {
                             deslikesQntd: doc.data().deslikesQntd - 1,
                           })
                           .then(() => {
+                            db.collection("usuarios")
+                                .doc(doc.data().UIDusuario)
+                                .collection("notificações")
+                                .where('UID', '==', userUID)
+                                .where('commentID', '==', postID)
+                                .where('type', '==', 'like')
+                                .get()
+                                .then((querySnapshot) => {
+                                  if(!querySnapshot.empty){
+                                    console.log('Já tem notificação sua lá po')        
+                                  }else{
+                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'like') 
+                                  }
+                                })
+
                             var qntd = doc.data().likesQntd + 1;
                             var qntdvs = doc.data().deslikesQntd - 1;
                             document.getElementById(style).textContent = qntd;
@@ -1479,6 +1504,23 @@ function reactP(num, vs, postID, userUID, type) {
                               .doc(doc.data().UIDusuario)
                               .get()
                               .then((userDoc) => {
+                                console.log(userDoc.data());
+
+                                db.collection("usuarios")
+                                .doc(doc.data().UIDusuario)
+                                .collection("notificações")
+                                .where('UID', '==', userUID)
+                                .where('commentID', '==', postID)
+                                .where('type', '==', 'like')
+                                .get()
+                                .then((querySnapshot) => {
+                                  if(!querySnapshot.empty){
+                                    console.log('Já tem notificação sua lá po')        
+                                  }else{
+                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'like') 
+                                  }
+                                })
+
                                 userDoc.ref
                                   .update({
                                     xp: userDoc.data().xp + 5,
@@ -1608,6 +1650,20 @@ function fav(post, userUID, type) {
                               xp: userDoc.data().xp + 10,
                             })
                             .then(function () {
+                              firebase.firestore().collection("usuarios")
+                                .doc(doc.data().UIDusuario)
+                                .collection("notificações")
+                                .where('UID', '==', userUID)
+                                .where('commentID', '==', post)
+                                .where('type', '==', 'fav')
+                                .get()
+                                .then((querySnapshot) => {
+                                  if(!querySnapshot.empty){
+                                    console.log('Já tem notificação sua lá po')        
+                                  }else{
+                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'fav') 
+                                  }
+                                })
                               console.log("XP Concedido papai");
                               document.getElementById(style).textContent =
                                 qntdFav + 1;
@@ -1755,58 +1811,69 @@ const firestore = firebase.firestore();
 
 // Lidar com o envio do formulário
 
-const buttonimg = document.getElementById("post")
-  ? document.getElementById("post")
-  : null;
-const imageInputPubli = document.getElementById("loadImage");
-if (buttonimg) {
-  buttonimg.addEventListener("click", async (e) => {
-    e.preventDefault();
+const buttonimg = document.getElementById("post");
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    const buttonimg = document.getElementById("post")
+      ? document.getElementById("post")
+      : null;
+    const imageInputPubli = document.getElementById("loadImage");
+    if (buttonimg) {
+      buttonimg.addEventListener("click", async (e) => {
+        e.preventDefault();
 
-    const file = imageInputPubli.files[0];
-    console.log(file);
+        const file = imageInputPubli.files[0];
+        console.log(file);
 
-    if (file) {
-      // Faça o upload da imagem para o Firebase Storage
-      const storageRef = storage.ref().child(`img/${file.name}`);
-      await storageRef.put(file);
+        if (file) {
+          // Faça o upload da imagem para o Firebase Storage
+          const storageRef = storage.ref().child(`img/${file.name}`);
+          await storageRef.put(file);
 
-      // Obtenha a URL de download da imagem
-      const downloadURL = await storageRef.getDownloadURL();
-      addPubli(downloadURL);
-      // Armazene a URL no Firestore
-      alert("Imagem enviada com sucesso!");
-    } else {
-      addPubli("");
+          // Obtenha a URL de download da imagem
+          const downloadURL = await storageRef.getDownloadURL();
+          addPubli(downloadURL);
+          // Armazene a URL no Firestore
+          alert("Imagem enviada com sucesso!");
+        } else {
+          addPubli("");
+        }
+      });
     }
-  });
-}
+  } else {
+    console.log("você não tá logado, dog");
+  }
+});
 
-const buttonimgPerfil = document.getElementById("post2")
-  ? document.getElementById("post2")
-  : null;
-const imageInput = document.getElementById("loadImagePerfil");
+firebase.auth().onAuthStateChanged(function (user) {
+  if (user) {
+    const buttonimgPerfil = document.getElementById("post2")
+      ? document.getElementById("post2")
+      : null;
+    const imageInput = document.getElementById("loadImagePerfil");
 
-if (buttonimgPerfil) {
-  buttonimgPerfil.addEventListener("click", async (e) => {
-    e.preventDefault();
+    if (buttonimgPerfil) {
+      buttonimgPerfil.addEventListener("click", async (e) => {
+        e.preventDefault();
 
-    const file = imageInput.files[0];
-    console.log(file);
+        const file = imageInput.files[0];
+        console.log(file);
 
-    if (file) {
-      // Faça o upload da imagem para o Firebase Storage
-      const storageRef = storage.ref().child(`img/${file.name}`);
-      await storageRef.put(file);
+        if (file) {
+          // Faça o upload da imagem para o Firebase Storage
+          const storageRef = storage.ref().child(`img/${file.name}`);
+          await storageRef.put(file);
 
-      // Obtenha a URL de download da imagem
-      const URL = await storageRef.getDownloadURL();
-      atualizar(URL);
-    } else {
-      atualizar();
+          // Obtenha a URL de download da imagem
+          const URL = await storageRef.getDownloadURL();
+          atualizar(URL);
+        } else {
+          atualizar();
+        }
+      });
     }
-  });
-}
+  }
+});
 
 function nivel() {
   firebase.auth().onAuthStateChanged(function (user) {
@@ -2081,12 +2148,48 @@ function sendInterest() {
   });
 }
 
-function showPostsInicio() {
+window.addEventListener('load', function () {
+  var loaderContainer = document.getElementById('loader-container');
+  loaderContainer.style.display = 'none'; // Esconde o indicador de carregamento e o fundo escuro
+});
+
+
+function renderNots(){
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      pedindo(user.uid)
+      const contadorElement = document.querySelector('.contador');
+
+      
+      firebase.firestore().collection("usuarios")
+      .doc(user.uid)
+      .collection("notificações")
+      .get()
+      .then((querySnapshot) => {
+        cont = 0;
+        if(!querySnapshot.empty){
+           querySnapshot.forEach((doc) =>{
+            cont++
+           })
+           console.log( cont)
+           const numeroNotificacoes = cont;
+           contadorElement.style.display = 'flex';
+           contadorElement.textContent = numeroNotificacoes.toString();
+          }else{
+            
+          }
+      })
+    }
+  })
+}
+
+function showPostsInicio() {
+  renderNots()
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
+      //pedindo(user.uid)
+      
       db.collection("usuarios")
         .doc(user.uid)
         .get()
@@ -2166,56 +2269,167 @@ function showPostsInicio() {
   });
 }
 
-function pedindo(uid) {
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('firebase-messaging-sw.js')
-      .then(function (registration) {
-        console.log('Service Worker registrado', registration);
-        
-        // Solicite o token após o registro do Service Worker
-        return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
-      })
-      .then((currentToken) => {
-        if (currentToken) {
-          // Você obteve um token de notificação.
-          firebase.firestore()
-            .collection('usuarios')
-            .doc(uid)
-            .get()
-            .then((doc) => {
-              doc.ref.update({
-                token: currentToken,
-              });
-            });
-          
-          console.log("Token atual:", currentToken);
-        } else {
-          // Nenhum token disponível, solicite permissão ao usuário.
-          return messaging.requestPermission();
-        }
-      })
-      .then(() => {
-        console.log("Permissão concedida.");
-      })
-      .catch((err) => {
-        console.log("Erro ao solicitar permissão:", err);
-      });
+// function pedindo(uid) {
+//   if ('serviceWorker' in navigator) {
+//     navigator.serviceWorker.register('firebase-messaging-sw.js')
+//       .then(function (registration) {
+//         console.log('Service Worker registrado', registration);
+
+//         // Solicite o token após o registro do Service Worker
+//         return messaging.getToken({ vapidKey: 'BIlbsehKH2Cav8naDnpLA4w56OtvAkNuGRhMeVBYdlm7de1hFag0AX372G2eJTwl_9kc87KraOhYd1rDb1JpKW0' });
+//       })
+//       .then((currentToken) => {
+//         if (currentToken) {
+//           // Você obteve um token de notificação.
+//           firebase.firestore()
+//             .collection('usuarios')
+//             .doc(uid)
+//             .get()
+//             .then((doc) => {
+//               doc.ref.update({
+//                 token: currentToken,
+//               });
+//             });
+
+//           console.log("Token atual:", currentToken);
+//         } else {
+//           // Nenhum token disponível, solicite permissão ao usuário.
+//           return messaging.requestPermission();
+//         }
+//       })
+//       .then(() => {
+//         console.log("Permissão concedida.");
+//       })
+//       .catch((err) => {
+//         console.log("Erro ao solicitar permissão:", err);
+//       });
+//   }
+// }
+
+function formatNotify(time, UID, commentID, type, foto, nome, postType, postText) {
+  tempoF = formatTime(time);
+  tempo = tempoF.replace(/^postado\s+/i, "");
+  console.log(tempo, UID, commentID, type);
+  if (postType == "post") {
+    categ = " sua postagem:";
+  } else {
+    categ = " seu comentário:";
   }
-}
+  if (type == "like") {
+    texto = " curtiu ";
+  } else if (type == "fav") {
+    texto = " favoritou ";
+  } else if (type == "com") {
+    texto = " comentou ";
+  }
 
-function tetes(){
-  
-  messaging.requestPermission()
-  .then(function () {
-    console.log("Foi concedido");
-    return messaging.getToken();
+  var content = `
+    <div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+    <p onclick="excluirNotify('${commentID}', '${UID}')" class="text-right text-red-500 text-xl pr-5">X</p>
+    <div class="flex flex-row p-3" onclick=" window.location.href='tela-comments.html' + '?ID=' + '${commentID}'">
+    <img class="self-center w-12 h-12 rounded-full mr-2" src="${foto}" style="  background-color: grey;">
+    <p class="text-left self-center text-black"> ${nome} ${texto} ${categ}<br> ${postText}</p>
     
-  })
-  .then(function (token){
-    console.log("token: ", token)
-  })
-  .catch(function (error){
-    console.error("Deu problema ", error)
-  })
+    </div>
+    <p class="text-right self-center text-black"> ${tempo} </p> 
+    
+    </div>`;
+  return content;
 }
 
+function notis() {
+  renderNots()
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      const notis = document.getElementById("notis");
+
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .collection("notificações")
+        .orderBy("timestamp", "desc")
+        .get()
+        .then((querySnapshot) => {
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              console.log(doc.data());
+              firebase
+                .firestore()
+                .collection("usuarios")
+                .doc(doc.data().UID)
+                .get()
+                .then((userDoc) => {
+                  firebase
+                    .firestore()
+                    .collection("posts")
+                    .doc(doc.data().commentID)
+                    .get()
+                    .then((postDoc) => {
+                      console.log(userDoc.data());
+                      const tempo = doc.data().timestamp;
+                      const UID = doc.data().UID;
+                      const commentID = doc.data().commentID;
+                      const tipo = doc.data().type;
+                      const foto = userDoc.data().url;
+                      const nome = userDoc.data().nome;
+                      const tipoPost = postDoc.data().categ;
+                      const textoPost = postDoc.data().post;
+
+                      notis.innerHTML += formatNotify(
+                        tempo,
+                        UID,
+                        commentID,
+                        tipo,
+                        foto,
+                        nome,
+                        tipoPost,
+                        textoPost
+                      );
+                    });
+                });
+            });
+          } else {
+            notis.innerHTML = 'SEM NOTIFICAÇÕES'
+          }
+        });
+    }
+  });
+}
+
+function addNotify(commentID, userUID, uid, tipo) {
+  const db = firebase.firestore();
+  const userRef = db.collection("usuarios").doc(uid);
+  const notifyRef = userRef.collection("notificações");
+
+  const dados = {
+    commentID: commentID,
+    UID: userUID,
+    timestamp: new Date(),
+    type: tipo,
+  };
+  notifyRef.add(dados);
+}
+
+function excluirNotify(commentID, UID){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      firebase.firestore()
+      .collection("usuarios")
+      .doc(user.uid)
+      .collection("notificações")
+      .where('commentID', '==', commentID)
+      .where('UID', '==', UID)
+      .get()
+      .then((querySnapshot) =>{
+        querySnapshot.forEach((doc) =>{
+          doc.ref.delete()
+          .then(() => {
+            window.location.reload();
+          })
+        })
+      })
+    }
+  })
+  
+}

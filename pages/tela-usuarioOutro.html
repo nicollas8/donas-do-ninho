@@ -9,6 +9,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <title>Donas do ninho</title>
 </head>
+
+<div id="loader-container" class="loader-container">
+  <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+</div>
+
 <body class="tela-user" onload="att()">
   <header class="box-perfil">
     <img id="imgPerfil" src="../assets/noPhoto.png" alt="">
@@ -42,11 +47,16 @@
     <button onclick="enterPublis()"> Ver Publicações</button>
   </div>
   </main>
-  <nav class="navPerfil">
+  <nav class="navPerfil nav">
     <button class="navButton"><img src="../assets/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
-    <button class="navButton"><img src="../assets/notficação.png" alt=""></button>
+    <button class="navButton"><img src="../assets/pesquisar.png" alt="" onclick="location.href='tela-descubra.html'"></button>
     <button class="navButton"><img src="../assets/publicação.png  " alt="" onclick="location.href='tela-publi.html'"></button>
-    <button class="navButton"><img src="../assets/pesquisar.png" alt=""></button>
+    <div>
+        <button class="navButton">
+          <span class="contador"></span> <!-- Mova o contador para dentro do botão -->
+          <img src="../assets/notficação.png" alt="" onclick="location.href='tela-notificacao.html'">
+        </button>
+      </div>
     <button class="navButton"><img src="../assets/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
   </nav>
 </body>
