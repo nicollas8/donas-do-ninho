@@ -839,8 +839,6 @@ function formatPost(
    <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="  background-color: grey;">
    <p id=nome class="text-left self-center text-black"> ${userNome}</p>
   </div>
-   
-    
     <h4 class=" text-red-700 self-center">${tipoPost}</h4>
   </div>
   <div class="options">
@@ -939,6 +937,7 @@ function showPosts() {
         .get()
         .then((postsQuerySnapshot) => {
           postsQuerySnapshot.forEach((postDoc) => {
+            var qtd = 0;
             var postData = postDoc.data();
             var postID = postDoc.id;
 
@@ -971,8 +970,7 @@ function showPosts() {
               tag,
               img,
               fotoUser,
-              UIDdonoPost
-            );
+              UIDdonoPost)
             checkReact(user.uid, "post");
           });
         })
@@ -1716,16 +1714,27 @@ function viewFavs() {
                   postID = doc.id;
                   time = postData.timestamp;
                   tempo = formatTime(time);
+
+                  if (postData.url != ""){
+                    var imgCarregado = "style='display:flex'";
+                  }else{
+                    var imgCarregado = "style='display:none'";
+                  }
                   publis.innerHTML += `
                   <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
                   <div class="ballPerguntas p-3">
-                  ${postData.nomeUser}  <button class="float-right w-6" onclick="fav('${postID}', '${user.uid}')"><img src="../assets/favorito.svg" alt=""> </button>
+                  <img class="float-left w-12 h-12 rounded-full object-contain mr-2" src="${postData.fotoUser}" style="  background-color: grey;">${postData.nomeUser}  
+                  <button class="float-right w-6" onclick="fav('${postID}', '${user.uid}')"><img src="../assets/favorito.svg" alt=""> </button>
                   <div class="options">
                   <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
                   </div>
+                  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
+                  <img src="${postData.url}" class="w-full h-1/4 mb-3">
+                </div>
                   <div class="balaoPergunta">
                   <p style=color:black></p>
                   <p class="text-black text-left mb-4"> ${postData.post} </p>
+                </div>
                   </div>
                   <p class='text-black text-right mt-2'> ${tempo}</p> </div>
                 `;
@@ -1830,8 +1839,10 @@ firebase.auth().onAuthStateChanged(function (user) {
         console.log(file);
 
         if (file) {
+          data = new Date();
+          arquivonome = "imgPost"+data;
           // Faça o upload da imagem para o Firebase Storage
-          const storageRef = storage.ref().child(`img/${file.name}`);
+          const storageRef = storage.ref().child(`img/${arquivonome}`);
           await storageRef.put(file);
 
           // Obtenha a URL de download da imagem
@@ -1863,6 +1874,10 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         if (file) {
           // Exiba a imagem no elemento de pré-visualização
+          data = new Date();
+          arquivonome = "imgPerfil"+data;
+          file.name = arquivonome;
+          
           const reader = new FileReader();
           reader.onload = function (e) {
             // Crie uma div para exibir a imagem para corte
@@ -1889,7 +1904,7 @@ firebase.auth().onAuthStateChanged(function (user) {
               // Converta o canvas em Blob
               croppedCanvas.toBlob(async (blob) => {
                 // Faça o upload da imagem recortada para o Firebase Storage
-                const storageRef = storage.ref().child(`img/${file.name}`);
+                const storageRef = storage.ref().child(`img/${arquivonome}`);
                 await storageRef.put(blob);
 
                 // Obtenha a URL de download da imagem
@@ -2361,7 +2376,7 @@ function formatNotify(time, UID, commentID, type, foto, nome, postType, postText
 
   var content = `
     <div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
-    <p onclick="excluirNotify('${commentID}', '${UID}')" class="text-right text-red-500 text-xl pr-5">X</p>
+    <p onclick="excluirNotify('${commentID}', '${UID}', '${type}')" class="text-right text-red-500 text-xl pr-5">X</p>
     <div class="flex flex-row p-3" onclick=" window.location.href='tela-comments.html' + '?ID=' + '${commentID}'">
     <img class="self-center w-12 h-12 rounded-full mr-2" src="${foto}" style="  background-color: grey;">
     <p class="text-left self-center text-black"> ${nome} ${texto} ${categ}<br> ${postText}</p>
@@ -2447,7 +2462,7 @@ function addNotify(commentID, userUID, uid, tipo) {
   notifyRef.add(dados);
 }
 
-function excluirNotify(commentID, UID){
+function excluirNotify(commentID, UID, tipo){
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       firebase.firestore()
@@ -2456,6 +2471,7 @@ function excluirNotify(commentID, UID){
       .collection("notificações")
       .where('commentID', '==', commentID)
       .where('UID', '==', UID)
+      .where('type', '==', tipo)
       .get()
       .then((querySnapshot) =>{
         querySnapshot.forEach((doc) =>{
