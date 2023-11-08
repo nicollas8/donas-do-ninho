@@ -4,21 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-straight/css/uicons-regular-straight.css'>
     <title>Donas do Ninho</title>
 </head>
-<body onload="att()">
+<body onload="att(), getUserEmail()" class="bg-white h-full">
     <header class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
-        <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-inicio.html'">
-        <h4 class="self-center text-white">Configurações</h4>
+        <img src="../assets/seta.png" alt="" class="w-10" onclick="location.href='tela-config.html'">
+        <h4 class="self-center text-white">Informações Pessoais</h4>
     </header>
-    <main>
+    <main class="flex flex-col h-full">
         <div>
-            <span>Nome</span>
-            <span id="nome-user" name="nome-user"></span>
-        </div>
-        <div>
-            <span>Data de nascimento</span>
-            <span id="data-user" name="data-user"></span>
+            <div class="flex flex-col border-b-2 border-black rounded-xl p-2">
+                <div class="p-2 flex flex-row">
+                    <i class="fi fi-rr-user text-xl"></i>
+                    <span class="text-xl self-center pl-1">Nome</span>
+                </div>
+                <span id="nome-user" class="text-lg px-2 text-purple-800"></span>
+            </div>
+            <div class="flex flex-col border-b-2 border-black rounded-xl p-2">
+                <div class="p-2">
+                    <i class="fi fi-rr-calendar-day text-xl"></i>
+                    <span class="text-xl self-center pl-1">Data de nascimento</span>
+                </div>
+                <span id="data-user" class="text-lg px-2 text-purple-800"></span>
+            </div>
+            <div class="flex flex-col border-b-2 border-black rounded-xl p-2">
+                <div class="p-2">
+                    <i class="fi fi-rr-envelope text-xl"></i>
+                    <span class="text-xl pl-2">E-mail</span>
+                </div>
+                <span id="email-user" class="text-lg px-2 text-purple-800"></span>
+            </div>
+            <div class="fixed bottom-8">
+                <div class="flex flex-row justify-between p-3 w-screen">
+                    <a href="redefinir-senha.html" class="border-2 border-black bg-[#ffa9a9] p-3 rounded-full">Redefinir senha</a>
+                    <button class="border-2 border-black bg-[#ffa9a9] p-3 rounded-full" onclick="excluirConta()">Excluir conta</button>
+                </div>
+            </div>
         </div>
     </main>
 </body>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do Ninho</title>
+</head>
+
+<div id="loader-container" class="loader-container">
+    <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+  </div>
+
+<body>
+    <div class="page">
+        <main>
+            <header>
+                <img src="../assets/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+            </header>
+            <form action="" method="post" class="formRecSenha">
+                <div class="inputGroup">
+                    <label for="email"> Informe seu email para redefinir sua senha </label>
+                    <input type="email" name="email" id="email" placeholder="Digite seu email" required>
+                    <p class="error" id="erroEmailRequired">Email Obrigatório</p>
+                    <p class="error" id="erroEmailInvalid">Email inválido</p>
+                </div>
+                <button type="button" class="btnRecSenha btn" id="btnRecuperarSenha" onclick="recoverPassword()"> Redefinir Senha </button>
+            </form>
+        </main>
+    </div>  
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/script.js"></script>
+</html>

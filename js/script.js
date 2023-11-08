@@ -105,12 +105,13 @@ const buttonCreateAccount = document.getElementById("btnCadInfo")
   : null;
 if (buttonCreateAccount) {
   buttonCreateAccount.addEventListener("click", () => {
-    const formData = {
+    var formData = {
       nome: document.getElementById("nome").value,
       data: document.getElementById("dataNascimento").value,
       tipoMom: document.querySelector("select[name=tipoMãe").value,
       email: document.getElementById("newEmail").value,
       senha: document.getElementById("newSenha").value,
+      termosDeUso: document.getElementById("termosDeUso").checked
     };
 
     let date = formData.data;
@@ -138,6 +139,8 @@ if (buttonCreateAccount) {
       alert("Por favor, digite uma senha com mais de 6 caracteres!");
     } else if (formData.senha != confirmSenha) {
       alert("As senhas devem se coincidir!");
+    } else if (!formData.termosDeUso){
+      alert ("leia e aceite os termos de uso")
     } else {
       firebase
         .auth()
@@ -161,6 +164,7 @@ if (buttonCreateAccount) {
               nome: formData.nome,
               dataNascimento: formData.data,
               tipoMom: formData.tipoMom,
+              termosDeUso: formData.termosDeUso,
               nivel: nivel,
               url: "../assets/noPhoto.png",
             })
@@ -315,7 +319,7 @@ function viewPublis() {
           <p class="text-black text-left py-2 mb-3"> ${userPosts.post} </p>
             <img src="${userPosts.url}" class="w-full">
           </div>
-          <div class="react flex flex-row gap-10 justify-around mb-2">
+          <div class="react flex flex-row gap-10 py-2 justify-around mb-2">
           
           <p style=color:black> ${doc.data().likesQntd}
           <img class="w-6" src="../assets/like.svg" alt=""></p>
@@ -328,9 +332,9 @@ function viewPublis() {
 
           <p style=color:black> ${doc.data().respsQntd}
           <img class="w-6" src="../assets/comentário.svg" alt=""></p>
-          <button class="w-6" onclick="confirmarExclusao('${
+          <button class="self-end" onclick="confirmarExclusao('${
             doc.id
-          }', '1')"><img src="../assets/lixeira.png" alt=""></button>
+          }', '1')"><img src="../assets/lixeira.png" alt="" class="w-6"></button>
           </div>
         </div>
       </div>`;
@@ -858,7 +862,7 @@ function formatPost(
           <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
-      <p class="text-left mb-2 text-orange-600" onclick="sortBy('${tag}')"> ${tag}</p>
+      <p class="text-left mb-2 text-orange-600" onclick="sortBy('${tag}')"> #${tag}</p>
       <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
       </div>
     </div>`;
@@ -2483,5 +2487,15 @@ function excluirNotify(commentID, UID, tipo){
       })
     }
   })
-  
+}
+
+function getUserEmail() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      var email = user.email;
+      document.getElementById('email-user').innerText = email;
+    } else {
+      console.log('No user is signed in.');
+    }
+  });
 }
