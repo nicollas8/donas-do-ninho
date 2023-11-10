@@ -573,9 +573,27 @@ function atualizar(URL) {
 }
 
 function excluirConta() {
-  var resposta = confirm("Tem certeza de que deseja excluir?");
-  console.log(resposta);
-  if (resposta === true) {
+  //var resposta = confirm("Tem certeza de que deseja excluir?");
+
+  const confirm = document.getElementById('preview')
+  confirm.style.display = 'block'
+  confirm.innerHTML = `<img class='' src='../assets/logoExclusao.svg'> 
+  <p class='text-black mt-3'> Tem certeza que deseja excluir sua conta? </p>
+  <div class='flex flex-row justify-center gap-10 mt-5'>
+  <button id='confirmExcluir' class='border-2 border-black p-2 rounded-3xl bg-green-400 px-4'> sim </button>
+  <button id='denyExcluir' class='border-2 border-black p-2 rounded-3xl bg-red-400 px-4'> não </button>
+  </div>`
+
+  const decision2 = document.getElementById("denyExcluir")
+
+  decision2.addEventListener("click", async (e) => {
+    console.log(decision2.textContent)
+    confirm.style.display = 'none';
+  })
+
+  const decision1 = document.getElementById("confirmExcluir")
+
+  decision1.addEventListener("click", async (e) => {
     firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         var uid = user.uid;
@@ -589,6 +607,7 @@ function excluirConta() {
           .delete()
           .then(function () {
             excluirPosts(uid);
+            excluirReacts(uid);
             console.log("Usuário excluído do Firestore com sucesso!");
 
             // Em seguida, exclua o usuário da autenticação do Firebase
@@ -615,9 +634,8 @@ function excluirConta() {
         console.log("Não foi possível obter o usuário autenticado.");
       }
     });
-  } else {
-    console.log("joia");
-  }
+  })
+   
 }
 
 function excluirPosts(uidDoUsuario) {
@@ -638,6 +656,19 @@ function excluirPosts(uidDoUsuario) {
           });
       });
     });
+}
+
+function excluirReacts(uid){
+  firebase.firestore()
+  .collection("reacts")
+  .where("userUID", "==", uid)
+  .get()
+  .then(function (querySnapshot){
+    querySnapshot.forEach((doc)=> {
+      doc.ref.delete()
+    })
+  })
+
 }
 
 function addPubli(url) {
@@ -1305,6 +1336,8 @@ function excluirPost(postUID) {
       console.error("Erro ao executar a consulta: ", error);
     });
 }
+
+
 
 function desabilitarBotao() {
   const button = document.getElementById("");
