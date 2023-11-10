@@ -830,15 +830,19 @@ function formatPost(
   fotoUser,
   donoUID
 ) {
+
+  console.log(tag)
+
   if (img) {
     var imgCarregado = "style='display:flex'";
   } else {
     var imgCarregado = "style='display:none'";
   }
 
-  var post = `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
-  <div class="ballPerguntas p-3">
-  <div class="cardTittle flex flex-row justify-between">
+  var post = `
+  <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg w-screen">
+    <div class="ballPerguntas p-3">
+    <div class="cardTittle flex flex-row justify-between">
   <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
    <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="  background-color: grey;">
    <p id=nome class="text-left self-center text-black"> ${userNome}</p>
@@ -850,20 +854,32 @@ function formatPost(
   <div class="balaoPergunt a">
   <p style=color:black></p>
   <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
-  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
+  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>'
     <img src="${img}" class="w-full h-1/4 mb-3">
   </div>
       </div>
-        <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
-          <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-          <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-          <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
-          <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../assets/comentário.svg" alt=""> </button>
+        <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']">
+          <button class="w-6 flex flex-row" onclick="react('1', '${postID}', 'post')"> 
+          <img src="../assets/like.svg" alt="">
+            <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> 
+          </button>
+          <button class="w-6 flex flex-row" onclick="react('2', '${postID}', 'post')">
+            <img src="../assets/dislike.svg" alt="">
+            <p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p>
+          </button>
+          <button class="w-6 flex flex-row" onclick="fav('${postID}', '${userUID}', 'post')">
+          <img src="../assets/favorito.svg" alt=""> 
+            <p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p>
+          </button>
+          <button class="w-6 flex flex-row" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> 
+            <img src="../assets/comentário.svg" alt=""> 
+            <p class="ml-2 text-black" id="comment">${respsQntd}</p>
+          </button>
           <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
-      <p class="text-left mb-2 text-orange-600" onclick="sortBy('${tag}')"> #${tag}</p>
-      <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
+        <p class="text-left mb-2 text-orange-600" id="tagColor" onclick="sortBy('${tag}')"> #${tag}</p>
+        <p class="text-black text-left mb-2 self-center"> ${tempo}</p>
       </div>
     </div>`;
 

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/2.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+  <title>Donas do Ninho</title>
+</head>
+<body class="bg-white h-screen w-full">
+  <header class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] py-2 px-3 bg-[#ffa9a9] rounded-b-xl">
+    <img src="../assets/seta.png" alt="" class="w-8" onclick="location.href='tela-usuario.html'">
+    <h4 class="self-center text-white">Configurar Notificações</h4>
+</header>
+<main class="flex flex-col gap-2 mt-2 p-2 w-screen">
+  <div class="flex flex-row">
+    <div class="flex flex-row gap-2">
+      <label name="receberLike" class="">Receber notificações de like</label>
+      <input type="checkbox" name="receberLike" class="notification">
+    </div>
+  </div>
+  <div class="flex flex-row gap-2">
+    <label name="receberComment" class="">Receber notificações de comentário</label>
+    <input type="checkbox" name="receberComment" class="notification">
+  </div>
+  <div class="flex flex-row gap-2">
+    <label name="receberFavorito" class="">Receber notificações de favoritos </label>
+    <input type="checkbox" name="receberFavorito" class="notification">
+  </div>
+  <div class="fixed bottom-10 left-0 w-screen">
+    <div class="flex flex-row justify-center">
+      <button class="bg-[#ffa9a9] p-2 rounded-full border-2 border-black" onclick="">Atualizar preferências <button>
+    </div>
+  </div>
+</main>
+</body>
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../js/firebase-init.js"></script>
+  <script src="../js/script.js"></script>
+</html>
