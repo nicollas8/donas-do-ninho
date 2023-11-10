@@ -248,23 +248,23 @@ function comparePassword() {
   }
 }
 
-function previewFilePerfil() {
-  const previewPerfil = document.getElementById("imgPerfil");
-  const filePerfil = document.getElementById("loadImagePerfil").files[0];
-  const reader = new FileReader();
+// function previewFilePerfil() {
+//   const previewPerfil = document.getElementById("imgPerfil");
+//   const filePerfil = document.getElementById("loadImagePerfil").files[0];
+//   const reader = new FileReader();
 
-  reader.addEventListener(
-    "load",
-    () => {
-      previewPerfil.src = reader.result;
-    },
-    false
-  );
-  if (filePerfil) {
-    previewPerfil.style.display = "block";
-    reader.readAsDataURL(filePerfil);
-  }
-}
+//   reader.addEventListener(
+//     "load",
+//     () => {
+//       previewPerfil.src = reader.result;
+//     },
+//     false
+//   );
+//   if (filePerfil) {
+//     previewPerfil.style.display = "block";
+//     reader.readAsDataURL(filePerfil);
+//   }
+// }
 
 function previewFile() {
   const preview = document.getElementById("fotoPubli");
@@ -1870,9 +1870,8 @@ firebase.auth().onAuthStateChanged(function (user) {
     const imageInput = document.getElementById("loadImagePerfil");
 
     if (buttonimgPerfil) {
-      buttonimgPerfil.addEventListener("click", async (e) => {
+      imageInput.addEventListener("input", async (e) => {
         e.preventDefault();
-
         const file = imageInput.files[0];
         console.log(file);
 
@@ -1880,14 +1879,15 @@ firebase.auth().onAuthStateChanged(function (user) {
           // Exiba a imagem no elemento de pré-visualização
           data = new Date();
           arquivonome = "imgPerfil"+data;
-          file.name = arquivonome;
           
+          
+
           const reader = new FileReader();
           reader.onload = function (e) {
             // Crie uma div para exibir a imagem para corte
-            const imagePreview = document.createElement("div");
+            const imagePreview = document.getElementById("preview");
+            imagePreview.style.display = 'block';
             imagePreview.innerHTML = `<img id="cropperImage" src="${e.target.result}">`;
-            document.body.appendChild(imagePreview);
 
             // Inicialize o cropper
             const cropperImage = document.getElementById("cropperImage");
@@ -1897,35 +1897,54 @@ firebase.auth().onAuthStateChanged(function (user) {
             });
 
             // Quando o usuário pressionar o botão de corte
+            const imgPerfil = document.getElementById('imgPerfil');
+            const closeButton = document.createElement("button");
             const cropButton = document.createElement("button");
+            cropButton.className = "float-right"
+            closeButton.className = "float-left"
+            console.log(cropButton)
+            closeButton.textContent = "Fechar";
             cropButton.textContent = "Crop";
-            document.body.appendChild(cropButton);
+
+            imagePreview.appendChild(cropButton);
+            imagePreview.appendChild(closeButton);
+
+            imagePreview.addEventListener("click", async () => {
+              imagePreview.style.display = 'none';
+              imageInput.value = null;
+            })
 
             cropButton.addEventListener("click", async () => {
               // Obtenha a imagem recortada
-              const croppedCanvas = cropper.getCroppedCanvas();
+              var croppedCanvas = cropper.getCroppedCanvas();
 
               // Converta o canvas em Blob
               croppedCanvas.toBlob(async (blob) => {
-                // Faça o upload da imagem recortada para o Firebase Storage
-                const storageRef = storage.ref().child(`img/${arquivonome}`);
-                await storageRef.put(blob);
+                var url = URL.createObjectURL(blob);
+                
+                imgPerfil.src = url;
 
-                // Obtenha a URL de download da imagem
-                const URL = await storageRef.getDownloadURL();
-                atualizar(URL);
+                imagePreview.style.display = 'none';
 
-                // Remova a pré-visualização e o botão de corte
-                document.body.removeChild(imagePreview);
-                document.body.removeChild(cropButton);
+                buttonimgPerfil.addEventListener("click", async (e) => {
+                  const storageRef = storage.ref().child(`img/${arquivonome}`);
+                  await storageRef.put(blob);
+    
+                    const URL = await storageRef.getDownloadURL();
+                    atualizar(URL);
+                })
               });
             });
+
+            
           };
           reader.readAsDataURL(file);
         } else {
           atualizar();
         }
       });
+
+      
     }
   }
 });
