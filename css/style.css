@@ -649,9 +649,15 @@ aside {
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  max-width: 100%;
+  width:70%;
   max-height: 100%;
   overflow: auto;
   filter: blur(0);
   transition: filter 0.3s ease-in-out;
+}
+
+#preview img{
+  width: 50%;
+  margin: auto;
+
 }
