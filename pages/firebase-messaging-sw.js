@@ -24,8 +24,8 @@ self.addEventListener('notificationclick', function(event) {
 self.addEventListener('push', function(event) {
   const options = {
     body: event.data.text(),
-    icon: '/assets/logoAPP.svg', // Ícone da notificação
-    badge: '/assets/noPhoto.png', // Ícone de contagem (pode ser nulo)
+    icon: '/img/logoAPP.svg', // Ícone da notificação
+    badge: '/img/noPhoto.png', // Ícone de contagem (pode ser nulo)
   };
 
   event.waitUntil(

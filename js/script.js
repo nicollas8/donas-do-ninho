@@ -166,7 +166,7 @@ if (buttonCreateAccount) {
               tipoMom: formData.tipoMom,
               termosDeUso: formData.termosDeUso,
               nivel: nivel,
-              url: "../assets/noPhoto.png",
+              url: "../img/noPhoto.png",
             })
             .then(() => {
               alert("conta criada com sucesso");
@@ -322,19 +322,19 @@ function viewPublis() {
           <div class="react flex flex-row gap-10 py-2 justify-around mb-2">
           
           <p style=color:black> ${doc.data().likesQntd}
-          <img class="w-6" src="../assets/like.svg" alt=""></p>
+          <img class="w-6" src="../img/like.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().deslikesQntd}
-          <img class="w-6" src="../assets/dislike.svg" alt=""></p>
+          <img class="w-6" src="../img/dislike.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().favsQntd}
-          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+          <img class="w-6" src="../img/favorito.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().respsQntd}
-          <img class="w-6" src="../assets/comentário.svg" alt=""></p>
+          <img class="w-6" src="../img/comentário.svg" alt=""></p>
           <button class="self-end" onclick="confirmarExclusao('${
             doc.id
-          }', '1')"><img src="../assets/lixeira.png" alt="" class="w-6"></button>
+          }', '1')"><img src="../img/lixeira.png" alt="" class="w-6"></button>
           </div>
         </div>
       </div>`;
@@ -377,14 +377,14 @@ function viewPublis() {
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <p style=color:black> ${doc.data().likesQntd}
-            <img class="w-6" src="../assets/like.svg" alt=""> </p>
+            <img class="w-6" src="../img/like.svg" alt=""> </p>
             <p style=color:black> ${doc.data().deslikesQntd}
-            <img class="w-6" src="../assets/dislike.svg" alt=""> </p>
+            <img class="w-6" src="../img/dislike.svg" alt=""> </p>
             <p style=color:black> ${doc.data().favsQntd}
-          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+          <img class="w-6" src="../img/favorito.svg" alt=""></p>
             <button class="w-6" onclick="confirmarExclusao('${
               doc.id
-            }', 2)"><img src="../assets/lixeira.png" alt=""></button>
+            }', 2)"><img src="../img/lixeira.png" alt=""></button>
             </div>
           </div>`;
               });
@@ -436,7 +436,7 @@ function att() {
               if (userData.url) {
                 var foto = userData.url;
               } else {
-                var foto = "../assets/perfil-usuário.png";
+                var foto = "../img/perfil-usuário.png";
               }
               img.setAttribute("src", foto);
             });
@@ -493,11 +493,11 @@ function showPostsUser(user) {
             </div>
                 </div>
                   <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
-                    <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-                    <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-                    <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
-                    <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../assets/comentário.svg" alt=""> </button>
-                    <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../img/like.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
+                    <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../img/comentário.svg" alt=""> </button>
+                    <button class="w-6 flex flex-row-reverse"><img src="../img/três-pontos.svg" alt=""></button>
                   </div>
                 <div class="flex justify-between">
                 <p class="text-left mb-2 text-green-700" onclick="sortBy('${tag}')"> ${tag}</p>
@@ -577,7 +577,7 @@ function excluirConta() {
 
   const confirm = document.getElementById('preview')
   confirm.style.display = 'block'
-  confirm.innerHTML = `<img class='' src='../assets/logoExclusao.svg'> 
+  confirm.innerHTML = `<img class='' src='../img/logoExclusao.svg'> 
   <p class='text-black mt-3'> Tem certeza que deseja excluir sua conta? </p>
   <div class='flex flex-row justify-center gap-10 mt-5'>
   <button id='confirmExcluir' class='border-2 border-black p-2 rounded-3xl bg-green-400 px-4'> sim </button>
@@ -891,22 +891,22 @@ function formatPost(
       </div>
         <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']">
           <button class="w-6 flex flex-row" onclick="react('1', '${postID}', 'post')"> 
-          <img src="../assets/like.svg" alt="">
+          <img src="../img/like.svg" alt="">
             <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> 
           </button>
           <button class="w-6 flex flex-row" onclick="react('2', '${postID}', 'post')">
-            <img src="../assets/dislike.svg" alt="">
+            <img src="../img/dislike.svg" alt="">
             <p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p>
           </button>
           <button class="w-6 flex flex-row" onclick="fav('${postID}', '${userUID}', 'post')">
-          <img src="../assets/favorito.svg" alt=""> 
+          <img src="../img/favorito.svg" alt=""> 
             <p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p>
           </button>
           <button class="w-6 flex flex-row" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> 
-            <img src="../assets/comentário.svg" alt=""> 
+            <img src="../img/comentário.svg" alt=""> 
             <p class="ml-2 text-black" id="comment">${respsQntd}</p>
           </button>
-          <button class="w-6 flex flex-row-reverse"><img src="../assets/três-pontos.svg" alt=""></button>
+          <button class="w-6 flex flex-row-reverse"><img src="../img/três-pontos.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
         <p class="text-left mb-2 text-orange-600" id="tagColor" onclick="sortBy('${tag}')"> #${tag}</p>
@@ -1207,10 +1207,10 @@ function comments() {
             <p class="text-black mt-4 mb-3 ml-2"> ${respData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../assets/like.svg" alt=""></button>
-              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../assets/dislike.svg" alt=""></button>
-              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../assets/favorito.svg" alt=""> </button>
-              <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
+              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
+              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
+              <button class="w-6"><img src="../img/três-pontos.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
             </div>`;
@@ -1777,7 +1777,7 @@ function viewFavs() {
                   <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
                   <div class="ballPerguntas p-3">
                   <img class="float-left w-12 h-12 rounded-full object-contain mr-2" src="${postData.fotoUser}" style="  background-color: grey;">${postData.nomeUser}  
-                  <button class="float-right w-6" onclick="fav('${postID}', '${user.uid}')"><img src="../assets/favorito.svg" alt=""> </button>
+                  <button class="float-right w-6" onclick="fav('${postID}', '${user.uid}')"><img src="../img/favorito.svg" alt=""> </button>
                   <div class="options">
                   <h4 class="py-3 text-purple-700 text-left">${postData.tipo}</h4>
                   </div>
@@ -2007,7 +2007,7 @@ function nivel() {
         .doc(user.uid)
         .get()
         .then((doc) => {
-          src = "../assets/lvl" + doc.data().nivel + "Icon.svg";
+          src = "../img/lvl" + doc.data().nivel + "Icon.svg";
           document.getElementById("fotoNivel").src = src;
           document.getElementById("nivelMae").textContent =
             "Nível: " + doc.data().nivel;
@@ -2133,17 +2133,17 @@ function viewPublisOutro() {
           <div class="react flex flex-row gap-10 justify-around mb-2">
           
           <p style=color:black> ${doc.data().likesQntd}
-          <img class="w-6" src="../assets/like.svg" alt=""></p>
+          <img class="w-6" src="../img/like.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().deslikesQntd}
-          <img class="w-6" src="../assets/dislike.svg" alt=""></p>
+          <img class="w-6" src="../img/dislike.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().favsQntd}
-          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
+          <img class="w-6" src="../img/favorito.svg" alt=""></p>
 
           <p style=color:black> ${doc.data().respsQntd}
-          <img class="w-6" src="../assets/comentário.svg" alt=""></p>
-          <button class="w-6"><img src="../assets/três-pontos.svg" alt=""></button>
+          <img class="w-6" src="../img/comentário.svg" alt=""></p>
+          <button class="w-6"><img src="../img/três-pontos.svg" alt=""></button>
           </div>
         </div>
       </div>`;
@@ -2186,12 +2186,12 @@ function viewPublisOutro() {
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
             <p style=color:black> ${doc.data().likesQntd}
-            <img class="w-6" src="../assets/like.svg" alt=""> </p>
+            <img class="w-6" src="../img/like.svg" alt=""> </p>
             <p style=color:black> ${doc.data().deslikesQntd}
-            <img class="w-6" src="../assets/dislike.svg" alt=""> </p>
+            <img class="w-6" src="../img/dislike.svg" alt=""> </p>
             <p style=color:black> ${doc.data().favsQntd}
-          <img class="w-6" src="../assets/favorito.svg" alt=""></p>
-            <button class="w-6"> <img src="../assets/três-pontos.svg" alt=""></button>
+          <img class="w-6" src="../img/favorito.svg" alt=""></p>
+            <button class="w-6"> <img src="../img/três-pontos.svg" alt=""></button>
             </div>
           </div>`;
           });
@@ -2219,7 +2219,7 @@ function addInter() {
           if (doc.data().url) {
             var foto = doc.data().url;
           } else {
-            var foto = "../assets/perfil-usuário.png";
+            var foto = "../img/perfil-usuário.png";
           }
           img.setAttribute("src", foto);
         });

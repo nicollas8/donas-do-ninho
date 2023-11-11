@@ -83,10 +83,11 @@ select {
 }
 
 .checkTermos {
+  width: 90vw;
+  margin-top: 1rem;
   display: flex;
   flex-direction: row;
-  
-  margin: 10px 0 0 30px;
+  justify-content: center;
   gap: 8px;
 }
 
