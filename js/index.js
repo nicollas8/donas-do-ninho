@@ -64,7 +64,7 @@ function login() {
     .auth()
     .signInWithEmailAndPassword(form.email().value, form.senha().value)
     .then((response) => {
-      window.location.href = "tela-inicio.html";
+      window.location.href = "../pages/tela-inicio.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
@@ -91,7 +91,7 @@ function recoverPassword() {
     .sendPasswordResetEmail(form.email().value)
     .then(() => {
       alert("E-mail enviado com sucesso");
-      window.location.href = "../pages/tela-login.html";
+      window.location.href = "../index.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
@@ -601,7 +601,7 @@ function excluirConta() {
                   "Usuário excluído da autenticação do Firebase com sucesso!"
                 );
                 alert("Conta Excluída com sucesso!");
-                window.location.replace("tela-login.html");
+                window.location.replace("../index.html");
               })
               .catch(function (error) {
                 console.error(
@@ -1748,7 +1748,7 @@ function logOut() {
     .signOut()
     .then(function () {
       alert("Você saiu!");
-      window.location.replace("tela-login.html");
+      window.location.replace("../index.html");
     });
 }
 
