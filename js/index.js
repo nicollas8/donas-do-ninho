@@ -64,7 +64,7 @@ function login() {
     .auth()
     .signInWithEmailAndPassword(form.email().value, form.senha().value)
     .then((response) => {
-      window.location.href = "../pages/tela-inicio.html";
+      window.location.href = "./pages/tela-inicio.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
@@ -82,7 +82,7 @@ function getErrorMessage(error) {
 
 function recoverySenha() {
   "";
-  location.href = "../pages/recuperar-senha.html";
+  location.href = "./pages/recuperar-senha.html";
 }
 
 function recoverPassword() {
@@ -91,7 +91,7 @@ function recoverPassword() {
     .sendPasswordResetEmail(form.email().value)
     .then(() => {
       alert("E-mail enviado com sucesso");
-      window.location.href = "../index.html";
+      window.location.href = "./index.html";
     })
     .catch((error) => {
       alert(getErrorMessage(error));
