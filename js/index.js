@@ -111,7 +111,7 @@ if (buttonCreateAccount) {
       tipoMom: document.querySelector("select[name=tipoMãe").value,
       email: document.getElementById("newEmail").value,
       senha: document.getElementById("newSenha").value,
-      termosDeUso: document.getElementById("termosDeUso").checked
+      termosDeUso: document.getElementById("termosDeUso").checked,
     };
 
     let date = formData.data;
@@ -139,8 +139,8 @@ if (buttonCreateAccount) {
       alert("Por favor, digite uma senha com mais de 6 caracteres!");
     } else if (formData.senha != confirmSenha) {
       alert("As senhas devem se coincidir!");
-    } else if (!formData.termosDeUso){
-      alert ("leia e aceite os termos de uso")
+    } else if (!formData.termosDeUso) {
+      alert("leia e aceite os termos de uso");
     } else {
       firebase
         .auth()
@@ -188,6 +188,7 @@ if (buttonCreateAccount) {
     }
   });
 }
+
 // VALIDAÇÃO CADASTRO
 
 const formEMailCadastro = document.getElementById("formEmail");
@@ -247,24 +248,6 @@ function comparePassword() {
     setError(4);
   }
 }
-
-// function previewFilePerfil() {
-//   const previewPerfil = document.getElementById("imgPerfil");
-//   const filePerfil = document.getElementById("loadImagePerfil").files[0];
-//   const reader = new FileReader();
-
-//   reader.addEventListener(
-//     "load",
-//     () => {
-//       previewPerfil.src = reader.result;
-//     },
-//     false
-//   );
-//   if (filePerfil) {
-//     previewPerfil.style.display = "block";
-//     reader.readAsDataURL(filePerfil);
-//   }
-// }
 
 function previewFile() {
   const preview = document.getElementById("fotoPubli");
@@ -397,7 +380,7 @@ function viewPublis() {
 }
 
 function att() {
-  renderNots()
+  renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var urlParams = new URLSearchParams(window.location.search);
@@ -575,23 +558,23 @@ function atualizar(URL) {
 function excluirConta() {
   //var resposta = confirm("Tem certeza de que deseja excluir?");
 
-  const confirm = document.getElementById('preview')
-  confirm.style.display = 'block'
+  const confirm = document.getElementById("preview");
+  confirm.style.display = "block";
   confirm.innerHTML = `<img class='' src='../img/logoExclusao.svg'> 
   <p class='text-black mt-3'> Tem certeza que deseja excluir sua conta? </p>
   <div class='flex flex-row justify-center gap-10 mt-5'>
   <button id='confirmExcluir' class='border-2 border-black p-2 rounded-3xl bg-green-400 px-4'> sim </button>
   <button id='denyExcluir' class='border-2 border-black p-2 rounded-3xl bg-red-400 px-4'> não </button>
-  </div>`
+  </div>`;
 
-  const decision2 = document.getElementById("denyExcluir")
+  const decision2 = document.getElementById("denyExcluir");
 
   decision2.addEventListener("click", async (e) => {
-    console.log(decision2.textContent)
-    confirm.style.display = 'none';
-  })
+    console.log(decision2.textContent);
+    confirm.style.display = "none";
+  });
 
-  const decision1 = document.getElementById("confirmExcluir")
+  const decision1 = document.getElementById("confirmExcluir");
 
   decision1.addEventListener("click", async (e) => {
     firebase.auth().onAuthStateChanged(function (user) {
@@ -634,8 +617,7 @@ function excluirConta() {
         console.log("Não foi possível obter o usuário autenticado.");
       }
     });
-  })
-   
+  });
 }
 
 function excluirPosts(uidDoUsuario) {
@@ -658,32 +640,32 @@ function excluirPosts(uidDoUsuario) {
     });
 }
 
-function excluirReacts(uid){
-  firebase.firestore()
-  .collection("reacts")
-  .where("userUID", "==", uid)
-  .get()
-  .then(function (querySnapshot){
-    querySnapshot.forEach((doc)=> {
-      doc.ref.delete()
-    })
-  })
-
+function excluirReacts(uid) {
+  firebase
+    .firestore()
+    .collection("reacts")
+    .where("userUID", "==", uid)
+    .get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+      });
+    });
 }
 
 function addPubli(url) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-  if (document.getElementById("publi").value == "") {
-    alert("Por favor, digite algo para enviar!");
-  } else if (document.getElementById("tipo").value == "") {
-    alert("Por favor, selecione um tipo de publicação!");
-  } else if (document.getElementById("tag").value == "") {
-    alert("Por favor, selecione uma tag!");
-  } else {
-    const button = document.getElementById("post");
-    button.disabled = true;
-    
+      if (document.getElementById("publi").value == "") {
+        alert("Por favor, digite algo para enviar!");
+      } else if (document.getElementById("tipo").value == "") {
+        alert("Por favor, selecione um tipo de publicação!");
+      } else if (document.getElementById("tag").value == "") {
+        alert("Por favor, selecione uma tag!");
+      } else {
+        const button = document.getElementById("post");
+        button.disabled = true;
+
         var uid = user.uid;
         console.log(uid);
         var usersCollection = firebase.firestore().collection("usuarios");
@@ -748,11 +730,9 @@ function addPubli(url) {
             alert("deu erro");
           }
         });
-      
-    
-  }
-}
-});
+      }
+    }
+  });
 }
 
 function addResp() {
@@ -800,12 +780,19 @@ function addResp() {
                       .collection("posts")
                       .add(newRespData)
                       .then(() => {
-                        firebase.firestore().collection("usuarios")
-                        .doc(doc.data().UIDusuario)
-                        .collection("notificações")
-                        .get()
-                        .then(() => {
-                            addNotify(doc.id,user.uid,doc.data().UIDusuario,'com') 
+                        firebase
+                          .firestore()
+                          .collection("usuarios")
+                          .doc(doc.data().UIDusuario)
+                          .collection("notificações")
+                          .get()
+                          .then(() => {
+                            addNotify(
+                              doc.id,
+                              user.uid,
+                              doc.data().UIDusuario,
+                              "com"
+                            );
                             const qntdResps = doc.data().respsQntd;
                             console.log(qntdResps);
                             doc.ref.update({
@@ -819,10 +806,13 @@ function addResp() {
                               "tela-comments.html" + "?ID=" + IDpostagem;
                           })
                           .catch((error) => {
-                            console.error("Erro ao adicionar resposta: ", error);
+                            console.error(
+                              "Erro ao adicionar resposta: ",
+                              error
+                            );
                           });
-                          })
-                        
+                      });
+
                     console.log(newRespData);
                   }
                 })
@@ -844,7 +834,7 @@ function addResp() {
     alert("Por favor, digite alguma coisa para enviar sua resposta!");
   }
 }
- 
+
 function formatPost(
   userNome,
   userUID,
@@ -861,8 +851,7 @@ function formatPost(
   fotoUser,
   donoUID
 ) {
-
-  console.log(tag)
+  console.log(tag);
 
   if (img) {
     var imgCarregado = "style='display:flex'";
@@ -975,7 +964,7 @@ function sortBy(tag) {
 }
 
 function showPosts() {
-  renderNots()
+  renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var db = firebase.firestore();
@@ -1021,7 +1010,8 @@ function showPosts() {
               tag,
               img,
               fotoUser,
-              UIDdonoPost)
+              UIDdonoPost
+            );
             checkReact(user.uid, "post");
           });
         })
@@ -1337,8 +1327,6 @@ function excluirPost(postUID) {
     });
 }
 
-
-
 function desabilitarBotao() {
   const button = document.getElementById("");
   button.disabled = true;
@@ -1469,19 +1457,24 @@ function reactP(num, vs, postID, userUID, type) {
                           })
                           .then(() => {
                             db.collection("usuarios")
-                                .doc(doc.data().UIDusuario)
-                                .collection("notificações")
-                                .where('UID', '==', userUID)
-                                .where('commentID', '==', postID)
-                                .where('type', '==', 'like')
-                                .get()
-                                .then((querySnapshot) => {
-                                  if(!querySnapshot.empty){
-                                    console.log('Já tem notificação sua lá po')        
-                                  }else{
-                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'like') 
-                                  }
-                                })
+                              .doc(doc.data().UIDusuario)
+                              .collection("notificações")
+                              .where("UID", "==", userUID)
+                              .where("commentID", "==", postID)
+                              .where("type", "==", "like")
+                              .get()
+                              .then((querySnapshot) => {
+                                if (!querySnapshot.empty) {
+                                  console.log("Já tem notificação sua lá po");
+                                } else {
+                                  addNotify(
+                                    doc.id,
+                                    userUID,
+                                    doc.data().UIDusuario,
+                                    "like"
+                                  );
+                                }
+                              });
 
                             var qntd = doc.data().likesQntd + 1;
                             var qntdvs = doc.data().deslikesQntd - 1;
@@ -1562,19 +1555,26 @@ function reactP(num, vs, postID, userUID, type) {
                                 console.log(userDoc.data());
 
                                 db.collection("usuarios")
-                                .doc(doc.data().UIDusuario)
-                                .collection("notificações")
-                                .where('UID', '==', userUID)
-                                .where('commentID', '==', postID)
-                                .where('type', '==', 'like')
-                                .get()
-                                .then((querySnapshot) => {
-                                  if(!querySnapshot.empty){
-                                    console.log('Já tem notificação sua lá po')        
-                                  }else{
-                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'like') 
-                                  }
-                                })
+                                  .doc(doc.data().UIDusuario)
+                                  .collection("notificações")
+                                  .where("UID", "==", userUID)
+                                  .where("commentID", "==", postID)
+                                  .where("type", "==", "like")
+                                  .get()
+                                  .then((querySnapshot) => {
+                                    if (!querySnapshot.empty) {
+                                      console.log(
+                                        "Já tem notificação sua lá po"
+                                      );
+                                    } else {
+                                      addNotify(
+                                        doc.id,
+                                        userUID,
+                                        doc.data().UIDusuario,
+                                        "like"
+                                      );
+                                    }
+                                  });
 
                                 userDoc.ref
                                   .update({
@@ -1705,20 +1705,27 @@ function fav(post, userUID, type) {
                               xp: userDoc.data().xp + 10,
                             })
                             .then(function () {
-                              firebase.firestore().collection("usuarios")
+                              firebase
+                                .firestore()
+                                .collection("usuarios")
                                 .doc(doc.data().UIDusuario)
                                 .collection("notificações")
-                                .where('UID', '==', userUID)
-                                .where('commentID', '==', post)
-                                .where('type', '==', 'fav')
+                                .where("UID", "==", userUID)
+                                .where("commentID", "==", post)
+                                .where("type", "==", "fav")
                                 .get()
                                 .then((querySnapshot) => {
-                                  if(!querySnapshot.empty){
-                                    console.log('Já tem notificação sua lá po')        
-                                  }else{
-                                    addNotify(doc.id, userUID, doc.data().UIDusuario, 'fav') 
+                                  if (!querySnapshot.empty) {
+                                    console.log("Já tem notificação sua lá po");
+                                  } else {
+                                    addNotify(
+                                      doc.id,
+                                      userUID,
+                                      doc.data().UIDusuario,
+                                      "fav"
+                                    );
                                   }
-                                })
+                                });
                               console.log("XP Concedido papai");
                               document.getElementById(style).textContent =
                                 qntdFav + 1;
@@ -1768,9 +1775,9 @@ function viewFavs() {
                   time = postData.timestamp;
                   tempo = formatTime(time);
 
-                  if (postData.url != ""){
+                  if (postData.url != "") {
                     var imgCarregado = "style='display:flex'";
-                  }else{
+                  } else {
                     var imgCarregado = "style='display:none'";
                   }
                   publis.innerHTML += `
@@ -1893,7 +1900,7 @@ firebase.auth().onAuthStateChanged(function (user) {
 
         if (file) {
           data = new Date();
-          arquivonome = "imgPost"+data;
+          arquivonome = "imgPost" + data;
           // Faça o upload da imagem para o Firebase Storage
           const storageRef = storage.ref().child(`img/${arquivonome}`);
           await storageRef.put(file);
@@ -1927,15 +1934,13 @@ firebase.auth().onAuthStateChanged(function (user) {
         if (file) {
           // Exiba a imagem no elemento de pré-visualização
           data = new Date();
-          arquivonome = "imgPerfil"+data;
-          
-          
+          arquivonome = "imgPerfil" + data;
 
           const reader = new FileReader();
           reader.onload = function (e) {
             // Crie uma div para exibir a imagem para corte
             const imagePreview = document.getElementById("preview");
-            imagePreview.style.display = 'block';
+            imagePreview.style.display = "block";
             imagePreview.innerHTML = `<img id="cropperImage" src="${e.target.result}">`;
 
             // Inicialize o cropper
@@ -1946,12 +1951,12 @@ firebase.auth().onAuthStateChanged(function (user) {
             });
 
             // Quando o usuário pressionar o botão de corte
-            const imgPerfil = document.getElementById('imgPerfil');
+            const imgPerfil = document.getElementById("imgPerfil");
             const closeButton = document.createElement("button");
             const cropButton = document.createElement("button");
-            cropButton.className = "float-right"
-            closeButton.className = "float-left"
-            console.log(cropButton)
+            cropButton.className = "float-right";
+            closeButton.className = "float-left";
+            console.log(cropButton);
             closeButton.textContent = "Fechar";
             cropButton.textContent = "Crop";
 
@@ -1959,9 +1964,9 @@ firebase.auth().onAuthStateChanged(function (user) {
             imagePreview.appendChild(closeButton);
 
             imagePreview.addEventListener("click", async () => {
-              imagePreview.style.display = 'none';
+              imagePreview.style.display = "none";
               imageInput.value = null;
-            })
+            });
 
             cropButton.addEventListener("click", async () => {
               // Obtenha a imagem recortada
@@ -1970,30 +1975,26 @@ firebase.auth().onAuthStateChanged(function (user) {
               // Converta o canvas em Blob
               croppedCanvas.toBlob(async (blob) => {
                 var url = URL.createObjectURL(blob);
-                
+
                 imgPerfil.src = url;
 
-                imagePreview.style.display = 'none';
+                imagePreview.style.display = "none";
 
                 buttonimgPerfil.addEventListener("click", async (e) => {
                   const storageRef = storage.ref().child(`img/${arquivonome}`);
                   await storageRef.put(blob);
-    
-                    const URL = await storageRef.getDownloadURL();
-                    atualizar(URL);
-                })
+
+                  const URL = await storageRef.getDownloadURL();
+                  atualizar(URL);
+                });
               });
             });
-
-            
           };
           reader.readAsDataURL(file);
         } else {
           atualizar();
         }
       });
-
-      
     }
   }
 });
@@ -2271,48 +2272,47 @@ function sendInterest() {
   });
 }
 
-window.addEventListener('load', function () {
-  var loaderContainer = document.getElementById('loader-container');
-  loaderContainer.style.display = 'none'; // Esconde o indicador de carregamento e o fundo escuro
+window.addEventListener("load", function () {
+  var loaderContainer = document.getElementById("loader-container");
+  loaderContainer.style.display = "none"; // Esconde o indicador de carregamento e o fundo escuro
 });
 
-
-function renderNots(){
+function renderNots() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      const contadorElement = document.querySelector('.contador');
+      const contadorElement = document.querySelector(".contador");
 
-      
-      firebase.firestore().collection("usuarios")
-      .doc(user.uid)
-      .collection("notificações")
-      .get()
-      .then((querySnapshot) => {
-        cont = 0;
-        if(!querySnapshot.empty){
-           querySnapshot.forEach((doc) =>{
-            cont++
-           })
-           console.log( cont)
-           const numeroNotificacoes = cont;
-           contadorElement.style.display = 'flex';
-           contadorElement.textContent = numeroNotificacoes.toString();
-          }else{
-            
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .collection("notificações")
+        .get()
+        .then((querySnapshot) => {
+          cont = 0;
+          if (!querySnapshot.empty) {
+            querySnapshot.forEach((doc) => {
+              cont++;
+            });
+            console.log(cont);
+            const numeroNotificacoes = cont;
+            contadorElement.style.display = "flex";
+            contadorElement.textContent = numeroNotificacoes.toString();
+          } else {
           }
-      })
+        });
     }
-  })
+  });
 }
 
 function showPostsInicio() {
-  renderNots()
+  renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       //pedindo(user.uid)
-      
+
       db.collection("usuarios")
         .doc(user.uid)
         .get()
@@ -2429,7 +2429,16 @@ function showPostsInicio() {
 //   }
 // }
 
-function formatNotify(time, UID, commentID, type, foto, nome, postType, postText) {
+function formatNotify(
+  time,
+  UID,
+  commentID,
+  type,
+  foto,
+  nome,
+  postType,
+  postText
+) {
   tempoF = formatTime(time);
   tempo = tempoF.replace(/^postado\s+/i, "");
   console.log(tempo, UID, commentID, type);
@@ -2461,7 +2470,7 @@ function formatNotify(time, UID, commentID, type, foto, nome, postType, postText
 }
 
 function notis() {
-  renderNots()
+  renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       const notis = document.getElementById("notis");
@@ -2513,7 +2522,7 @@ function notis() {
                 });
             });
           } else {
-            notis.innerHTML = 'SEM NOTIFICAÇÕES'
+            notis.innerHTML = "SEM NOTIFICAÇÕES";
           }
         });
     }
@@ -2534,36 +2543,36 @@ function addNotify(commentID, userUID, uid, tipo) {
   notifyRef.add(dados);
 }
 
-function excluirNotify(commentID, UID, tipo){
+function excluirNotify(commentID, UID, tipo) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      firebase.firestore()
-      .collection("usuarios")
-      .doc(user.uid)
-      .collection("notificações")
-      .where('commentID', '==', commentID)
-      .where('UID', '==', UID)
-      .where('type', '==', tipo)
-      .get()
-      .then((querySnapshot) =>{
-        querySnapshot.forEach((doc) =>{
-          doc.ref.delete()
-          .then(() => {
-            window.location.reload();
-          })
-        })
-      })
+      firebase
+        .firestore()
+        .collection("usuarios")
+        .doc(user.uid)
+        .collection("notificações")
+        .where("commentID", "==", commentID)
+        .where("UID", "==", UID)
+        .where("type", "==", tipo)
+        .get()
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            doc.ref.delete().then(() => {
+              window.location.reload();
+            });
+          });
+        });
     }
-  })
+  });
 }
 
 function getUserEmail() {
-  firebase.auth().onAuthStateChanged(function(user) {
+  firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       var email = user.email;
-      document.getElementById('email-user').innerText = email;
+      document.getElementById("email-user").innerText = email;
     } else {
-      console.log('No user is signed in.');
+      console.log("No user is signed in.");
     }
   });
 }

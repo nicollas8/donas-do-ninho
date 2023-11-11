@@ -1,0 +1,12 @@
+{
+  "name": "donas-do-ninho",
+  "version": "1.0.0",
+  "description": "<h1 align=\"center\"> Donas do Ninho </h1>",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
