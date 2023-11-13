@@ -878,17 +878,17 @@ function formatPost(
     <img src="${img}" class="w-full h-1/4 mb-3">
   </div>
       </div>
-        <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']">
-          <button class="w-6 flex flex-row" onclick="react('1', '${postID}', 'post')"> 
-          <img src="../img/like.svg" alt="">
+        <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']" id="react">
+          <button class="w-6 flex flex-row" id="likeButton" onclick="react('1', '${postID}', 'post'), like()"> 
+            <img id="imgLike" src="../img/like.svg" alt="">
             <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> 
           </button>
-          <button class="w-6 flex flex-row" onclick="react('2', '${postID}', 'post')">
-            <img src="../img/dislike.svg" alt="">
+          <button class="w-6 flex flex-row" id="deslikeButton" onclick="react('2', '${postID}', 'post'), disklike()">
+            <img id="imgDislike" src="../img/dislike.svg" alt="">
             <p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p>
           </button>
-          <button class="w-6 flex flex-row" onclick="fav('${postID}', '${userUID}', 'post')">
-          <img src="../img/favorito.svg" alt=""> 
+          <button class="w-6 flex flex-row"  id="favoriteButton" onclick="fav( '${postID}', '${userUID}', 'post'), favorite()">
+            <img id="imgFavs" src="../img/favorito.svg" alt=""> 
             <p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p>
           </button>
           <button class="w-6 flex flex-row" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> 
@@ -1405,11 +1405,11 @@ function reactP(num, vs, postID, userUID, type) {
   const reactLocation = db.collection("reacts");
 
   if (num == 1) {
-    colorInd = "lightgreen";
+
     style = "like" + postID;
     styleVs = "deslike" + postID;
   } else {
-    colorInd = "red";
+
     style = "deslike" + postID;
     styleVs = "like" + postID;
   }
@@ -1555,8 +1555,6 @@ function reactP(num, vs, postID, userUID, type) {
                           });
                       }
                     });
-                    document.getElementById(style).style.backgroundColor =
-                      colorInd;
                     document.getElementById(styleVs).style.backgroundColor =
                       "white";
                   })
@@ -1638,8 +1636,6 @@ function reactP(num, vs, postID, userUID, type) {
                         .then(() => {});
                     }
                     document.getElementById(style).textContent = qntd + 1;
-                    document.getElementById(style).style.backgroundColor =
-                      colorInd;
                   })
                   .catch((error) => {
                     console.error("Erro: ", error);
@@ -1774,7 +1770,7 @@ function fav(post, userUID, type) {
                                 qntdFav + 1;
                               document.getElementById(
                                 style
-                              ).style.backgroundColor = "yellow";
+                              )
                             });
                         });
                     }
@@ -2619,4 +2615,34 @@ function getUserEmail() {
       console.log("No user is signed in.");
     }
   });
+}
+
+function like() {
+  const myImage = document.getElementById('imgLike');
+
+  if (myImage.src.match("../img/like.svg")) {
+      myImage.src = "../img/thumbs-up.png";
+  } else {
+      myImage.src = "../img/like.svg";
+  }
+};
+
+function disklike(){
+  const myImage = document.getElementById('imgDislike');
+
+  if (myImage.src.match("../img/dislike.svg")) {
+      myImage.src = "../img/thumbs-down.png";
+  } else {
+      myImage.src = "../img/dislike.svg";
+  }
+}
+
+function favorite() {
+  const myImage = document.getElementById('imgFavs');
+
+  if (myImage.src.match("../img/favorito.svg")) {
+      myImage.src = "../img/star.png";
+  } else {
+      myImage.src = "../img/favorito.svg";
+  }
 }

@@ -16,17 +16,28 @@
 <main class="flex flex-col gap-2 mt-2 p-2 w-screen">
   <div class="flex flex-row">
     <div class="flex flex-row gap-2">
-      <label name="receberLike" class="">Receber notificações de like</label>
-      <input type="checkbox" name="receberLike" class="notification">
+      <span>Receber notificações de like</span>
+      <label class="switch">
+        <input type="checkbox" name="receberLike" id="receberLike">
+        <span class="slider"></span>
+      </label>
     </div>
   </div>
   <div class="flex flex-row gap-2">
-    <label name="receberComment" class="">Receber notificações de comentário</label>
-    <input type="checkbox" name="receberComment" class="notification">
+    <span>Receber notificações de comentários</span>
+      <label class="switch">
+        <input type="checkbox" name="receberComentarios" id="receberComentarios">
+        <span class="slider"></span>
+      </label>
+    </div>
   </div>
   <div class="flex flex-row gap-2">
-    <label name="receberFavorito" class="">Receber notificações de favoritos </label>
-    <input type="checkbox" name="receberFavorito" class="notification">
+    <span>Receber notificações de favoritos</span>
+      <label class="switch">
+        <input type="checkbox" name="receberFavoritos" id="receberFavoritos">
+        <span class="slider"></span>
+      </label>
+    </div>  
   </div>
   <div class="fixed bottom-10 left-0 w-screen">
     <div class="flex flex-row justify-center">
