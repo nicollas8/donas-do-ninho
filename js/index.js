@@ -919,6 +919,7 @@ function sortBy(tag) {
           if (!querySnapshot.empty) {
             publis.innerHTML = "";
             querySnapshot.forEach(function (doc) {
+
               console.log(doc.data());
               var postData = doc.data();
               var postID = doc.id;
@@ -977,9 +978,50 @@ function showPosts() {
         .get()
         .then((postsQuerySnapshot) => {
           postsQuerySnapshot.forEach((postDoc) => {
-            var qtd = 0;
             var postData = postDoc.data();
             var postID = postDoc.id;
+
+            //fav
+            db.collection("reacts")
+              .where("postID", "==", postID)
+              .where("react", "==", 3)
+              .get()
+              .then(function (reactSnapshot3){
+                postsRef.doc(postID).get().then((doc) => {
+                  doc.ref.update({
+                    favsQntd: reactSnapshot3.size,
+                  });
+                })
+                console.log("Número de Fav:", );
+              })
+
+            //deslike
+            db.collection("reacts")
+              .where("postID", "==", postID)
+              .where("react", "==", 2)
+              .get()
+              .then(function (reactSnapshot2){
+                postsRef.doc(postID).get().then((doc) => {
+                  doc.ref.update({
+                    deslikesQntd: reactSnapshot2.size,
+                  });
+                })
+                console.log("Número de deslikes:", reactSnapshot2.size);
+              })
+            
+            //like
+            db.collection("reacts")
+              .where("postID", "==", postID)
+              .where("react", "==", 1)
+              .get()
+              .then(function (reactSnapshot1){
+                postsRef.doc(postID).get().then((doc) => {
+                  doc.ref.update({
+                    likesQntd: reactSnapshot1.size,
+                  });
+                })
+                console.log("Número de likes:", reactSnapshot1.size);
+              })
 
             time = postData.timestamp;
             tempo = formatTime(time);
@@ -1156,7 +1198,7 @@ function comments() {
             const redirect = "add-comment.html";
             const img = postData.url;
             const fotoUser = postData.fotoUser;
-
+            const UID = postData.UIDusuario;
             publis.innerHTML = formatPost(
               userNome,
               userUID,
@@ -1170,7 +1212,8 @@ function comments() {
               redirect,
               tag,
               img,
-              fotoUser
+              fotoUser,
+              UID
             );
             checkReact(user.uid, "post");
             const respUID = postData.IDpost;
@@ -2027,6 +2070,7 @@ function nivel() {
           }
           const conta = xp / 10;
           const xpBar = conta * xpMulti;
+          console.log(conta)
           console.log(xp);
           console.log(xpBar);
 
