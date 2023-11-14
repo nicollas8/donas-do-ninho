@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 793.70081 1122.5197"
+   width="173.32899mm"
+   height="168.414mm"
+   viewBox="0 0 655.10173 636.52538"
    version="1.1"
    id="svg1"
    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
@@ -25,9 +25,9 @@
      inkscape:document-units="mm"
      inkscape:zoom="0.40378396"
      inkscape:cx="269.94633"
-     inkscape:cy="657.52983"
-     inkscape:window-width="1600"
-     inkscape:window-height="837"
+     inkscape:cy="456.92751"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -483,20 +483,21 @@
        style="display:inline;fill:#ffed83;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-dasharray:none;stroke-opacity:1"
        id="path40"
        sodipodi:type="arc"
-       sodipodi:cx="390.6792"
-       sodipodi:cy="554.75208"
+       sodipodi:cx="327.55005"
+       sodipodi:cy="318.26291"
        sodipodi:rx="325.05005"
        sodipodi:ry="315.76291"
        sodipodi:start="0"
        sodipodi:end="6.2822494"
        sodipodi:open="true"
        sodipodi:arc-type="arc"
-       d="M 715.72925,554.75208 A 325.05005,315.76291 0 0 1 390.75525,870.51498 325.05005,315.76291 0 0 1 65.629186,554.89984 325.05005,315.76291 0 0 1 390.45104,238.98924 325.05005,315.76291 0 0 1 715.72911,554.45655" />
+       d="M 652.6001,318.26291 A 325.05005,315.76291 0 0 1 327.6261,634.02581 325.05005,315.76291 0 0 1 2.5000356,318.41067 325.05005,315.76291 0 0 1 327.32189,2.5000778 325.05005,315.76291 0 0 1 652.59996,317.96738" />
   </g>
   <g
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-59.995717,-246.78756)">
     <path
        style="display:inline;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:5;stroke-dasharray:none;stroke-opacity:1"
        id="path6"

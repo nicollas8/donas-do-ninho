@@ -2,9 +2,9 @@
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
 
 <svg
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 793.70081 1122.5197"
+   width="184.14799mm"
+   height="174.304mm"
+   viewBox="0 0 695.99244 658.78678"
    version="1.1"
    id="svg1"
    inkscape:version="1.3 (0e150ed6c4, 2023-07-21)"
@@ -23,11 +23,11 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:document-units="mm"
-     inkscape:zoom="0.40378396"
-     inkscape:cx="371.48578"
-     inkscape:cy="506.45895"
-     inkscape:window-width="1600"
-     inkscape:window-height="837"
+     inkscape:zoom="0.80756792"
+     inkscape:cx="502.74409"
+     inkscape:cy="427.82779"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
      inkscape:window-x="-8"
      inkscape:window-y="-8"
      inkscape:window-maximized="1"
@@ -280,25 +280,26 @@
      id="layer4"
      inkscape:label="Camada 2"
      transform="matrix(1.0941177,0,0,1.0819672,-15.850061,-54.261289)"
-     style="stroke:#000000;stroke-opacity:1;stroke-width:4.59548068;stroke-dasharray:none;fill:#c6ebf4;fill-opacity:1">
+     style="fill:#c6ebf4;fill-opacity:1;stroke:#000000;stroke-width:4.59548;stroke-dasharray:none;stroke-opacity:1">
     <path
        style="fill:#c6ebf4;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:4.59548;stroke-dasharray:none;stroke-opacity:1"
        id="path75"
        sodipodi:type="arc"
-       sodipodi:cx="378.9155"
-       sodipodi:cy="572.76385"
+       sodipodi:cx="332.54727"
+       sodipodi:cy="354.59009"
        sodipodi:rx="315.76291"
        sodipodi:ry="302.14175"
        sodipodi:start="0"
        sodipodi:end="6.2822494"
        sodipodi:open="true"
        sodipodi:arc-type="arc"
-       d="M 694.67841,572.76385 A 315.76291,302.14175 0 0 1 378.98938,874.9056 315.76291,302.14175 0 0 1 63.152622,572.90524 315.76291,302.14175 0 0 1 378.69385,270.62218 315.76291,302.14175 0 0 1 694.67827,572.48108" />
+       d="M 648.31018,354.59009 A 315.76291,302.14175 0 0 1 332.62115,656.73183 315.76291,302.14175 0 0 1 16.784397,354.73148 315.76291,302.14175 0 0 1 332.32563,52.448408 315.76291,302.14175 0 0 1 648.31004,354.30731" />
   </g>
   <g
      inkscape:label="Camada 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-37.14858,-235.27433)">
     <g
        id="g22"
        transform="matrix(0.61623032,0,0,0.61136604,95.98424,168.42305)">

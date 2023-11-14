@@ -117,7 +117,7 @@ if (buttonCreateAccount) {
     let date = formData.data;
     date = date.replace(/\//g, "-");
     let dataArray = date.split("-");
-    console.log(dataArray);
+    //console.log(dataArray);
     let nowdate = new Date();
     nowdate = nowdate.getFullYear();
 
@@ -290,7 +290,7 @@ function viewPublis() {
             querySnapshot.forEach(function (doc) {
               // O documento do usuário foi encontrado
               var userPosts = doc.data();
-              console.log("dados", userPosts);
+              //console.log("dados", userPosts);
               publis.innerHTML += `<div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
         <div class="ballPerguntas p-3">
           <div class="options">
@@ -849,9 +849,9 @@ function formatPost(
   tag,
   img,
   fotoUser,
-  donoUID
+  donoUID,
 ) {
-  console.log(tag);
+  //console.log(tag);
 
   if (img) {
     var imgCarregado = "style='display:flex'";
@@ -864,7 +864,7 @@ function formatPost(
     <div class="ballPerguntas p-3">
     <div class="cardTittle flex flex-row justify-between">
   <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
-   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="  background-color: grey;">
+   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="background-color: grey;">
    <p id=nome class="text-left self-center text-black"> ${userNome}</p>
   </div>
     <h4 class=" text-red-700 self-center">${tipoPost}</h4>
@@ -980,6 +980,31 @@ function showPosts() {
           postsQuerySnapshot.forEach((postDoc) => {
             var postData = postDoc.data();
             var postID = postDoc.id;
+          
+
+            db.collection("usuarios")
+            .doc(postData.UIDusuario)
+            .get()
+            .then((doc) => {
+              // var lvl = "";
+              // console.log(doc.data());
+
+              // if (doc.data().nivel == 0){
+              //   lvl = "Não é mãe";
+              // }else if(doc.data().nivel == 1){
+              //   lvl = "Iniciante"
+              // }else if(doc.data().nivel == 2){
+              //   lvl = "Beija-Flor"
+              // }else if(doc.data().nivel == 3){
+              //   lvl = "Flamingo"
+              // }else if(doc.data().nivel == 4){
+              //   lvl = "Coruja"
+              // }else if(doc.data().nivel == 5){
+              //   lvl = "Tico-Tico "
+              // }else if(doc.data().nivel == 6){
+              //   lvl = "Cegonha"
+              // }
+            
 
             //fav
             db.collection("reacts")
@@ -992,7 +1017,7 @@ function showPosts() {
                     favsQntd: reactSnapshot3.size,
                   });
                 })
-                console.log("Número de Fav:", );
+                //console.log("Número de Fav:", );
               })
 
             //deslike
@@ -1006,7 +1031,7 @@ function showPosts() {
                     deslikesQntd: reactSnapshot2.size,
                   });
                 })
-                console.log("Número de deslikes:", reactSnapshot2.size);
+                //console.log("Número de deslikes:", reactSnapshot2.size);
               })
             
             //like
@@ -1020,8 +1045,22 @@ function showPosts() {
                     likesQntd: reactSnapshot1.size,
                   });
                 })
-                console.log("Número de likes:", reactSnapshot1.size);
+                //console.log("Número de likes:", reactSnapshot1.size);
               })
+
+            //comments
+            db.collection("posts")
+            .where("categ", "==", "resp")
+            .where("IDresp", "==", postID)
+            .get()
+            .then( function (reactSnapshot4){
+              postsRef.doc(postID).get().then((doc) => {
+                doc.ref.update({
+                  respsQntd: reactSnapshot4.size,
+                });
+              })
+              //console.log("Número de respostas:", reactSnapshot4.size)
+            })
 
             time = postData.timestamp;
             tempo = formatTime(time);
@@ -1057,6 +1096,7 @@ function showPosts() {
             checkReact(user.uid, "post");
           });
         })
+        })
 
         .catch(function (error) {
           console.error(
@@ -1068,7 +1108,9 @@ function showPosts() {
     } else {
       console.log("tu nao tá logado");
     }
+    
   });
+  
 }
 
 function checkReact(userUID, local) {
@@ -2062,7 +2104,7 @@ function nivel() {
           } else if (lvl == 4) {
             var xpMulti = 5;
           } else if (lvl == 5) {
-            var xpMulti = 4;
+            var xpMulti = 6;
           }
           const conta = xp / 10;
           const xpBar = conta * xpMulti;
@@ -2070,8 +2112,13 @@ function nivel() {
           console.log(xp);
           console.log(xpBar);
 
-          document.getElementById("lvlBar").style.width = xpBar + "px";
-
+          if (lvl == 5){
+            document.getElementById("lvlBar").style.width = "205px";
+          }else{
+            document.getElementById("lvlBar").style.width = xpBar + "px"
+          }
+          
+          
           checarNivel(lvl);
           if (xpBar >= 200) {
             if (lvl != 5) {
@@ -2125,7 +2172,7 @@ function enterPublis() {
   var urlParams = new URLSearchParams(window.location.search);
   var IDpostagem = urlParams.get("ID");
   window.location.href = "tela-publisOutro.html" + "?ID=" + IDpostagem;
-  console.log(IDpostagem);
+  //console.log(IDpostagem);
 }
 
 function voltarOutro() {
@@ -2331,11 +2378,8 @@ function renderNots() {
         .then((querySnapshot) => {
           cont = 0;
           if (!querySnapshot.empty) {
-            querySnapshot.forEach((doc) => {
-              cont++;
-            });
-            console.log(cont);
-            const numeroNotificacoes = cont;
+            //console.log(cont);
+            const numeroNotificacoes = querySnapshot.size;
             contadorElement.style.display = "flex";
             contadorElement.textContent = numeroNotificacoes.toString();
           } else {
