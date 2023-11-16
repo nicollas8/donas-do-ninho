@@ -2673,6 +2673,13 @@ function sendReport(uid){
   }else{
     console.log('nada')
   }
-  
+}
 
+const documento = document.getElementById("interesses")
+  ? document.getElementById("interesses")
+  : null;
+if (documento) {
+  documento.addEventListener("click", () => {
+  console.log(documento)
+  })
 }
