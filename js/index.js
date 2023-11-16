@@ -895,7 +895,7 @@ function formatPost(
             <img src="../img/comentário.svg" alt=""> 
             <p class="ml-2 text-black" id="comment">${respsQntd}</p>
           </button>
-          <button class="w-6 flex flex-row-reverse"><img src="../img/três-pontos.svg" alt=""></button>
+          <button class="w-6 flex flex-row-reverse" onclick="report('${postID}')"><img src="../img/denuncia.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
         <p class="text-left mb-2 text-orange-600" id="tagColor" onclick="sortBy('${tag}')"> #${tag}</p>
@@ -2659,4 +2659,20 @@ function getUserEmail() {
       console.log("No user is signed in.");
     }
   });
+}
+
+function report(uid){
+  window.location.href = 'tela-denuncia.html' + '?ID=' + uid;
+}
+
+function sendReport(uid){
+  const content = document.getElementById("outro").value;
+
+  if (content){
+    console.log(content)
+  }else{
+    console.log('nada')
+  }
+  
+
 }

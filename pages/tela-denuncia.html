@@ -1,0 +1,47 @@
+<html lang="pt-br">
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do ninho</title>
+</head>
+<div id="loader-container" class="loader-container">
+    <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+  </div>
+<body>
+    <script> var urlParams = new URLSearchParams(window.location.search);
+        var meuValor = urlParams.get("ID");</script>
+    <div class="header-publi flex flex-row justify-between border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] rounded-b-xl">
+        <img src="../img/seta.png" alt="" class="w-10" onclick= "window.location.href = 'tela-inicio.html'">
+        <h4 class="self-center text-white">Denúncia</h4>
+    </div>
+    <div class="flex flex-col overflow-y-scroll">
+        <p class="text-black"> Selecione o motivo da sua denúncia:</p>
+        
+        <div class="flex flex-col">
+            <button style="width: 30vw;" class="bg-white p-2 px-5 border-1 rounded-xl"> motivo1</button>
+            <button style="width: 30vw;" class="bg-white p-2 px-5 border-1 rounded-xl"> motivo2</button>
+            <button style="width: 30vw;" class="bg-white p-2 px-5 border-1 rounded-xl"> motivo3</button>
+
+            <div class="flex">
+                <span> Outro: </span>
+                <textarea id="outro" class="p-2 border-1 rounded-xl" placeholder="Especifique o motivo"></textarea>
+            </div>
+            
+        </div>
+        
+
+        <div class="flex justify-end mr-5">
+            <button type="submit" class="bg-[#ffa9a9] p-2 px-5 border-1 text-white rounded-full" onclick="sendReport(meuValor)" id="send">Enviar</button>
+        </div>
+    </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/index.js"></script>
+</html>
