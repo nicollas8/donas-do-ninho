@@ -409,9 +409,13 @@ function att() {
               var userData = doc.data();
               //console.log('Dados do usuário:', userData);
 
+              const dataNasc = userData.dataNascimento.split('-');
+              const dataReformada = `${dataNasc[2]}/${dataNasc[1]}/${dataNasc[0]}`
+           
+
               document.getElementById("nome-user").textContent = userData.nome;
               document.getElementById("data-user").textContent =
-                userData.dataNascimento;
+                dataReformada;
               document.getElementById("tipo-user").textContent =
                 userData.tipoMom;
               document.getElementById("bio-user").textContent =
@@ -1881,6 +1885,8 @@ function viewFavs() {
                 `;
                 });
             });
+          }else{
+            publis.innerHTML = "Você não tem favoritos"
           }
         });
       console.log("minha mae nao me ama");
@@ -2675,11 +2681,26 @@ function sendReport(uid){
   }
 }
 
-const documento = document.getElementById("interesses")
-  ? document.getElementById("interesses")
-  : null;
-if (documento) {
-  documento.addEventListener("click", () => {
-  console.log(documento)
+function discover(){
+
+  const tags = ['Amamentação', 'Gestação', 'Filhos', 'Medicação', 'Cuidados', 'Planejamento', 'Saúde', 'Promoções'];
+  const postRef = firebase.firestore().collection('posts').where('categ', '==', 'post');
+  const tagPromises = tags.map(tag => postRef.where('tag', '==', tag).get());
+  Promise.all(tagPromises)
+  .then((snapshots) => {
+    const tagSizes = snapshots.map((snapshot, index) => ({ tag: tags[index], size: snapshot.size }));
+    
+    const sortSize = tagSizes.sort((a, b) => b.size -a.size);
+    const quatroPrimeiras = sortSize.slice(0,4);
+    const teste = quatroPrimeiras.map( item => item.tag);
+    const interesses = document.getElementById('interesses');
+
+    teste.forEach(texto => {
+      interesses.innerHTML += `<div style='width:8rem; height:3rem' class='bg-white rounded-xl text-center' onclick="sortBy('${texto}')"> ${texto}</div>`;
+    });
+    console.log(teste)
   })
+  .catch((error) => {
+    console.error('Erro ao contar documentos:', error);
+  });
 }
