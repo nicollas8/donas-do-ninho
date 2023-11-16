@@ -499,6 +499,8 @@ function showPostsUser(user) {
 function atualizar(URL) {
   var nome = document.getElementById("nameNew").value;
   var biografia = document.getElementById("biografia").value;
+  var botao = document.getElementById("post2")
+
 
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -2079,9 +2081,13 @@ firebase.auth().onAuthStateChanged(function (user) {
           };
           reader.readAsDataURL(file);
         } else {
-          atualizar();
         }
+      
       });
+
+      buttonimgPerfil.addEventListener("click", async (e) => {
+        atualizar("");
+      })
     }
   }
 });
