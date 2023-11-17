@@ -67,8 +67,13 @@ function login() {
       window.location.href = "./pages/tela-inicio.html";
     })
     .catch((error) => {
-      alert(getErrorMessage(error));
+      showAlert(getErrorMessage(error));
+
     });
+}
+
+function showAlert(message){
+window.Android.showAlert(message);
 }
 
 function getErrorMessage(error) {
