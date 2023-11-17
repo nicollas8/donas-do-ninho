@@ -480,7 +480,7 @@ function showPostsUser(user) {
             <div class="balaoPergunt a">
             <p style=color:black></p>
             <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
-            <div class="flex justify-center py-2 h-1/4" >
+            <div class="flex justify-center py-2 h-1/4">
               <img src="${img}" class="w-full h-1/4 mb-3">
             </div>
                 </div>
@@ -885,7 +885,7 @@ function formatPost(
   <div class="balaoPergunt a">
   <p style=color:black></p>
   <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
-  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>'
+  <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
     <img src="${img}" class="w-full h-1/4 mb-3">
   </div>
       </div>
@@ -975,10 +975,21 @@ function sortBy(tag) {
   });
 }
 
+function isADM(uid){
+  firebase.firestore().collection("usuarios")
+  .doc(uid).get().then((doc) => {
+    if (doc.data().adm == true){
+      const img = document.getElementById('denuncia');
+      img.src = "../img/lixeira.png";
+    }
+  })
+}
+
 function showPosts() {
   renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+      isADM(user.uid);
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       // Obtenha todos os documentos da coleção 'posts'
@@ -991,33 +1002,6 @@ function showPosts() {
           postsQuerySnapshot.forEach((postDoc) => {
             var postData = postDoc.data();
             var postID = postDoc.id;
-          
-
-            db.collection("usuarios")
-            .doc(postData.UIDusuario)
-            .get()
-            .then((doc) => {
-              // var lvl = "";
-              // console.log(doc.data());
-
-              // if (doc.data().nivel == 0){
-              //   lvl = "Não é mãe";
-              // }else if(doc.data().nivel == 1){
-              //   lvl = "Iniciante"
-              // }else if(doc.data().nivel == 2){
-              //   lvl = "Beija-Flor"
-              // }else if(doc.data().nivel == 3){
-              //   lvl = "Flamingo"
-              // }else if(doc.data().nivel == 4){
-              //   lvl = "Coruja"
-              // }else if(doc.data().nivel == 5){
-              //   lvl = "Tico-Tico "
-              // }else if(doc.data().nivel == 6){
-              //   lvl = "Cegonha"
-              // }
-            
-
-            //fav
             db.collection("reacts")
               .where("postID", "==", postID)
               .where("react", "==", 3)
@@ -1106,7 +1090,6 @@ function showPosts() {
             );
             checkReact(user.uid, "post");
           });
-        })
         })
 
         .catch(function (error) {
@@ -1296,7 +1279,7 @@ function comments() {
               <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
               <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
               <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
-              <button class="w-6"><img src="../img/três-pontos.svg" alt=""></button>
+              <button class="w-6" onclick="report('${doc.id}')"><img id="denuncia" src="../img/denuncia.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
             </div>`;
@@ -2016,84 +1999,96 @@ firebase.auth().onAuthStateChanged(function (user) {
 
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
-    const buttonimgPerfil = document.getElementById("post2");
-    const imageInput = document.getElementById("loadImagePerfil");
-
-    if (buttonimgPerfil) {
-      imageInput.addEventListener("input", async (e) => {
-        e.preventDefault();
-        const file = imageInput.files[0];
-        console.log(file);
-
-        if (file) {
-          // Exiba a imagem no elemento de pré-visualização
-          data = new Date();
-          arquivonome = "imgPerfil" + data;
-
-          const reader = new FileReader();
-          reader.onload = function (e) {
-            // Crie uma div para exibir a imagem para corte
-            const imagePreview = document.getElementById("preview");
-            imagePreview.style.display = "block";
-            imagePreview.innerHTML = `<img id="cropperImage" src="${e.target.result}">`;
-
-            // Inicialize o cropper
-            const cropperImage = document.getElementById("cropperImage");
-            const cropper = new Cropper(cropperImage, {
-              aspectRatio: 1, // Pode ajustar para a proporção desejada (1 para quadrado)
-              viewMode: 1, // Pode ajustar a visualização de acordo com suas necessidades
-            });
-
-            // Quando o usuário pressionar o botão de corte
-            const imgPerfil = document.getElementById("imgPerfil");
-            const closeButton = document.createElement("button");
-            const cropButton = document.createElement("button");
-            cropButton.className = "float-right";
-            closeButton.className = "float-left";
-            console.log(cropButton);
-            closeButton.textContent = "Fechar";
-            cropButton.textContent = "Crop";
-
-            imagePreview.appendChild(cropButton);
-            imagePreview.appendChild(closeButton);
-
-            imagePreview.addEventListener("click", async () => {
-              imagePreview.style.display = "none";
-              imageInput.value = null;
-            });
-
-            cropButton.addEventListener("click", async () => {
-              // Obtenha a imagem recortada
-              var croppedCanvas = cropper.getCroppedCanvas();
-
-              // Converta o canvas em Blob
-              croppedCanvas.toBlob(async (blob) => {
-                var url = URL.createObjectURL(blob);
-
-                imgPerfil.src = url;
-
+    var buttonimgPerfil = document.getElementById("post2")
+    ? document.getElementById("post2")
+    : null;
+    if (buttonimgPerfil){
+      var imageInput = document.getElementById("loadImagePerfil");
+      var buttonApply = document.getElementById('apply')
+  
+      buttonimgPerfil.addEventListener("click", async (e) => {
+        atualizar();
+      })
+  
+  
+        imageInput.addEventListener("input", async (e) => {
+          e.preventDefault();
+          const file = imageInput.files[0];
+          const files = imageInput.value;
+          buttonimgPerfil.style.display = 'none';
+          buttonApply.style.display = 'block';
+  
+          if (files != null) {
+            // Exiba a imagem no elemento de pré-visualização
+            data = new Date();
+            arquivonome = "imgPerfil" + data;
+  
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              // Crie uma div para exibir a imagem para corte
+              const imagePreview = document.getElementById("preview");
+              imagePreview.style.display = "block";
+              imagePreview.innerHTML = `<img id="cropperImage" src="${e.target.result}">`;
+  
+              // Inicialize o cropper
+              const cropperImage = document.getElementById("cropperImage");
+              const cropper = new Cropper(cropperImage, {
+                aspectRatio: 1, // Pode ajustar para a proporção desejada (1 para quadrado)
+                viewMode: 1, // Pode ajustar a visualização de acordo com suas necessidades
+              });
+  
+              // Quando o usuário pressionar o botão de corte
+              const imgPerfil = document.getElementById("imgPerfil");
+              const closeButton = document.createElement("button");
+              const cropButton = document.createElement("button");
+              cropButton.className = "float-right";
+              closeButton.className = "float-left";
+              console.log(cropButton);
+              closeButton.textContent = "Fechar";
+              cropButton.textContent = "Crop";
+  
+              imagePreview.appendChild(cropButton);
+              imagePreview.appendChild(closeButton);
+  
+              closeButton.addEventListener("click", async () => {
+                buttonimgPerfil.style.display = "block"
+                buttonApply.style.display = "none";
                 imagePreview.style.display = "none";
-
-                buttonimgPerfil.addEventListener("click", async (e) => {
-                  const storageRef = storage.ref().child(`img/${arquivonome}`);
-                  await storageRef.put(blob);
-
-                  const URL = await storageRef.getDownloadURL();
-                  atualizar(URL);
+                imageInput.value = null;
+              });
+  
+              cropButton.addEventListener("click", async () => {
+                // Obtenha a imagem recortada
+                var croppedCanvas = cropper.getCroppedCanvas();
+  
+                // Converta o canvas em Blob
+                croppedCanvas.toBlob(async (blob) => {
+                  var url = URL.createObjectURL(blob);
+  
+                  imgPerfil.src = url;
+  
+                  imagePreview.style.display = "none";
+  
+                  buttonApply.addEventListener("click", async (e) => {
+                    const storageRef = storage.ref().child(`img/${arquivonome}`);
+                    await storageRef.put(blob);
+  
+                    var URL = await storageRef.getDownloadURL();
+                    atualizar(URL);
+                  });
                 });
               });
-            });
-          };
-          reader.readAsDataURL(file);
-        } else {
-        }
-      
-      });
-
-      buttonimgPerfil.addEventListener("click", async (e) => {
-        atualizar("");
-      })
+            };
+            reader.readAsDataURL(file);
+          }else{
+            atualizar("");
+          }
+          
+        });
+        
     }
+    
+    
   }
 });
 
@@ -2714,4 +2709,21 @@ function discover(){
   .catch((error) => {
     console.error('Erro ao contar documentos:', error);
   });
+}
+
+
+function logado(){
+  firebase.auth().onAuthStateChanged(function (user) {
+
+    if(user){
+      console.log(user.uid)
+      window.location.replace('./pages/tela-inicio.html');
+    }else{
+      console.log("realmente, vc tá fora")
+    }
+  })
+}
+ 
+function sendReport(num){
+  
 }
