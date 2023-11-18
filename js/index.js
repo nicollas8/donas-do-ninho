@@ -1134,7 +1134,7 @@ function showPosts() {
           const popup = document.getElementById("popup");
           const popupInfo = document.getElementById('info');
           popup.style.display = 'flex';
-          popupInfo.innerHTML = `<p class="text-black">Devido as suas atitudes, você foi banido da nossa comunidade, se você acha que isso é um engano, nos envie um email: tccmaternidade6@gmail.com          </p>
+          popupInfo.innerHTML = `<p class="text-black">Devido as suas atitudes, você foi banido da nossa comunidade, se você acha que isso é um engano, nos envie um email: donasdoninhosuporte@gmail.com</p>
           <button onclick="logOut()"class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Sair</button>`
         }
         
