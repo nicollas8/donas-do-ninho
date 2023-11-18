@@ -172,6 +172,10 @@ if (buttonCreateAccount) {
               termosDeUso: formData.termosDeUso,
               nivel: nivel,
               url: "../img/noPhoto.png",
+              dataEntrada: new Date(),
+              xp: 0,
+              access: true,
+              adm: false,
             })
             .then(() => {
               alert("conta criada com sucesso");
@@ -906,7 +910,7 @@ function formatPost(
             <img src="../img/comentário.svg" alt=""> 
             <p class="ml-2 text-black" id="comment">${respsQntd}</p>
           </button>
-          <button class="w-6 flex flex-row-reverse" onclick="report('${postID}')"><img src="../img/denuncia.svg" alt=""></button>
+          <button class="w-6 flex flex-row-reverse"><img onclick="report('${postID}', '${userUID}')" class='denuncia' src="../img/denuncia.svg" alt=""></button>
         </div>
       <div class="flex justify-between">
         <p class="text-left mb-2 text-orange-600" id="tagColor" onclick="sortBy('${tag}')"> #${tag}</p>
@@ -979,17 +983,24 @@ function isADM(uid){
   firebase.firestore().collection("usuarios")
   .doc(uid).get().then((doc) => {
     if (doc.data().adm == true){
-      const img = document.getElementById('denuncia');
-      img.src = "../img/lixeira.png";
+      console.log('salve')
+      const img = document.querySelectorAll('.denuncia');
+
+      img.forEach(elemento => {
+        elemento.src ="../img/lixeira.png";
+      })
+      console.log(img)
     }
   })
+}
+function deleta(postID){
+  console.log(postID)
 }
 
 function showPosts() {
   renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-      isADM(user.uid);
       var db = firebase.firestore();
       const postsRef = db.collection("posts");
       // Obtenha todos os documentos da coleção 'posts'
@@ -1099,6 +1110,36 @@ function showPosts() {
           );
         });
       console.log("tu tá logado");
+      isADM(user.uid);
+
+      db.collection("usuarios").doc(user.uid).get().then((doc) => {
+        const data = doc.data().reclusao
+        if (data){
+          const hoje = new Date().toISOString().split('T')[0];
+
+          const dataFormatada = data.split('-');
+          const dataReformada = dataFormatada[2]+'/'+dataFormatada[1]+'/'+dataFormatada[0]
+          console.log(data, hoje)
+          if (data > hoje){
+            const popup = document.getElementById("popup");
+            const popupInfo = document.getElementById('info');
+            popup.style.display = 'flex';
+            popupInfo.innerHTML = `<p class="text-black">Você está proibido de mexer no aplicativo até a seguinte data: ${dataReformada}</p>
+            <button onclick="logOut()"class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Sair</button>`
+          }
+        }
+        
+        const block = doc.data().access
+        if(block == false){
+          const popup = document.getElementById("popup");
+          const popupInfo = document.getElementById('info');
+          popup.style.display = 'flex';
+          popupInfo.innerHTML = `<p class="text-black">Devido as suas atitudes, você foi banido da nossa comunidade, se você acha que isso é um engano, nos envie um email: tccmaternidade6@gmail.com          </p>
+          <button onclick="logOut()"class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Sair</button>`
+        }
+        
+      })
+
     } else {
       console.log("tu nao tá logado");
     }
@@ -1391,7 +1432,7 @@ function excluirPost(postUID) {
                 });
               } else {
                 alert("Publicação Excluída com sucesso!");
-                window.location.reload();
+                //window.location.reload();
               }
 
               // Após o forEach, você pode recarregar a página
@@ -2299,78 +2340,6 @@ function viewPublisOutro() {
     });
 }
 
-function addInter() {
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      firebase
-        .firestore()
-        .collection("usuarios")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          var img = document.querySelector("#imgPerfil");
-          if (doc.data().interesses) {
-            doc.data().interesses.forEach(function (interesse) {
-              document.getElementById(interesse).style.backgroundColor = "blue";
-            });
-          }
-          document.getElementById("imgPerfil").src = doc.data().url;
-
-          if (doc.data().url) {
-            var foto = doc.data().url;
-          } else {
-            var foto = "../img/perfil-usuário.png";
-          }
-          img.setAttribute("src", foto);
-        });
-    }
-  });
-}
-
-var interesses = [];
-
-function toggleInterest(interestNumber) {
-  var button = document.getElementById(interestNumber);
-  var index = interesses.indexOf(interestNumber);
-
-  if (button.style.backgroundColor == "blue") {
-    button.style.backgroundColor = "";
-    interesses.splice(index, 1);
-    button.style.backgroundColor = "";
-  } else {
-    if (index !== -1) {
-      interesses.splice(index, 1);
-      button.style.backgroundColor = "";
-    } else {
-      interesses.push(interestNumber);
-      button.style.backgroundColor = "blue";
-    }
-  }
-  console.log(interesses);
-}
-
-function sendInterest() {
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      firebase
-        .firestore()
-        .collection("usuarios")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          doc.ref
-            .update({
-              interesses: interesses,
-            })
-            .then(function () {
-              alert("Interesses Atualizados com sucesso!");
-              window.location.href = "tela-usuario.html";
-            });
-        });
-    }
-  });
-}
-
 window.addEventListener("load", function () {
   var loaderContainer = document.getElementById("loader-container");
   loaderContainer.style.display = "none"; // Esconde o indicador de carregamento e o fundo escuro
@@ -2538,30 +2507,67 @@ function formatNotify(
   tempoF = formatTime(time);
   tempo = tempoF.replace(/^postado\s+/i, "");
   console.log(tempo, UID, commentID, type);
-  if (postType == "post") {
-    categ = " sua postagem:";
-  } else {
-    categ = " seu comentário:";
-  }
-  if (type == "like") {
-    texto = " curtiu ";
-  } else if (type == "fav") {
-    texto = " favoritou ";
-  } else if (type == "com") {
-    texto = " comentou ";
-  }
 
-  var content = `
-    <div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+  const tipo =type.split(" ");
+  if (type == "del" ){
+    console.log("deletaod")
+  }
+  
+
+  if (tipo.length > 1){
+    if(tipo[1] == 1){
+      var infracao = "Assédio";
+    }else if(tipo[1] == 2){
+      var infracao = "Conteúdo ofensivo"
+    }else if(tipo[1] == 3){
+      var infracao = "Spam"
+    }else if(tipo[1] == 4){
+      var infracao = "Comportamento Inadequado"
+    }
+    var content = `<div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
     <p onclick="excluirNotify('${commentID}', '${UID}', '${type}')" class="text-right text-red-500 text-xl pr-5">X</p>
-    <div class="flex flex-row p-3" onclick=" window.location.href='tela-comments.html' + '?ID=' + '${commentID}'">
-    <img class="self-center w-12 h-12 rounded-full mr-2" src="${foto}" style="  background-color: grey;">
-    <p class="text-left self-center text-black"> ${nome} ${texto} ${categ}<br> ${postText}</p>
+    <div class="flex flex-row p-3" onclick=" window.location.href='tela-analise.html' + '?ID=' + '${commentID}'">
+    <img class="self-center w-12 h-12 mr-2" src="../img/notifyReport.svg">
+    <p class="text-left self-center text-black"> ${nome} denunciou uma postagem por ${infracao} </p>
     
     </div>
     <p class="text-right self-center text-black"> ${tempo} </p> 
     
-    </div>`;
+    </div>`
+
+
+  }else{
+      if (postType == "post") {
+        categ = " sua postagem:";
+      } else {
+        categ = " seu comentário:";
+      }
+    
+      if (type == "like") {
+        texto = " curtiu ";
+      } else if (type == "fav") {
+        texto = " favoritou ";
+      } else if (type == "com") {
+        texto = " comentou ";
+      }
+      var content = `
+      <div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+      <p onclick="excluirNotify('${commentID}', '${UID}', '${type}')" class="text-right text-red-500 text-xl pr-5">X</p>
+      <div class="flex flex-row p-3" onclick=" window.location.href='tela-comments.html' + '?ID=' + '${commentID}'">
+      <img class="self-center w-12 h-12 rounded-full mr-2" src="${foto}" style="  background-color: grey;">
+      <p class="text-left self-center text-black"> ${nome} ${texto} ${categ}<br> ${postText}</p>
+      
+      </div>
+      <p class="text-right self-center text-black"> ${tempo} </p> 
+      
+      </div>`;
+  }
+
+  
+  
+
+  
+  
   return content;
 }
 
@@ -2571,12 +2577,21 @@ function notis() {
     if (user) {
       const notis = document.getElementById("notis");
 
+      firebase.firestore().collection("usuarios")
+      .doc(user.uid).collection("notificações")
+      .get().then((queryNotify) => {
+        console.log(queryNotify.size)
+        if (queryNotify.size == 0){
+          notis.innerHTML = "SEM NOTIFICAÇÕES"
+        }
+      })
+
       firebase
         .firestore()
         .collection("usuarios")
         .doc(user.uid)
         .collection("notificações")
-        .orderBy("timestamp", "desc")
+        .where("type", "!=", "del")
         .get()
         .then((querySnapshot) => {
           if (!querySnapshot.empty) {
@@ -2618,26 +2633,58 @@ function notis() {
                 });
             });
           } else {
-            notis.innerHTML = "SEM NOTIFICAÇÕES";
           }
         });
+
+      firebase.firestore()
+      .collection('usuarios')
+      .doc(user.uid)
+      .collection("notificações")
+      .where("type", "==", "del")
+      .get()
+      .then((querySnapshot) => {
+        if (!querySnapshot.empty) {
+          querySnapshot.forEach((doc) => {
+            const tempoF = formatTime(doc.data().timestamp);
+            const tempo = tempoF.replace(/^postado\s+/i, "");
+            
+            console.log(doc.data())
+            notis.innerHTML += `<div class="notis border-b-2 border-[#ffa9a9] bg-white rounded-b-lg">
+            <p onclick="excluirNotifyDel('${doc.data().commentID}', '${doc.data().motivo}', '${doc.data().type}')" class="text-right text-red-500 text-xl pr-5">X</p>
+            <div class="flex flex-row">
+            <img class="self-center w-12 h-12 mr-2" src="../img/notifyReport.svg">
+            <p class="text-left self-center text-black"> Sua postagem foi excluída após ser denunciada por ${doc.data().motivo} </p>
+            </div>
+            <p class="text-right self-center text-black"> ${tempo} </p> 
+
+            </div>`
+          })
+        }
+      }) 
     }
   });
 }
 
-function addNotify(commentID, userUID, uid, tipo) {
-  const db = firebase.firestore();
-  const userRef = db.collection("usuarios").doc(uid);
-  const notifyRef = userRef.collection("notificações");
-
-  const dados = {
-    commentID: commentID,
-    UID: userUID,
-    timestamp: new Date(),
-    type: tipo,
-  };
-  notifyRef.add(dados);
+function excluirNotifyDel(commentID, motivo, type){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+  firebase.firestore().collection("usuarios")
+  .doc(user.uid).collection("notificações")
+  .where("commentID", "==", commentID)
+  .where("motivo", "==", motivo)
+  .where("type", "==", type)
+  .get()
+  .then((querySnapshot) => {
+    querySnapshot.forEach((doc) => {
+      doc.ref.delete().then(() => {
+        window.location.reload();
+      })
+    })
+  })
+  console.log(commentID, motivo, type)
+}})
 }
+
 
 function excluirNotify(commentID, UID, tipo) {
   firebase.auth().onAuthStateChanged(function (user) {
@@ -2673,18 +2720,232 @@ function getUserEmail() {
   });
 }
 
-function report(uid){
-  window.location.href = 'tela-denuncia.html' + '?ID=' + uid;
+function report(uid, userID){
+  firebase.firestore()
+  .collection("usuarios")
+  .doc(userID)
+  .get()
+  .then((doc) =>{
+    if (doc.data().adm == true){
+      window.location.href = 'tela-analise.html' + '?ID=' + uid;
+    }else{
+      window.location.href = 'tela-denuncia.html' + '?ID=' + uid;
+    }
+
+  })
 }
 
-function sendReport(uid){
-  const content = document.getElementById("outro").value;
+function analise(){
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  const postLocation = firebase.firestore().collection("posts").doc(IDpostagem);
+  postLocation.get().then((doc) => {
+    const tempo =formatTime(doc.data().timestamp)
+    const content =document.getElementById('content');
+    content.innerHTML = `<div class="max-w-md bg-white rounded-lg overflow-hidden shadow-lg p-6">
+    <div class="flex items-center mb-4">
+      <img src="${doc.data().fotoUser}" alt="Foto de Perfil" class="bg-black w-12 h-12 rounded-full mr-4">
 
-  if (content){
-    console.log(content)
+      <h2 class="text-lg font-semibold">${doc.data().nomeUser}</h2>
+    </div>
+
+    <p class="text-gray-500 text-sm mb-4 ">${tempo}</p>
+
+    <p class="text-gray-700 mb-6">${doc.data().post}</p>
+    <img src="${doc.data().url}" class="mb-4">
+  </div>
+   
+  <div class="max-w-md bg-white rounded-lg overflow-hidden shadow-lg p-6 mt-4">
+  <!-- Motivo de exclusão -->
+  <label for="motivo" class="block text-gray-700 text-sm font-bold mb-2">Motivo de exclusão</label>
+  <select id="motivo" name="motivo" class="w-full border rounded p-2 mb-4">
+    <option value="Assédio">Assédio</option>
+    <option value="Conteúdo ofensivo">Conteúdo ofensivo</option>
+    <option value="Spam">Spam</option>
+    <option value="Comportamento Inadequado">Comportamento Inadequado</option>
+    <!-- Adicione mais opções, se necessário -->
+  </select>
+
+  <!-- Botões de Excluir e Manter -->
+    <button onclick="deletarADM('${IDpostagem}', '${doc.data().UIDusuario}')" class="bg-red-500 hover:bg-red-600 float-right text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Excluir</button>
+</div>
+
+  <!-- Fora do bloco de motivo de exclusão -->
+  <div class="max-w-md bg-white rounded-lg p-6 mt-4 flex justify-center">
+    <button onclick= "window.location.href = 'tela-analiseUser.html' + '?ID=' + '${doc.data().UIDusuario}'" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline mb-4">Analisar Usuário</button>
+  </div>
+  `
+    console.log(doc.data())
+
+  })
+  
+}
+
+function analiseUser(){
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+
+  firebase.firestore().collection("usuarios").doc(IDpostagem)
+  .get().then((doc) => {
+    const hoje = new Date().toISOString().split('T')[0];
+    console.log(hoje)
+    const dataEntrada = doc.data().dataEntrada;
+    const data = new Date(dataEntrada.seconds * 1000);
+    const dia = data.getDate().toString().padStart(2, '0'); // Dia com zero à esquerda se necessário
+    const mes = (data.getMonth() + 1).toString().padStart(2, '0'); // Mês com zero à esquerda se necessário
+    const ano = data.getFullYear();
+    const dataFormatada = `${dia}/${mes}/${ano}`;
+    const entrada = data;
+    const content = document.getElementById("content")
+    const dataNasc = doc.data().dataNascimento.split('-');
+      const dataReformada = `${dataNasc[2]}/${dataNasc[1]}/${dataNasc[0]}`
+    if (!doc.data().bio){
+     var bio = "nenhuma biografia"
+    }else{
+     var bio = doc.data().biografia;
+    }
+    
+    
+    
+    content.innerHTML = `<div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="flex justify-center">
+      <img src="${doc.data().url}" alt="Foto de perfil" class="w-32 h-32 rounded-full">
+    </div>
+    <div class="text-center mt-4">
+      <h2 class="text-xl font-semibold">${doc.data().nome}</h2>
+      <p class="text-gray-600 text-sm">Nível: ${doc.data().nivel} | XP:  ${doc.data().xp}</p>
+      <p class="text-gray-600 text-sm">Data de Entrada: ${dataFormatada}</p>
+      <p class="text-gray-600 text-sm">Data de Nascimento: ${dataReformada}</p>
+      <p class="text-gray-600 text-sm">Biografia: ${bio}</p>
+      </div>
+  </div>
+
+  <div class="space-x-4 mt-8">
+  <input id="xp" type="number" class=" w-1/2 border border-gray-300 rounded-md px-3 py-2 " placeholder="Escolha um número" min='0' max="${doc.data().xp}">
+  <button onclick=removexp('${doc.id}') class="bg-red-500 float-right hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Revogar XP</button>
+</div>
+
+<div class="space-x-4 mt-8">
+  <input type="date" id='intervalo' class="border border-gray-300 rounded-md px-3 py-2" placeholder="Escolha uma data" min="${hoje}">
+  <button onclick=interacaoOff('${doc.id}') class="bg-blue-500 float-right hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Impedir Interação</button>
+</div>
+
+<div id="block" class="flex justify-center mt-10">
+</div>
+  `
+  const block = document.getElementById('block');
+  if (doc.data().access == true){
+    block.innerHTML = `<button  onclick=blockAcess('${doc.id}') class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Bloquear Acesso</button>`
+       
   }else{
-    console.log('nada')
+    block.innerHTML = `<button id="block" onclick=blockAcess('${doc.id}') class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Desbloquear Acesso</button>`;
   }
+  })
+  
+}
+
+function removexp(uid){
+  const valor = document.getElementById('xp').value
+  if (valor != 0){
+    firebase.firestore().collection("usuarios")
+    .doc(uid).get().then((doc) => {
+
+      if (valor < doc.data().xp){
+        doc.ref.update({
+          xp: doc.data().xp - valor
+        }).then(() =>{
+          window.location.reload();
+          alert('XP revogado com sucesso')
+        })
+      }else{
+        alert("Não é possível abaixar tanto XP assim")
+      }
+      
+    })
+  }
+  console.log(valor)
+}
+
+function interacaoOff(uid){
+  const data = document.getElementById('intervalo').value
+  const Fdata = new Date(data);
+  const timestamp = Fdata.getTime();
+  console.log(data);
+
+  firebase.firestore().collection("usuarios").doc(uid)
+  .get().then((doc) => {
+    doc.ref.update({
+      reclusao: data
+    })
+  })
+}
+
+function blockAcess(uid){
+  firebase.firestore().collection('usuarios').doc(uid)
+  .get().then((doc) =>{
+    const block = document.getElementById('block');
+    if (doc.data().access == true){
+      doc.ref.update({
+        access: false
+      }).then(() => {
+        block.innerHTML = `<button id="block" onclick=blockAcess('${doc.id}') class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Desbloquear Acesso</button>`;
+      })
+    }else{
+      doc.ref.update({
+        access: true
+      }).then(() => {
+        block.innerHTML = `<button  onclick=blockAcess('${doc.id}') class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Bloquear Acesso</button>`
+      })
+    }
+    
+  })
+}
+
+function deletarADM(IDpost, uidUser){
+  firebase.auth().onAuthStateChanged(function (user) {
+
+    if(user){
+  const popup = document.getElementById("popup");
+
+  popup.style.display = 'block'
+
+  const decisionY = document.getElementById("sim");
+  const decisionN = document.getElementById("nao");
+
+  decisionN.addEventListener("click", () => {
+    popup.style.display = 'none';
+  })
+
+  decisionY.addEventListener("click", () => {
+    const motivo = document.getElementById("motivo").value;
+
+    addNotify(IDpost, motivo, uidUser, "del");
+    excluirPost(IDpost);
+    
+    firebase.firestore().collection("usuarios")
+    .doc(user.uid).collection("notificações")
+    .where("commentID", "==", IDpost)
+    .where("UID", "==", uidUser)
+    .get()
+    .then((querySnapshot) =>{
+      if(!querySnapshot.empty){
+        querySnapshot.forEach((doc) => {
+          doc.ref.delete().then(() => {
+            window.location.replace('tela-inicio.html');
+          });
+        });
+      }else{
+        window.location.replace('tela-inicio.html');
+      }
+      
+    })
+    
+  })
+}})
+}
+
+function manterADM(){
+  const popup = document.getElementById("popup");
 }
 
 function discover(){
@@ -2725,5 +2986,59 @@ function logado(){
 }
  
 function sendReport(num){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+  
+  var urlParams = new URLSearchParams(window.location.search);
+  var IDpostagem = urlParams.get("ID");
+  console.log(IDpostagem, num);
+
+  firebase.firestore().collection("usuarios").where("adm", "==", true)
+  .get().then(function (querySnapshot){
+      querySnapshot.forEach(function (doc){
+        firebase.firestore().collection("usuarios").doc(doc.data().uid).collection("notificações")
+        .get().then(() => {
+          addNotify(
+            IDpostagem,
+            user.uid,
+            doc.data().uid,
+            "den "+ num,
+          )
+        })
+      })
+    
+  })
+
+}})
+}
+
+function addNotify(commentID, userUID, uid, tipo) {
+  const db = firebase.firestore();
+  const userRef = db.collection("usuarios").doc(uid);
+  const notifyRef = userRef.collection("notificações");
+  if (userUID.length < 20){
+    const dados = {
+      commentID: commentID,
+      motivo: userUID,
+      timestamp: new Date(),
+      type: tipo,
+    };
+    notifyRef.add(dados)
+  }else{
+    const dados = {
+      commentID: commentID,
+      UID: userUID,
+      timestamp: new Date(),
+      type: tipo,
+    };
+    notifyRef.add(dados).then(() =>{
+      alert('Denuncia enviada com sucesso!')
+            window.location.replace('tela-inicio.html');
+    });
+  }
+  
+  console.log(commentID, userUID, uid, tipo)
+
+
   
 }

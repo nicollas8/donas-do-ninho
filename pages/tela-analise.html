@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <title>Donas do ninho</title>
+  </head>
+
+  <div id="loader-container" class="loader-container">
+    <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+  </div>
+
+  <div id="popup" class="fixed w-full h-full bg-gray-900 bg-opacity-50 hidden">
+    <div class="max-w-md mx-auto bg-white rounded-lg border border-gray-300 p-6 mt-24">
+      <p class="text-gray-700 text-center mb-4">Deseja realmente excluir essa postagem?</p>
+    
+      <div class="flex justify-center">
+        <button id="sim" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-l focus:outline-none focus:shadow-outline">Sim</button>
+        <button id="nao" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-r focus:outline-none focus:shadow-outline">Não</button>
+      </div>
+    </div>
+  </div>
+
+  <body onload="analise()" class="bg-white h-full w-screen">
+    <div class="page-header margin border-b-2 border-[#ffa9a9] p-2 bg-[#ffa9a9] flex items-center justify-center">
+      <h4 class="text-white">ANÁLISE DE PUBLICAÇÃO</h4>
+    </div>
+
+    <div id="content" class="mt-16 mb-16">
+
+    </div>
+
+
+    <nav class="navPerfil nav">
+      <button class="navButton"><img src="../img/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
+      <button class="navButton"><img src="../img/pesquisar.png" alt="" onclick="location.href='tela-descubra.html'"></button>
+      <button class="navButton"><img src="../img/publicação.png  " alt="" onclick="location.href='tela-publi.html'"></button>
+      <div>
+          <button class="navButton">
+            <span class="contador"></span> <!-- Mova o contador para dentro do botão -->
+            <img src="../img/notficação.png" alt="" onclick="location.href='tela-notificacao.html'">
+          </button>
+        </div>
+      <button class="navButton"><img src="../img/user.png" alt="" onclick="location.href='tela-usuario.html'"></button>
+    </nav>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/index.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+</html>
+ 
