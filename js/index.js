@@ -928,7 +928,7 @@ function formatPost(
 }
 
 function sortBy(tag) {
-  document.getElementById('mostrarMaisBtn').style.display = 'flex';
+  // document.getElementById('mostrarMaisBtn').style.display = 'flex';
   console.log(window.location.href)
   const publis = document.getElementById("publis");
   if (window.location.href.includes("tela-descubra.html")){
@@ -1012,7 +1012,7 @@ function sortBy(tag) {
 
 function ocultarBotaoMostrarMais() {
   if (todasPostagensCarregadas) {
-    document.getElementById('mostrarMaisBtn').style.display = 'none'; // Oculta o botão
+    //document.getElementById('mostrarMaisBtn').style.display = 'none'; // Oculta o botão
       const publis = document.getElementById("publis");
       publis.classList.add('mb-16');
   }
