@@ -9,7 +9,7 @@
 <div id="loader-container" class="loader-container">
     <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
   </div>
-<body onload="showPosts()" class="bg-white h-full w-screen">
+<body onload="showPosts()" class="bg-#ffece4 h-full w-screen">
 
   <div id="popup" style="display: none;" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
     <div id="info" class="bg-white p-6 rounded-md text-center">
@@ -19,8 +19,9 @@
         <img src="../img/doninho.svg" alt="" class="w-12">
     </div>
     <div class="pageContent" id="id">
-        <div id="publis" class="mb-16">
+        <div id="publis">
         </div>
+        <button style='display: flex'; class="mx-auto block mt-4 mb-20 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="mostrarMaisBtn">Mostrar Mais</button>
     </div>
     <nav class="navPerfil nav">
         <button class="navButton"><img src="../img/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>

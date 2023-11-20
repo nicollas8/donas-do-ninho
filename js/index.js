@@ -1,4 +1,7 @@
-const messaging = firebase.messaging();
+var total = 6;
+let lastPost = null;
+let postagensCarregadas = 0;
+let todasPostagensCarregadas = false;
 
 function onChangeEmail() {
   toggleBtnDisabled();
@@ -293,6 +296,7 @@ function viewPublis() {
         .collection("posts")
         .where("UIDusuario", "==", uid)
         .where("categ", "==", "post")
+        .orderBy("timestamp", "desc")
         .get()
         .then(function (querySnapshot) {
           if (!querySnapshot.empty) {
@@ -342,9 +346,9 @@ function viewPublis() {
       firebase
         .firestore()
         .collection("posts")
-        .orderBy("timestamp", "desc")
         .where("categ", "==", "resp")
         .where("UIDusuario", "==", uid)
+        .orderBy("timestamp", "desc")
         .get()
         .then(function (querySnapshot) {
           querySnapshot.forEach(function (doc) {
@@ -802,12 +806,14 @@ function addResp() {
                           .collection("notificações")
                           .get()
                           .then(() => {
-                            addNotify(
-                              doc.id,
-                              user.uid,
-                              doc.data().UIDusuario,
-                              "com"
-                            );
+                            if(doc.data().UIDusuario != user.uid){
+                              addNotify(
+                                doc.id,
+                                user.uid,
+                                doc.data().UIDusuario,
+                                "com"
+                              );
+                            }
                             const qntdResps = doc.data().respsQntd;
                             console.log(qntdResps);
                             doc.ref.update({
@@ -922,23 +928,36 @@ function formatPost(
 }
 
 function sortBy(tag) {
+  document.getElementById('mostrarMaisBtn').style.display = 'flex';
+  console.log(window.location.href)
+  const publis = document.getElementById("publis");
+  if (window.location.href.includes("tela-descubra.html")){
+    var tags = document.getElementById("categs");
+    tags.style.display = 'none';
+    window.history.pushState({page: 'tela-descubra.html'}, 'Donas do Ninho', `?tag=${tag}`)
+  }else{
+    publis.innerHTML = "";
+  }
+  
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       const db = firebase.firestore();
-      const publis = document.getElementById("publis");
+      
+      
 
       db.collection("posts")
         .where("tag", "==", tag)
+        .limit(total)
         .get()
         .then(function (querySnapshot) {
           if (!querySnapshot.empty) {
-            publis.innerHTML = "";
+            
             querySnapshot.forEach(function (doc) {
 
               console.log(doc.data());
               var postData = doc.data();
               var postID = doc.id;
-
+              countInteractions(postID)
               time = postData.timestamp;
               tempo = formatTime(time);
               const userNome = postData.nomeUser;
@@ -970,26 +989,45 @@ function sortBy(tag) {
                 imgPerfil
               );
               checkReact(user.uid, "post");
+              isADM(user.uid);
+              
             });
+            lastPost  = querySnapshot.docs[querySnapshot.docs.length - 1];
+            postagensCarregadas += querySnapshot.size;
+
+            if (postagensCarregadas >= querySnapshot.size) {
+              todasPostagensCarregadas = true; // Define como verdadeiro quando todas as postagens forem carregadas
+              ocultarBotaoMostrarMais(); // Chama a função para ocultar o botão
+            }
           } else {
-            console.log("Deu erro!");
+            todasPostagensCarregadas = true;
+            ocultarBotaoMostrarMais();
+            tags.style.display = 'none';
+            publis.innerHTML = "Sem publicações com a tag informada!";
           }
         });
     }
   });
 }
 
+function ocultarBotaoMostrarMais() {
+  if (todasPostagensCarregadas) {
+    document.getElementById('mostrarMaisBtn').style.display = 'none'; // Oculta o botão
+      const publis = document.getElementById("publis");
+      publis.classList.add('mb-16');
+  }
+}
 function isADM(uid){
   firebase.firestore().collection("usuarios")
   .doc(uid).get().then((doc) => {
     if (doc.data().adm == true){
-      console.log('salve')
+      //console.log('salve')
       const img = document.querySelectorAll('.denuncia');
 
       img.forEach(elemento => {
         elemento.src ="../img/lixeira.png";
       })
-      console.log(img)
+      //console.log(img)
     }
   })
 }
@@ -997,7 +1035,68 @@ function deleta(postID){
   console.log(postID)
 }
 
+function countInteractions(postID){
+  var db = firebase.firestore();
+  const postsRef = db.collection("posts");
+  db.collection("reacts")
+  .where("postID", "==", postID)
+  .where("react", "==", 3)
+  .get()
+  .then(function (reactSnapshot3){
+    postsRef.doc(postID).get().then((doc) => {
+      doc.ref.update({
+        favsQntd: reactSnapshot3.size,
+      });
+    })
+    //console.log("Número de Fav:", );
+  })
+
+//deslike
+db.collection("reacts")
+  .where("postID", "==", postID)
+  .where("react", "==", 2)
+  .get()
+  .then(function (reactSnapshot2){
+    postsRef.doc(postID).get().then((doc) => {
+      doc.ref.update({
+        deslikesQntd: reactSnapshot2.size,
+      });
+    })
+    //console.log("Número de deslikes:", reactSnapshot2.size);
+  })
+
+//like
+db.collection("reacts")
+  .where("postID", "==", postID)
+  .where("react", "==", 1)
+  .get()
+  .then(function (reactSnapshot1){
+    postsRef.doc(postID).get().then((doc) => {
+      doc.ref.update({
+        likesQntd: reactSnapshot1.size,
+      });
+    })
+    //console.log("Número de likes:", reactSnapshot1.size);
+  })
+
+//comments
+db.collection("posts")
+.where("categ", "==", "resp")
+.where("IDresp", "==", postID)
+.get()
+.then( function (reactSnapshot4){
+  postsRef.doc(postID).get().then((doc) => {
+    doc.ref.update({
+      respsQntd: reactSnapshot4.size,
+    });
+  })
+  //console.log("Número de respostas:", reactSnapshot4.size)
+})
+}
+
+
 function showPosts() {
+  let contador = 0;
   renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -1008,65 +1107,19 @@ function showPosts() {
       postsRef
         .where("categ", "==", "post")
         .orderBy("timestamp", "desc")
+        .limit(total)
         .get()
         .then((postsQuerySnapshot) => {
           postsQuerySnapshot.forEach((postDoc) => {
+            contador++;
             var postData = postDoc.data();
             var postID = postDoc.id;
-            db.collection("reacts")
-              .where("postID", "==", postID)
-              .where("react", "==", 3)
-              .get()
-              .then(function (reactSnapshot3){
-                postsRef.doc(postID).get().then((doc) => {
-                  doc.ref.update({
-                    favsQntd: reactSnapshot3.size,
-                  });
-                })
-                //console.log("Número de Fav:", );
-              })
-
-            //deslike
-            db.collection("reacts")
-              .where("postID", "==", postID)
-              .where("react", "==", 2)
-              .get()
-              .then(function (reactSnapshot2){
-                postsRef.doc(postID).get().then((doc) => {
-                  doc.ref.update({
-                    deslikesQntd: reactSnapshot2.size,
-                  });
-                })
-                //console.log("Número de deslikes:", reactSnapshot2.size);
-              })
-            
-            //like
-            db.collection("reacts")
-              .where("postID", "==", postID)
-              .where("react", "==", 1)
-              .get()
-              .then(function (reactSnapshot1){
-                postsRef.doc(postID).get().then((doc) => {
-                  doc.ref.update({
-                    likesQntd: reactSnapshot1.size,
-                  });
-                })
-                //console.log("Número de likes:", reactSnapshot1.size);
-              })
-
-            //comments
-            db.collection("posts")
-            .where("categ", "==", "resp")
-            .where("IDresp", "==", postID)
-            .get()
-            .then( function (reactSnapshot4){
-              postsRef.doc(postID).get().then((doc) => {
-                doc.ref.update({
-                  respsQntd: reactSnapshot4.size,
-                });
-              })
-              //console.log("Número de respostas:", reactSnapshot4.size)
-            })
+            countInteractions(postID)
+           
+            if (contador % 4 === 0) {
+              publis.innerHTML += exibirAnuncio();
+              
+            }
 
             time = postData.timestamp;
             tempo = formatTime(time);
@@ -1099,8 +1152,15 @@ function showPosts() {
               fotoUser,
               UIDdonoPost
             );
+
+            
+
             checkReact(user.uid, "post");
           });
+          postagensCarregadas += total;
+          console.log(postagensCarregadas)
+          lastPost  = postsQuerySnapshot.docs[postsQuerySnapshot.docs.length - 1];
+          console.log(lastPost.data());
         })
 
         .catch(function (error) {
@@ -1147,6 +1207,153 @@ function showPosts() {
   });
   
 }
+
+function exibirAnuncio(){
+  var ad = `
+  <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg w-screen">
+  <div class="ballPerguntas p-3">
+    <h4 class="text-red-700 self-center">Anúncio</h4>
+    <div class="options"></div>
+    <div class="balaoPergunta">
+      <p style="color:black;"></p>
+      <p class="text-black text-left mb-4 py-2">Insira seu anúncio aqui</p>
+    </div>
+  </div>
+</div>
+`
+    return ad;
+}
+
+
+function showmorePosts() {
+  let contador = 0;
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+      var db = firebase.firestore();
+      const postsRef = db.collection("posts");
+      // Obtenha todos os documentos da coleção 'posts'
+      
+
+      postsRef
+        .where("categ", "==", "post")
+        .orderBy("timestamp", "desc")
+        .startAfter(lastPost)
+        .limit(total)
+        .get()
+        .then((postsQuerySnapshot) => {
+          if(postsQuerySnapshot.empty){
+            todasPostagensCarregadas = true;
+            ocultarBotaoMostrarMais();
+            return;
+          }
+          postsQuerySnapshot.forEach((postDoc) => {
+            contador++
+            if (contador % 4 === 0) {
+              publis.innerHTML += exibirAnuncio();
+            }
+            
+
+            var postData = postDoc.data();
+            var postID = postDoc.id;
+            countInteractions(postID)
+           
+
+            time = postData.timestamp;
+            tempo = formatTime(time);
+            const userNome = postData.nomeUser;
+            const userUID = user.uid;
+            const tipoPost = postData.tipo;
+            const contPost = postData.post;
+            const likesQntd = postData.likesQntd;
+            const deslikesQntd = postData.deslikesQntd;
+            const favsQntd = postData.favsQntd;
+            const respsQntd = postData.respsQntd;
+            const redirect = "tela-comments.html";
+            const tag = postData.tag;
+            const img = postData.url;
+            const fotoUser = postData.fotoUser;
+            const UIDdonoPost = postData.UIDusuario;
+            publis.innerHTML += formatPost(
+              userNome,
+              userUID,
+              tipoPost,
+              contPost,
+              postID,
+              likesQntd,
+              deslikesQntd,
+              favsQntd,
+              respsQntd,
+              redirect,
+              tag,
+              img,
+              fotoUser,
+              UIDdonoPost
+            )
+            lastPost = postDoc;
+            ;
+            checkReact(user.uid, "post");
+            lastPost  = postsQuerySnapshot.docs[postsQuerySnapshot.docs.length - 1];
+          });
+          
+          console.log(lastPost.data());
+        })
+
+        .catch(function (error) {
+          console.error(
+            "Erro ao obter os documentos da subcoleção 'posts':",
+            error
+          );
+        });
+      console.log("tu tá logado");
+      isADM(user.uid);
+
+      db.collection("usuarios").doc(user.uid).get().then((doc) => {
+        const data = doc.data().reclusao
+        if (data){
+          const hoje = new Date().toISOString().split('T')[0];
+
+          const dataFormatada = data.split('-');
+          const dataReformada = dataFormatada[2]+'/'+dataFormatada[1]+'/'+dataFormatada[0]
+          console.log(data, hoje)
+          if (data > hoje){
+            const popup = document.getElementById("popup");
+            const popupInfo = document.getElementById('info');
+            popup.style.display = 'flex';
+            popupInfo.innerHTML = `<p class="text-black">Você está proibido de mexer no aplicativo até a seguinte data: ${dataReformada}</p>
+            <button onclick="logOut()"class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Sair</button>`
+          }
+        }
+        
+        const block = doc.data().access
+        if(block == false){
+          const popup = document.getElementById("popup");
+          const popupInfo = document.getElementById('info');
+          popup.style.display = 'flex';
+          popupInfo.innerHTML = `<p class="text-black">Devido as suas atitudes, você foi banido da nossa comunidade, se você acha que isso é um engano, nos envie um email: donasdoninhosuporte@gmail.com</p>
+          <button onclick="logOut()"class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4">Sair</button>`
+        }
+        
+      })
+
+    } else {
+      console.log("tu nao tá logado");
+    }
+    
+  });
+  
+}
+
+
+var showmore = document.getElementById('mostrarMaisBtn') ? document.getElementById('mostrarMaisBtn') : null;
+
+if(showmore){
+  console.log(showmore.style.display);
+  showmore.addEventListener('click', function() {
+    showmorePosts();
+  });
+}
+
+
 
 function checkReact(userUID, local) {
   var db = firebase.firestore();
@@ -1245,6 +1452,7 @@ function formatTime(time) {
 function comments() {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
+      isADM(user.uid);
       var urlParams = new URLSearchParams(window.location.search);
       var idComment = urlParams.get("ID");
 
@@ -1320,7 +1528,7 @@ function comments() {
               <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
               <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
               <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
-              <button class="w-6" onclick="report('${doc.id}')"><img id="denuncia" src="../img/denuncia.svg" alt=""></button>
+              <button class="w-6" onclick="report('${doc.id}')"><img class="denuncia" src="../img/denuncia.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
             </div>`;
@@ -1933,13 +2141,14 @@ function pesquisa() {
       if (termo !== "") {
         const db = firebase.firestore();
         let resultadosEncontrados = false; // Variável para verificar se algum resultado foi encontrado
-
+        const tags = document.getElementById("categs");
         db.collection("posts")
           .where("categ", "==", "post")
           .orderBy("timestamp", "desc")
           .get()
           .then(function (querySnapshot) {
             if (!querySnapshot.empty) {
+              tags.style.display = 'none'
               publis.innerHTML = "";
               querySnapshot.forEach(function (doc) {
                 const postData = doc.data();
@@ -1984,6 +2193,7 @@ function pesquisa() {
 
               if (!resultadosEncontrados) {
                 publis.innerHTML = "Sem resultados para sua pesquisa!";
+                
               }
             }
           });
@@ -2355,6 +2565,7 @@ function renderNots() {
         .collection("usuarios")
         .doc(user.uid)
         .collection("notificações")
+        .where("lido", "==", false)
         .get()
         .then((querySnapshot) => {
           cont = 0;
@@ -2370,92 +2581,6 @@ function renderNots() {
   });
 }
 
-function showPostsInicio() {
-  renderNots();
-  firebase.auth().onAuthStateChanged(function (user) {
-    if (user) {
-      var db = firebase.firestore();
-      const postsRef = db.collection("posts");
-      //pedindo(user.uid)
-
-      db.collection("usuarios")
-        .doc(user.uid)
-        .get()
-        .then((doc) => {
-          num = 0;
-
-          var interesses = doc.data().interesses;
-
-          var queries = interesses.map(function (interesse) {
-            return postsRef
-              .where("categ", "==", "post")
-              .where("tag", "==", interesse)
-              .get();
-          });
-
-          Promise.all(queries).then(function (querySnapshots) {
-            var posts = [];
-            querySnapshots.forEach(function (querySnapshot) {
-              querySnapshot.forEach(function (doc) {
-                posts.push(doc.data());
-              });
-            });
-
-            posts.sort(function (a, b) {
-              return b.timestamp - a.timestamp;
-            });
-            var i = 0;
-
-            posts.forEach(function (postData) {
-              firebase
-                .firestore()
-                .collection("posts")
-                .where("IDpost", "==", postData.IDpost)
-                .get()
-                .then(function (querySnapshot) {
-                  querySnapshot.forEach(function (dados) {
-                    var postID = dados.id;
-
-                    time = postData.timestamp;
-                    tempo = formatTime(time);
-                    const userNome = postData.nomeUser;
-                    const userUID = user.uid;
-                    const tipoPost = postData.tipo;
-                    const contPost = postData.post;
-                    const likesQntd = postData.likesQntd;
-                    const deslikesQntd = postData.deslikesQntd;
-                    const favsQntd = postData.favsQntd;
-                    const respsQntd = postData.respsQntd;
-                    const redirect = "tela-comments.html";
-                    const tag = postData.tag;
-                    const img = postData.url;
-                    const fotoUser = postData.fotoUser;
-                    const UIDdonoPost = postData.UIDusuario;
-                    publis.innerHTML += formatPost(
-                      userNome,
-                      userUID,
-                      tipoPost,
-                      contPost,
-                      postID,
-                      likesQntd,
-                      deslikesQntd,
-                      favsQntd,
-                      respsQntd,
-                      redirect,
-                      tag,
-                      img,
-                      fotoUser,
-                      UIDdonoPost
-                    );
-                    checkReact(user.uid, "post");
-                  });
-                });
-            });
-          });
-        });
-    }
-  });
-}
 
 // function pedindo(uid) {
 //   if ('serviceWorker' in navigator) {
@@ -2609,6 +2734,12 @@ function notis() {
                     .doc(doc.data().commentID)
                     .get()
                     .then((postDoc) => {
+
+                      if (doc.data().lido == false){
+                        doc.ref.update({
+                          lido: true
+                        })
+                      }
                       console.log(userDoc.data());
                       const tempo = doc.data().timestamp;
                       const UID = doc.data().UID;
@@ -2949,22 +3080,23 @@ function manterADM(){
 }
 
 function discover(){
-
+  renderNots()
   const tags = ['Amamentação', 'Gestação', 'Filhos', 'Medicação', 'Cuidados', 'Planejamento', 'Saúde', 'Promoções'];
   const postRef = firebase.firestore().collection('posts').where('categ', '==', 'post');
   const tagPromises = tags.map(tag => postRef.where('tag', '==', tag).get());
   Promise.all(tagPromises)
   .then((snapshots) => {
     const tagSizes = snapshots.map((snapshot, index) => ({ tag: tags[index], size: snapshot.size }));
-    
+    console.log(tagSizes)
     const sortSize = tagSizes.sort((a, b) => b.size -a.size);
-    const quatroPrimeiras = sortSize.slice(0,4);
+    const quatroPrimeiras = sortSize.slice();
     const teste = quatroPrimeiras.map( item => item.tag);
+    const teste2 = quatroPrimeiras.map( item => item.size)
     const interesses = document.getElementById('interesses');
 
-    teste.forEach(texto => {
-      interesses.innerHTML += `<div style='width:8rem; height:3rem' class='bg-white rounded-xl text-center' onclick="sortBy('${texto}')"> ${texto}</div>`;
-    });
+    for (let i = 0; i < 8; i++){
+      interesses.innerHTML += `<button class="bg-pink-300 hover:bg-pink-400 text-white font-bold py-6 rounded-lg focus:outline-none focus:shadow-outline" onclick="sortBy('${teste[i]}')">${teste[i]} (${teste2[i]})</button>`
+    }
     console.log(teste)
   })
   .catch((error) => {
@@ -3022,23 +3154,151 @@ function addNotify(commentID, userUID, uid, tipo) {
       motivo: userUID,
       timestamp: new Date(),
       type: tipo,
-    };
-    notifyRef.add(dados)
+      lido: false,
+      };
+    notifyRef.add(dados).then(() =>{
+      alert('Denuncia enviada com sucesso!')
+            window.location.replace('tela-inicio.html');
+    });
   }else{
     const dados = {
       commentID: commentID,
       UID: userUID,
       timestamp: new Date(),
       type: tipo,
+      lido: false
     };
-    notifyRef.add(dados).then(() =>{
-      alert('Denuncia enviada com sucesso!')
-            window.location.replace('tela-inicio.html');
-    });
+    notifyRef.add(dados)
+    
   }
   
   console.log(commentID, userUID, uid, tipo)
 
 
   
+}
+
+function filter(){
+  document.getElementById('modal').classList.remove('hidden');
+
+}
+
+function fecharModal() {
+  document.getElementById('modal').classList.add('hidden');
+}
+
+function orderBy(){
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
+  const order = document.getElementById('ordenacao').value;
+  const pesquisa = order.split('/');
+  const publis = document.getElementById("publis")
+  console.log(pesquisa)
+  var urlParams = new URLSearchParams(window.location.search);
+  var tag = urlParams.get("tag");
+  if (!tag){
+  firebase.firestore().collection("posts")
+  .where("categ", "==", "post")
+  .orderBy(pesquisa[0], pesquisa[1])
+  .get()
+  .then((querySnapshot) => {
+    publis.innerHTML="";
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+              var postData = doc.data();
+              var postID = doc.id;
+
+              time = postData.timestamp;
+              tempo = formatTime(time);
+              const userNome = postData.nomeUser;
+              const userUID = user.uid;
+              const tipoPost = postData.tipo;
+              const contPost = postData.post;
+              const likesQntd = postData.likesQntd;
+              const deslikesQntd = postData.deslikesQntd;
+              const favsQntd = postData.favsQntd;
+              const respsQntd = postData.respsQntd;
+              const redirect = "tela-comments.html";
+              const tag = postData.tag;
+              const img = postData.url;
+              const imgPerfil = postData.fotoUser;
+
+              
+              publis.innerHTML += formatPost(
+                userNome,
+                userUID,
+                tipoPost,
+                contPost,
+                postID,
+                likesQntd,
+                deslikesQntd,
+                favsQntd,
+                respsQntd,
+                redirect,
+                tag,
+                img,
+                imgPerfil
+              );
+              const categs = document.getElementById("categs")
+              categs.style.display = 'none';
+              checkReact(user.uid, "post");
+              isADM(user.uid);
+              fecharModal()
+    })
+  })
+  }else{
+    firebase.firestore().collection("posts")
+  .where("categ", "==", "post")
+  .where("tag", "==", tag)
+  .orderBy(pesquisa[0], pesquisa[1])
+  .get()
+  .then((querySnapshot) => {
+    publis.innerHTML="";
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+              var postData = doc.data();
+              var postID = doc.id;
+
+              time = postData.timestamp;
+              tempo = formatTime(time);
+              const userNome = postData.nomeUser;
+              const userUID = user.uid;
+              const tipoPost = postData.tipo;
+              const contPost = postData.post;
+              const likesQntd = postData.likesQntd;
+              const deslikesQntd = postData.deslikesQntd;
+              const favsQntd = postData.favsQntd;
+              const respsQntd = postData.respsQntd;
+              const redirect = "tela-comments.html";
+              const tag = postData.tag;
+              const img = postData.url;
+              const imgPerfil = postData.fotoUser;
+
+              
+              publis.innerHTML += formatPost(
+                userNome,
+                userUID,
+                tipoPost,
+                contPost,
+                postID,
+                likesQntd,
+                deslikesQntd,
+                favsQntd,
+                respsQntd,
+                redirect,
+                tag,
+                img,
+                imgPerfil
+              );
+              const categs = document.getElementById("categs")
+              categs.style.display = 'none';
+              checkReact(user.uid, "post");
+              isADM(user.uid);
+              fecharModal()
+    })
+  })
+  }
+}})
+
+
 }

@@ -13,15 +13,51 @@
 
 <body onload="discover()">
     <div class="page-header flex flex-row justify-between border-b-2 border-[#ffa9a9] p-3 bg-[#ffa9a9] rounded-b-xl">
-        <input type="search" name="" id="termo" class="w-screen ">
+        <img src="../img/filter.png" class="w-8 self-center pr-2" onclick="filter()">
+        <input type="search" name="" id="termo" class="w-screen pl-2 ">
         <img src="../img/pesquisa.png" alt="" class="w-8 self-center pl-2" onclick="pesquisa()">
     </div>
     <div class="pageContent" id="id">
-      <div id="publis"></div>
-        <p class="text-black self-center "> Mais populares</p>
-        <div id="interesses" class="flex flex-row justify-center" >
+
+      <div class="bg-white p-4 rounded-md shadow-md mb-3 mt-16">
+        <p class="text-center text-gray-600">Finge que tem um anúncio aqui</p>
+      </div>
+      
+      <div id="modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 hidden">
+        <div class="bg-white rounded-lg p-8">
+          <form>
+            <label for="ordenacao" class="block mb-4">Organizar por:</label>
+            <select id="ordenacao" class="w-full border p-2 rounded mb-4">
+              <option value="timestamp/desc">Mais Recentes</option>
+            <option value="timestamp/asc">Mais Antigos</option>
+              <option value="likesQntd/desc">Maior Número de Likes</option>
+              <option value="respsQntd/desc">Maior Número de Interações</option>
+            </select>
+          </form>
+          <div class="flex justify-between">
+            <button onclick="fecharModal()" class="bg-red-500 text-white px-4 py-2 rounded-md">Fechar</button>
+            <button onclick="orderBy()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Filtrar</button>
+          </div>
         </div>
+      </div>
+
+      <div id="publis" class="mb-16"></div>
+      
+        
+      
+
+      <div id="categs">
+        
+  
+        <p class="text-black self-center "> Navegar por categoria </p>
+        <div id=interesses class="grid grid-cols-2 gap-4"></div>
+      </div>
+
+      
     </div>
+          
+        
+    
     <nav class="navPerfil nav">
         <button class="navButton"><img src="../img/home.png" alt="" onclick="location.href='tela-inicio.html'"></button>
         <button class="navButton"><img src="../img/pesquisar.png" alt="" onclick="location.href='tela-descubra.html'"></button>
