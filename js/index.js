@@ -910,15 +910,15 @@ function formatPost(
         <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']" id="react">
           <button class="w-6 flex flex-row" id="likeButton" onclick="react('1', '${postID}', 'post')"> 
             <img id="imgLike" src="../img/like.svg" alt="">
-            <p class="ml-2" id="like${postID}" class="text-black";>${likesQntd} </p> 
+            <p class="ml-2 text-black" id="like${postID}";>${likesQntd} </p> 
           </button>
           <button class="w-6 flex flex-row" id="deslikeButton" onclick="react('2', '${postID}', 'post')">
             <img id="imgDislike" src="../img/dislike.svg" alt="">
-            <p class="ml-2" id="deslike${postID}" class="text-black";> ${deslikesQntd} </p>
+            <p class="ml-2 text-black" id="deslike${postID}";> ${deslikesQntd} </p>
           </button>
           <button class="w-6 flex flex-row"  id="favoriteButton" onclick="fav( '${postID}', '${userUID}', 'post')">
             <img id="imgFavs" src="../img/favorito.svg" alt=""> 
-            <p class="ml-2" id="fav${postID}" class="text-black";> ${favsQntd} </p>
+            <p class="ml-2 text-black" id="fav${postID}";> ${favsQntd} </p>
           </button>
           <button class="w-6 flex flex-row" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> 
             <img src="../img/comentário.svg" alt=""> 
