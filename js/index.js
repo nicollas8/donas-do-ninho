@@ -317,17 +317,25 @@ function viewPublis() {
           </div>
           <div class="react flex flex-row gap-10 py-2 justify-around mb-2">
           
-          <p style=color:black> ${doc.data().likesQntd}
-          <img class="w-6" src="../img/like.svg" alt=""></p>
+          <div class="flex flex-row gap-2">
+            <img class="w-7" src="../img/like.svg" alt="">
+            <p class="text-black self-center"> ${doc.data().likesQntd}</p>
+          </div>
 
-          <p style=color:black> ${doc.data().deslikesQntd}
-          <img class="w-6" src="../img/dislike.svg" alt=""></p>
+          <div class="flex flex-row gap-2">
+          <img class="w-7" src="../img/dislike.svg" alt="">
+          <p class="text-black self-center"> ${doc.data().deslikesQntd}</p>
+          </div>
 
-          <p style=color:black> ${doc.data().favsQntd}
-          <img class="w-6" src="../img/favorito.svg" alt=""></p>
+          <div class="flex flex-row gap-2">
+          <img class="w-7" src="../img/favorito.svg" alt="">
+          <p class="text-black self-center"> ${doc.data().favsQntd}</p>
+          </div>
 
-          <p style=color:black> ${doc.data().respsQntd}
-          <img class="w-6" src="../img/comentário.svg" alt=""></p>
+          <div class="flex flex-row gap-2">
+            <img class="w-7" src="../img/comentário.svg" alt="">
+            <p class="text-black self-center"> ${doc.data().respsQntd}</p>
+          </div>
           <button class="self-end" onclick="confirmarExclusao('${
             doc.id
           }', '1')"><img src="../img/lixeira.png" alt="" class="w-6"></button>
@@ -366,17 +374,17 @@ function viewPublis() {
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
             <div class="balaoPergunta">
-            <p style=color:black></p>
+            <p class="text-black"></p>
             <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postID}'" class="text-black text-left mb-4"> ${
                   doc.data().post
                 } </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <p style=color:black> ${doc.data().likesQntd}
+            <p class="text-black"> ${doc.data().likesQntd}
             <img class="w-6" src="../img/like.svg" alt=""> </p>
-            <p style=color:black> ${doc.data().deslikesQntd}
+            <p class="text-black"> ${doc.data().deslikesQntd}
             <img class="w-6" src="../img/dislike.svg" alt=""> </p>
-            <p style=color:black> ${doc.data().favsQntd}
+            <p class="text-black"> ${doc.data().favsQntd}
           <img class="w-6" src="../img/favorito.svg" alt=""></p>
             <button class="w-6" onclick="confirmarExclusao('${
               doc.id
@@ -486,16 +494,16 @@ function showPostsUser(user) {
             <div class="options">
             </div>
             <div class="balaoPergunt a">
-            <p style=color:black></p>
+            <p class="text-black"></p>
             <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
             <div class="flex justify-center py-2 h-1/4">
               <img src="${img}" class="w-full h-1/4 mb-3">
             </div>
                 </div>
                   <div class=" react flex flex-row gap-14 justify-evenly pl-3 py-3 mt-2 mb-2 w-full">
-                    <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> <img src="../img/like.svg" alt=""></button>
-                    <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
-                    <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
+                    <button class="w-6 flex flex-row-reverse" onclick="react('1', '${postID}', 'post')"> <p class="ml-2" id="like${postID}" class="text-black";>${likesQntd} </p> <img src="../img/like.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="react('2', '${postID}', 'post')"><p class="ml-2" id="deslike${postID}" class="text-black";> ${deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
+                    <button class="w-6 flex flex-row-reverse" onclick="fav('${postID}', '${userUID}', 'post')"><p class="ml-2" id="fav${postID}" class="text-black";> ${favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
                     <button class="w-6 flex flex-row-reverse" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> <p class="ml-2 text-black" id="comment">${respsQntd}</p><img src="../img/comentário.svg" alt=""> </button>
                     <button class="w-6 flex flex-row-reverse"><img src="../img/três-pontos.svg" alt=""></button>
                   </div>
@@ -620,7 +628,7 @@ function excluirConta() {
                   "Usuário excluído da autenticação do Firebase com sucesso!"
                 );
                 alert("Conta Excluída com sucesso!");
-                window.location.replace("../index.html");
+                window.location.replace("./index.html");
               })
               .catch(function (error) {
                 console.error(
@@ -653,7 +661,7 @@ function excluirPosts(uidDoUsuario) {
           .doc(postID)
           .delete()
           .then(function () {
-            console.log("Postagem excluída com sucesso!");
+            alert("Postagem excluída com sucesso!");
           });
       });
     });
@@ -893,7 +901,7 @@ function formatPost(
   <div class="options">
   </div>
   <div class="balaoPergunt a">
-  <p style=color:black></p>
+  <p class="text-black"></p>
   <p class="text-black text-left mb-4 py-2"> ${contPost} </p>
   <div class="flex justify-center py-2 h-1/4" ${imgCarregado}>
     <img src="${img}" class="w-full h-1/4 mb-3">
@@ -902,15 +910,15 @@ function formatPost(
         <div class="react flex flex-row gap-10 justify-around mt-2 mb-2 w-['90vw']" id="react">
           <button class="w-6 flex flex-row" id="likeButton" onclick="react('1', '${postID}', 'post')"> 
             <img id="imgLike" src="../img/like.svg" alt="">
-            <p class="ml-2" id="like${postID}" style=color:black;>${likesQntd} </p> 
+            <p class="ml-2" id="like${postID}" class="text-black";>${likesQntd} </p> 
           </button>
           <button class="w-6 flex flex-row" id="deslikeButton" onclick="react('2', '${postID}', 'post')">
             <img id="imgDislike" src="../img/dislike.svg" alt="">
-            <p class="ml-2" id="deslike${postID}" style=color:black;> ${deslikesQntd} </p>
+            <p class="ml-2" id="deslike${postID}" class="text-black";> ${deslikesQntd} </p>
           </button>
           <button class="w-6 flex flex-row"  id="favoriteButton" onclick="fav( '${postID}', '${userUID}', 'post')">
             <img id="imgFavs" src="../img/favorito.svg" alt=""> 
-            <p class="ml-2" id="fav${postID}" style=color:black;> ${favsQntd} </p>
+            <p class="ml-2" id="fav${postID}" class="text-black";> ${favsQntd} </p>
           </button>
           <button class="w-6 flex flex-row" onclick= "window.location.href = '${redirect}' + '?ID=' + '${postID}';"> 
             <img src="../img/comentário.svg" alt=""> 
@@ -1525,9 +1533,9 @@ function comments() {
             <p class="text-black mt-4 mb-3 ml-2"> ${respData.post} </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" style=color:black;>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
-              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" style=color:black;> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
-              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" style=color:black;> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
+              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" class="text-black";>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
+              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" class="text-black";> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
+              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" class="text-black";> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
               <button class="w-6" onclick="report('${doc.id}')"><img class="denuncia" src="../img/denuncia.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
@@ -2116,7 +2124,7 @@ function viewFavs() {
                   <img src="${postData.url}" class="w-full h-1/4 mb-3">
                 </div>
                   <div class="balaoPergunta">
-                  <p style=color:black></p>
+                  <p class="text-black"></p>
                   <p class="text-black text-left mb-4"> ${postData.post} </p>
                 </div>
                   </div>
@@ -2237,7 +2245,6 @@ firebase.auth().onAuthStateChanged(function (user) {
           const downloadURL = await storageRef.getDownloadURL();
           addPubli(downloadURL);
           // Armazene a URL no Firestore
-          alert("Imagem enviada com sucesso!");
         } else {
           addPubli("");
         }
@@ -2483,16 +2490,16 @@ function viewPublisOutro() {
           </div>
           <div class="react flex flex-row gap-10 justify-around mb-2">
           
-          <p style=color:black> ${doc.data().likesQntd}
+          <p class="text-black"> ${doc.data().likesQntd}
           <img class="w-6" src="../img/like.svg" alt=""></p>
 
-          <p style=color:black> ${doc.data().deslikesQntd}
+          <p class="text-black"> ${doc.data().deslikesQntd}
           <img class="w-6" src="../img/dislike.svg" alt=""></p>
 
-          <p style=color:black> ${doc.data().favsQntd}
+          <p class="text-black"> ${doc.data().favsQntd}
           <img class="w-6" src="../img/favorito.svg" alt=""></p>
 
-          <p style=color:black> ${doc.data().respsQntd}
+          <p class="text-black"> ${doc.data().respsQntd}
           <img class="w-6" src="../img/comentário.svg" alt=""></p>
           <button class="w-6"><img src="../img/três-pontos.svg" alt=""></button>
           </div>
@@ -2530,17 +2537,17 @@ function viewPublisOutro() {
             <div class="ballPerguntas p-4">
             <p id=nome style="color:blue;" class="text-right"> Resposta à ${nome}  </p>
             <div class="balaoPergunta">
-            <p style=color:black></p>
+            <p class="text-black"></p>
             <p onclick= "window.location.href = 'tela-comments.html' + '?ID=' + '${postID}'" class="text-black text-left mb-4"> ${
               doc.data().post
             } </p>
             </div>
             <div class="react flex flex-row gap-10 justify-around mb-2">
-            <p style=color:black> ${doc.data().likesQntd}
+            <p class="text-black"> ${doc.data().likesQntd}
             <img class="w-6" src="../img/like.svg" alt=""> </p>
-            <p style=color:black> ${doc.data().deslikesQntd}
+            <p class="text-black"> ${doc.data().deslikesQntd}
             <img class="w-6" src="../img/dislike.svg" alt=""> </p>
-            <p style=color:black> ${doc.data().favsQntd}
+            <p class="text-black"> ${doc.data().favsQntd}
           <img class="w-6" src="../img/favorito.svg" alt=""></p>
             <button class="w-6"> <img src="../img/três-pontos.svg" alt=""></button>
             </div>
