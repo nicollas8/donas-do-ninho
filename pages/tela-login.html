@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
+    <title>Donas do Ninho</title>
+</head>
+
+<div id="loader-container" class="loader-container">
+    <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+  </div>
+
+<body>
+    <div class="page">
+        <header>
+            <img src="../img/logoDonasDoNinho.svg" alt="Logo Donas do Ninho">
+        </header>
+        <main>
+            <form action="" method="post" class="formLogin">
+                <div class="inputGroup">
+                    <label for="newEmail"> Email </label>
+                    <input type="email" name="email" onchange="onChangeEmail()" id="email" placeholder="Digite seu email"
+                    required>
+                    <span class="error" id="erroEmailRequired">Email Obrigatório</span>
+                    <span class="error" id="erroEmailInvalid">Email inválido</s>
+                </div>
+                <div class="inputGroup">
+                    <label for="cofirmSenha"> Senha </label>
+                    <input type="password" onchange="onChangeSenha()" name="senha" id="senha" placeholder="Digite sua senha"
+                    required>
+                    <span class="error" id="erroSenhaRequired">Senha Obrigatória</span>
+                </div>
+                <div id="groupRecSenha">
+                    <button type="button" class="btnCadSenha" disabled id="btnRecuperarSenha"
+                    onclick="recoverySenha()"> Esqueci minha senha </button>
+                    <button type="button" class="btnCadSenha" onclick="location.href='tela-cadastro.html'">Não tem conta? Cadastre-se</button>
+                </div>
+            </form>
+        </main>
+        <footer>
+            <button type="button" class="btnPadrão btn" id="btnLogin" onclick="login()" disabled>Entrar</button>
+        </footer>
+    </div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/index.js"></script>
+</html>

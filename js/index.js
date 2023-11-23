@@ -67,7 +67,7 @@ function login() {
     .auth()
     .signInWithEmailAndPassword(form.email().value, form.senha().value)
     .then((response) => {
-      window.location.href = "./pages/tela-inicio.html";
+      window.location.href = "tela-inicio.html";
     })
     .catch((error) => {
       showAlert(getErrorMessage(error));
@@ -441,6 +441,20 @@ function att() {
                 userData.tipoMom;
               document.getElementById("bio-user").textContent =
                 userData.biografia;
+
+                lvl = document.getElementById("lvlPerfil");
+
+                if(lvl){
+                  firebase.firestore().collection("nivel")
+                  .where("nvl", "==", userData.nivel).get()
+                  .then(function (queryLvl) {
+                    queryLvl.forEach(function (doc) {
+                      console.log(doc.data().titulo)
+                      document.getElementById("lvlPerfil").textContent = doc.data().titulo;
+                    })
+                  })
+                }
+              
               if (userData.url) {
                 var foto = userData.url;
               } else {
@@ -520,6 +534,7 @@ function showPostsUser(user) {
 function atualizar(URL) {
   var nome = document.getElementById("nameNew").value;
   var biografia = document.getElementById("biografia").value;
+  var tipoMae = document.getElementById("tipoMae").value
   var botao = document.getElementById("post2")
 
 
@@ -544,6 +559,20 @@ function atualizar(URL) {
       // Se a biografia foi fornecida, adicione-a ao objeto de atualização
       if (biografia) {
         updateData.biografia = biografia;
+      }
+      console.log(tipoMae)
+
+      if (tipoMae) {
+        if(tipoMae == "nãoMae"){
+          updateData.tipoMom = 'Não sou mãe'
+          updateDataPosts.nivel = 0
+        }else if(tipoMae == "gestante"){
+          updateData.tipoMom = "Gestante"
+          updateDataPosts.nivel = 6
+        }else if(tipoMae == "mae"){
+          updateData.tipoMom = "Mãe"
+          updateDataPosts.nivel = 1
+        }
       }
 
       if (URL) {
@@ -584,7 +613,8 @@ function atualizar(URL) {
 
 function excluirConta() {
   //var resposta = confirm("Tem certeza de que deseja excluir?");
-
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (user) {
   const confirm = document.getElementById("preview");
   confirm.style.display = "block";
   confirm.innerHTML = `<img class='' src='../img/logoExclusao.svg'> 
@@ -604,8 +634,6 @@ function excluirConta() {
   const decision1 = document.getElementById("confirmExcluir");
 
   decision1.addEventListener("click", async (e) => {
-    firebase.auth().onAuthStateChanged(function (user) {
-      if (user) {
         var uid = user.uid;
         console.log(uid);
         usersCollection = firebase.firestore().collection("usuarios");
@@ -628,7 +656,7 @@ function excluirConta() {
                   "Usuário excluído da autenticação do Firebase com sucesso!"
                 );
                 alert("Conta Excluída com sucesso!");
-                window.location.replace("./index.html");
+                window.location.replace("../index.html");
               })
               .catch(function (error) {
                 console.error(
@@ -640,11 +668,12 @@ function excluirConta() {
           .catch(function (error) {
             console.error("Erro ao excluir o usuário do Firestore:", error);
           });
-      } else {
-        console.log("Não foi possível obter o usuário autenticado.");
-      }
-    });
+      
+    
   });
+} else {
+  console.log("Não foi possível obter o usuário autenticado.");
+}});
 }
 
 function excluirPosts(uidDoUsuario) {
@@ -723,6 +752,7 @@ function addPubli(url) {
                 categ: "post",
                 url: url,
                 fotoUser: userData.url,
+                nivel: userData.nivel,
               };
               firebase
                 .firestore()
@@ -879,8 +909,25 @@ function formatPost(
   img,
   fotoUser,
   donoUID,
+  nivel
 ) {
   //console.log(tag);
+  var lvlText = ""
+  if (nivel == 0){
+     lvlText = 'Amigo do Ninho'
+  }else if(nivel == 1) {
+    lvlText = 'Mamãe Iniciante'
+  }else if(nivel == 2) {
+    lvlText = 'Mamãe beija-flor'
+  }else if(nivel == 3) {
+    lvlText = 'Mamãe Flamingo'
+  }else if(nivel == 4) {
+    lvlText = 'Mamãe Coruja'
+  }else if(nivel == 5){
+    lvlText = 'Mamãe Tico-Tico'
+  }else if (nivel == 6){
+    lvlText = 'Mamãe Cegonha'
+  }
 
   if (img) {
     var imgCarregado = "style='display:flex'";
@@ -892,11 +939,16 @@ function formatPost(
   <div class="publi border-b-2 border-[#ffa9a9] bg-white rounded-b-lg w-screen">
     <div class="ballPerguntas p-3">
     <div class="cardTittle flex flex-row justify-between">
-  <div class="flex flex-row justify-between" onclick="acessarPerfil('${donoUID}')">
-   <img class="self-center w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="background-color: grey;">
-   <p id=nome class="text-left self-center text-black"> ${userNome}</p>
-  </div>
-    <h4 class=" text-red-700 self-center">${tipoPost}</h4>
+    <div class="flex flex-row items-center" >
+      <div class="relative">
+        <img onclick="acessarPerfil('${donoUID}')" class="w-12 h-12 rounded-full mr-2" src="${fotoUser}" style="background-color: grey;">
+      </div>
+      <div>
+        <p onclick="acessarPerfil('${donoUID}')" id="nome" class="text-left text-black">${userNome}</p>
+        <p onclick="window.location.href = 'tela-Outronivel.html' + '?nvl=' + '${nivel}' " class="text-left text-xs text-rose-300">${lvlText}</p> <!-- Texto abaixo do nome do usuário -->
+      </div>
+    </div>
+    <h4 class="text-red-700 self-center">${tipoPost}</h4>
   </div>
   <div class="options">
   </div>
@@ -936,7 +988,6 @@ function formatPost(
 }
 
 function sortBy(tag) {
-  // document.getElementById('mostrarMaisBtn').style.display = 'flex';
   console.log(window.location.href)
   const publis = document.getElementById("publis");
   if (window.location.href.includes("tela-descubra.html")){
@@ -950,12 +1001,13 @@ function sortBy(tag) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       const db = firebase.firestore();
+      console.log(tag)
       
       
 
       db.collection("posts")
         .where("tag", "==", tag)
-        .limit(total)
+        .orderBy('timestamp', 'desc')
         .get()
         .then(function (querySnapshot) {
           if (!querySnapshot.empty) {
@@ -980,6 +1032,7 @@ function sortBy(tag) {
               const tag = postData.tag;
               const img = postData.url;
               const imgPerfil = postData.fotoUser;
+              const nivel = postData.nivel
 
               publis.innerHTML += formatPost(
                 userNome,
@@ -994,7 +1047,8 @@ function sortBy(tag) {
                 redirect,
                 tag,
                 img,
-                imgPerfil
+                imgPerfil,
+                nivel
               );
               checkReact(user.uid, "post");
               isADM(user.uid);
@@ -1104,7 +1158,6 @@ db.collection("posts")
 
 
 function showPosts() {
-  let contador = 0;
   renderNots();
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
@@ -1119,15 +1172,9 @@ function showPosts() {
         .get()
         .then((postsQuerySnapshot) => {
           postsQuerySnapshot.forEach((postDoc) => {
-            contador++;
             var postData = postDoc.data();
             var postID = postDoc.id;
             countInteractions(postID)
-           
-            if (contador % 4 === 0) {
-              publis.innerHTML += exibirAnuncio();
-              
-            }
 
             time = postData.timestamp;
             tempo = formatTime(time);
@@ -1144,6 +1191,7 @@ function showPosts() {
             const img = postData.url;
             const fotoUser = postData.fotoUser;
             const UIDdonoPost = postData.UIDusuario;
+            const nivel = postData.nivel
             publis.innerHTML += formatPost(
               userNome,
               userUID,
@@ -1158,7 +1206,8 @@ function showPosts() {
               tag,
               img,
               fotoUser,
-              UIDdonoPost
+              UIDdonoPost,
+              nivel
             );
 
             
@@ -1312,7 +1361,6 @@ function showmorePosts() {
             error
           );
         });
-      console.log("tu tá logado");
       isADM(user.uid);
 
       db.collection("usuarios").doc(user.uid).get().then((doc) => {
@@ -1437,22 +1485,22 @@ function formatTime(time) {
     minute: "numeric",
   });
   if (secDiff < 60) {
-    tempo = `postado há ${secDiff} ${
+    tempo = ` há ${secDiff} ${
       secDiff === 1 ? "segundo" : "segundos"
     } atrás`;
   } else if (minDiff < 60) {
-    tempo = `postado há ${minDiff} ${
+    tempo = ` há ${minDiff} ${
       minDiff === 1 ? "minuto" : "minutos"
     } atrás`;
   } else if (minDiff >= 60 && minDiff < 1440) {
-    tempo = `postado há ${Math.floor(minDiff / 60)} ${
+    tempo = ` há ${Math.floor(minDiff / 60)} ${
       Math.floor(minDiff / 60) === 1 ? "hora" : "horas"
     } atrás`;
   } else if (minDiff >= 1440 && minDiff <= 2160) {
-    tempo = `postado ontem às ` + formatterH.format(time);
+    tempo = ` ontem às ` + formatterH.format(time);
   } else {
     tempo =
-      "postado " + formatter.format(time) + " às " + formatterH.format(time);
+      formatter.format(time) + " às " + formatterH.format(time);
   }
   return tempo;
 }
@@ -2366,15 +2414,15 @@ function nivel() {
           const lvl = doc.data().nivel;
           const xp = doc.data().xp;
           if (lvl == 1) {
-            var xpMulti = 20;
+            var xpMulti = 40;
           } else if (lvl == 2) {
-            var xpMulti = 10;
+            var xpMulti = 20;
           } else if (lvl == 3) {
-            var xpMulti = 8;
+            var xpMulti = 16;
           } else if (lvl == 4) {
-            var xpMulti = 5;
+            var xpMulti = 10;
           } else if (lvl == 5) {
-            var xpMulti = 6;
+            var xpMulti = 12;
           }
           const conta = xp / 10;
           const xpBar = conta * xpMulti;
@@ -2384,8 +2432,10 @@ function nivel() {
 
           if (lvl == 5){
             document.getElementById("lvlBar").style.width = "205px";
+            document.getElementById("xpInd").textContent = "Nível Máximo!"
           }else{
             document.getElementById("lvlBar").style.width = xpBar + "px"
+            document.getElementById("xpInd").textContent = 'XP: ' + xpBar + '/200'
           }
           
           
@@ -2406,6 +2456,30 @@ function nivel() {
             }
           }
         });
+    }
+  });
+}
+
+function outroNivel() {
+  var urlParams = new URLSearchParams(window.location.search);
+  var nvl = urlParams.get("nvl");
+  lvl =parseInt(nvl)
+  
+  firebase
+  .firestore()
+  .collection("nivel")
+  .where("nvl", "==", lvl)
+  .get()
+  .then(function (querySnapshot) {
+    if (!querySnapshot.empty) {
+      querySnapshot.forEach(function (doc) {
+        document.getElementById("fotoNivel").src = '../img/lvl'+lvl+'Icon.svg';
+        document.getElementById("tituloMae").textContent = doc.data().titulo;
+        document.getElementById("descTitulo").textContent = doc.data().desc;
+        document.getElementById("nivelMae").textContent = 'Nível ' +lvl
+        doc.data();
+        document.getElementById("lvlBar");
+      });
     }
   });
 }
@@ -3102,7 +3176,7 @@ function discover(){
     const interesses = document.getElementById('interesses');
 
     for (let i = 0; i < 8; i++){
-      interesses.innerHTML += `<button class="bg-pink-300 hover:bg-pink-400 text-white font-bold py-6 rounded-lg focus:outline-none focus:shadow-outline" onclick="sortBy('${teste[i]}')">${teste[i]} (${teste2[i]})</button>`
+      interesses.innerHTML += `<button class="bg-rose-300 hover:bg-pink-400 text-white font-bold py-6 rounded-lg focus:outline-none focus:shadow-outline" onclick="sortBy('${teste[i]}')">${teste[i]} (${teste2[i]})</button>`
     }
     console.log(teste)
   })
@@ -3119,36 +3193,45 @@ function logado(){
       console.log(user.uid)
       window.location.replace('./pages/tela-inicio.html');
     }else{
-      console.log("realmente, vc tá fora")
+      window.location.replace('./pages/tela-login.html');
     }
   })
 }
  
-function sendReport(num){
+function sendReport(num) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
-  
-  var urlParams = new URLSearchParams(window.location.search);
-  var IDpostagem = urlParams.get("ID");
-  console.log(IDpostagem, num);
 
-  firebase.firestore().collection("usuarios").where("adm", "==", true)
-  .get().then(function (querySnapshot){
-      querySnapshot.forEach(function (doc){
-        firebase.firestore().collection("usuarios").doc(doc.data().uid).collection("notificações")
-        .get().then(() => {
-          addNotify(
-            IDpostagem,
-            user.uid,
-            doc.data().uid,
-            "den "+ num,
-          )
+      var urlParams = new URLSearchParams(window.location.search);
+      var IDpostagem = urlParams.get("ID");
+      console.log(IDpostagem, num);
+
+      firebase.firestore().collection("usuarios").where("adm", "==", true)
+        .get().then(function (querySnapshot) {
+          querySnapshot.forEach(function (doc) {
+            firebase.firestore().collection("usuarios").doc(doc.data().uid).collection("notificações")
+              .get().then(() => {
+                addNotify(
+                  IDpostagem,
+                  user.uid,
+                  doc.data().uid,
+                  "den " + num,
+                ).then(() => {
+                  // Redirecionamento
+                  window.location.href = 'tela-inicio.html';
+
+                  // Alerta
+                  alert("Operação concluída. Você será redirecionado.");
+                }).catch((error) => {
+                  console.error("Erro ao adicionar notificação: ", error);
+                  // Em caso de erro, exibir um alerta ou lidar com a situação de outra maneira
+                });
+              })
+          })
+
         })
-      })
-    
+    }
   })
-
-}})
 }
 
 function addNotify(commentID, userUID, uid, tipo) {
@@ -3163,10 +3246,7 @@ function addNotify(commentID, userUID, uid, tipo) {
       type: tipo,
       lido: false,
       };
-    notifyRef.add(dados).then(() =>{
-      alert('Denuncia enviada com sucesso!')
-            window.location.replace('tela-inicio.html');
-    });
+    notifyRef.add(dados)
   }else{
     const dados = {
       commentID: commentID,
@@ -3175,7 +3255,10 @@ function addNotify(commentID, userUID, uid, tipo) {
       type: tipo,
       lido: false
     };
-    notifyRef.add(dados)
+    notifyRef.add(dados).then(() => {
+      alert('Denuncia enviada com sucesso!')
+            window.location.replace('tela-inicio.html');
+    }) 
     
   }
   

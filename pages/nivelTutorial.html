@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nível</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<div id="loader-container" class="loader-container">
+  <div id="loader" class="loader"></div> <!-- Elemento de carregamento -->
+</div>
+
+<body style="overflow: hidden;">
+
+  <div class="page-header flex flex-row justify-between border-b-2 border-[#ffa9a9] p-3 bg-[#ffa9a9] rounded-b-xl">
+    <img src="../img/seta.png" alt="" class="w-9 pl-2">
+    <h4 class="text-center text-white text-2xl font-normal font-['Roboto']">Tutorial de Nível</h4>
+</div>
+<div class="flex flex-col justify-center items-center py-8">
+  <p class="text-center max-w-md mx-auto mb-6">
+      Para evoluir de nível em nossa plataforma, você precisa interagir. Na tabela abaixo, mostramos como ganhar XP para avançar de nível:
+  </p>
+
+  <div class="w-full md:w-3/4 lg:w-2/3 bg-white shadow-md rounded-xl overflow-hidden">
+      <table class="w-full">
+          <thead class="bg-pink-200">
+              <tr>
+                  <th class="px-4 py-2 text-center text-sm font-semibold text-pink-700 uppercase">Interação</th>
+                  <th class="px-4 py-2 text-center text-sm font-semibold text-pink-700 uppercase">Quantidade de XP adquirida</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr class="bg-pink-100">
+                  <td class="px-4 py-2 text-center text-sm">Curtida</td>
+                  <td class="px-4 py-2 text-center text-sm">5</td>
+              </tr>
+              <tr class="bg-pink-200">
+                  <td class="px-4 py-2 text-center text-sm">Favorito</td>
+                  <td class="px-4 py-2 text-center text-sm">10</td>
+              </tr>
+              <tr class="bg-pink-100">
+                  <td class="px-4 py-2 text-center text-sm">Publicar</td>
+                  <td class="px-4 py-2 text-center text-sm">10</td>
+              </tr>
+          </tbody>
+      </table>
+  </div>
+
+  <p class="text-center max-w-md mx-auto mt-6">
+      O calculo para decidir
+      quanto xp você recebe é: <br> <span class=font-bold> XP / 10 X multiplicador </span>
+      <br> Como descrito na tabela acima, o valor de xp é equivalente à interação,
+      dividido por dez, então multiplicado por um valor X que aumenta a cada nível, começando
+      como 40 no primeiro nível e chegando até 10 no 4° nível  
+  </p>
+</div>
+</body>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-app-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-storage-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-firestore-compat.js"></script> 
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.3.0/firebase-messaging-compat.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="../js/firebase-init.js"></script>
+<script defer src="../js/index.js"></script>
+</html>

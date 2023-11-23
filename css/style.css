@@ -741,3 +741,14 @@ aside {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.breathing-img {
+  animation: breathing 4s infinite ease-in-out;
+  max-width: 50%; /* Defina o tamanho máximo desejado */
+}
+
+@keyframes breathing {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
