@@ -60,6 +60,10 @@ header img {
   width: 90vw;
 }
 
+.inputGroup #dataNascimento {
+  width: 90vw;
+}
+
 input,
 select {
   background-color: #ffffff;
@@ -487,6 +491,11 @@ textarea {
   padding: 0.3rem;
   margin-top: 0.2rem;
   margin-left: 1rem;
+}
+
+.inputIcon select {
+  margin-top: 0.3rem;
+  width: 90vw;
 }
 
 .inputIcon {

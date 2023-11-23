@@ -1580,11 +1580,20 @@ function comments() {
             <div class="balaoPergunta flex flex-row">
             <p class="text-black mt-4 mb-3 ml-2"> ${respData.post} </p>
             </div>
-            <div class="react flex flex-row gap-10 justify-around mb-2">
-              <button class="w-6" onclick="react('1', '${doc.id}', 'resp')"> <p id="like${doc.id}" class="text-black";>${respData.likesQntd} </p> <img src="../img/like.svg" alt=""></button>
-              <button class="w-6" onclick="react('2', '${doc.id}', 'resp')"><p id="deslike${doc.id}" class="text-black";> ${respData.deslikesQntd} </p><img src="../img/dislike.svg" alt=""></button>
-              <button class="w-6" onclick="fav('${doc.id}', '${user.uid}', 'resp')"><p id="fav${doc.id}" class="text-black";> ${respData.favsQntd} </p><img src="../img/favorito.svg" alt=""> </button>
-              <button class="w-6" onclick="report('${doc.id}')"><img class="denuncia" src="../img/denuncia.svg" alt=""></button>
+            <div class="react flex flex-row gap-10 justify-around my-3">
+              <button class="w-7 flex flex-row gap-3" onclick="react('1', '${doc.id}', 'resp')"> 
+              <img src="../img/like.svg" alt="">
+              <p id="like${doc.id}" class="text-black self-center";>${respData.likesQntd} </p> 
+              </button>
+              <button class="w-7 flex flex-row gap-3" onclick="react('2', '${doc.id}', 'resp')">
+              <img src="../img/dislike.svg" alt="">
+              <p id="deslike${doc.id}" class="text-black self-center";> ${respData.deslikesQntd} </p>
+              </button>
+              <button class="w-7 flex flex-row gap-3" onclick="fav('${doc.id}', '${user.uid}', 'resp')">
+              <img src="../img/favorito.svg" alt=""> 
+              <p id="fav${doc.id}" class="text-black self-center";> ${respData.favsQntd} </p>
+              </button>
+              <button class="w-7 flex flex-row" onclick="report('${doc.id}')"><img class="denuncia" src="../img/denuncia.svg" alt=""></button>
             </div>
             <p class='text-black text-right mt-2'> ${tempo}</p>
             </div>`;
