@@ -98,11 +98,11 @@ function recoverPassword() {
     .auth()
     .sendPasswordResetEmail(form.email().value)
     .then(() => {
-      alert("E-mail enviado com sucesso");
-      window.location.href = "./index.html";
+      showAlert("E-mail enviado com sucesso");
+      window.location.href = "../index.html";
     })
     .catch((error) => {
-      alert(getErrorMessage(error));
+      showAlert(getErrorMessage(error));
     });
 }
 
@@ -132,9 +132,9 @@ if (buttonCreateAccount) {
     let confirmSenha = document.getElementById("confirmSenha").value;
 
     if (formData.nome.length == "") {
-      alert("Por favor, insira seu nome no campo!");
+      showAlert("Por favor, insira seu nome no campo!");
     } else if (formData.nome.length > 100) {
-      alert("Limite de 100 caracteres para o nome!");
+      showAlert("Limite de 100 caracteres para o nome!");
     } else if (
       dataArray[0] < 1900 ||
       dataArray[0] >= nowdate ||
@@ -142,13 +142,13 @@ if (buttonCreateAccount) {
       dataArray[1] == "" ||
       dataArray[2] == ""
     ) {
-      alert("Por favor, selecione uma data de nascimento válida!");
+      showAlert("Por favor, selecione uma data de nascimento válida!");
     } else if (formData.senha.length < 6) {
-      alert("Por favor, digite uma senha com mais de 6 caracteres!");
+      showAlert("Por favor, digite uma senha com mais de 6 caracteres!");
     } else if (formData.senha != confirmSenha) {
-      alert("As senhas devem se coincidir!");
+      showAlert("As senhas devem se coincidir!");
     } else if (!formData.termosDeUso) {
-      alert("leia e aceite os termos de uso");
+      showAlert("leia e aceite os termos de uso");
     } else {
       firebase
         .auth()
@@ -181,19 +181,19 @@ if (buttonCreateAccount) {
               adm: false,
             })
             .then(() => {
-              alert("conta criada com sucesso");
+              showAlert("conta criada com sucesso");
               window.location.replace("boas-vindas.html");
             });
         })
         .catch((error) => {
           if (error.code == "auth/email-already-in-use") {
-            alert("Esse e-mail já está em uso por outro usuário");
+            showAlert("Esse e-mail já está em uso por outro usuário");
           } else if (error.code == "auth/invalid-email") {
-            alert("Por favor, insira um e-mail!");
+            showAlert("Por favor, insira um e-mail!");
           } else if (error.code == "auth/missing-password") {
-            alert("Por favor, insira uma senha!");
+            showAlert("Por favor, insira uma senha!");
           } else {
-            alert(error.message);
+            showAlert(error.message);
           }
           console.log(error);
         });
@@ -592,12 +592,12 @@ function atualizar(URL) {
                 querySnapshot.forEach(function (doc) {
                   console.log(doc.data().post);
                   doc.ref.update(updateDataPosts).then(function () {
-                    alert("Dados Atualizados com Sucesso!");
+                    showAlert("Dados Atualizados com Sucesso!");
                     window.location.replace("tela-usuario.html");
                   });
                 });
               } else {
-                alert("Dados Atualizados com Sucesso!");
+                showAlert("Dados Atualizados com Sucesso!");
                 window.location.replace("tela-usuario.html");
               }
             });
@@ -655,7 +655,7 @@ function excluirConta() {
                 console.log(
                   "Usuário excluído da autenticação do Firebase com sucesso!"
                 );
-                alert("Conta Excluída com sucesso!");
+                showAlert("Conta Excluída com sucesso!");
                 window.location.replace("../index.html");
               })
               .catch(function (error) {
@@ -690,7 +690,7 @@ function excluirPosts(uidDoUsuario) {
           .doc(postID)
           .delete()
           .then(function () {
-            alert("Postagem excluída com sucesso!");
+            showAlert("Postagem excluída com sucesso!");
           });
       });
     });
@@ -713,11 +713,11 @@ function addPubli(url) {
   firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
       if (document.getElementById("publi").value == "") {
-        alert("Por favor, digite algo para enviar!");
+        showAlert("Por favor, digite algo para enviar!");
       } else if (document.getElementById("tipo").value == "") {
-        alert("Por favor, selecione um tipo de publicação!");
+        showAlert("Por favor, selecione um tipo de publicação!");
       } else if (document.getElementById("tag").value == "") {
-        alert("Por favor, selecione uma tag!");
+        showAlert("Por favor, selecione uma tag!");
       } else {
         const button = document.getElementById("post");
         button.disabled = true;
@@ -774,7 +774,7 @@ function addPubli(url) {
                         })
                         .then(function () {
                           console.log("XP Concedido papai");
-                          alert("Publicação adicionada com sucesso!");
+                          showAlert("Publicação adicionada com sucesso!");
                           window.location.replace("tela-inicio.html");
                         });
                     });
@@ -784,7 +784,7 @@ function addPubli(url) {
                 });
             });
           } else {
-            alert("deu erro");
+            showAlert("deu erro");
           }
         });
       }
@@ -860,7 +860,7 @@ function addResp() {
                             setTimeout(function () {
                               button.disabled = false;
                             }, 2000);
-                            alert("Resposta enviada com sucesso!");
+                            showAlert("Resposta enviada com sucesso!");
                             window.location.href =
                               "tela-comments.html" + "?ID=" + IDpostagem;
                           })
@@ -890,7 +890,7 @@ function addResp() {
       }
     });
   } else {
-    alert("Por favor, digite alguma coisa para enviar sua resposta!");
+    showAlert("Por favor, digite alguma coisa para enviar sua resposta!");
   }
 }
 
@@ -1662,7 +1662,7 @@ function excluirComment(commentID) {
                         contagem--;
                       });
                     } else {
-                      alert("Publicação Excluída com sucesso!");
+                      showAlert("Publicação Excluída com sucesso!");
                       window.location.reload();
                     }
                   });
@@ -1695,7 +1695,7 @@ function excluirPost(postUID) {
                   contagem--;
                 });
               } else {
-                alert("Publicação Excluída com sucesso!");
+                showAlert("Publicação Excluída com sucesso!");
                 //window.location.reload();
               }
 
@@ -2127,7 +2127,7 @@ function logOut() {
     .auth()
     .signOut()
     .then(function () {
-      alert("Você saiu!");
+      showAlert("Você saiu!");
       window.location.replace("../index.html");
     });
 }
@@ -3067,10 +3067,10 @@ function removexp(uid){
           xp: doc.data().xp - valor
         }).then(() =>{
           window.location.reload();
-          alert('XP revogado com sucesso')
+          showAlert('XP revogado com sucesso')
         })
       }else{
-        alert("Não é possível abaixar tanto XP assim")
+        showAlert("Não é possível abaixar tanto XP assim")
       }
       
     })
@@ -3221,7 +3221,7 @@ function sendReport(num) {
                   window.location.href = 'tela-inicio.html';
 
                   // Alerta
-                  alert("Operação concluída. Você será redirecionado.");
+                  showAlert("Operação concluída. Você será redirecionado.");
                 }).catch((error) => {
                   console.error("Erro ao adicionar notificação: ", error);
                   // Em caso de erro, exibir um alerta ou lidar com a situação de outra maneira
@@ -3256,7 +3256,7 @@ function addNotify(commentID, userUID, uid, tipo) {
       lido: false
     };
     notifyRef.add(dados).then(() => {
-      alert('Denuncia enviada com sucesso!')
+      showAlert('Denuncia enviada com sucesso!')
             window.location.replace('tela-inicio.html');
     }) 
     
