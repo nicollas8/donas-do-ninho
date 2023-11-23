@@ -3216,16 +3216,7 @@ function sendReport(num) {
                   user.uid,
                   doc.data().uid,
                   "den " + num,
-                ).then(() => {
-                  // Redirecionamento
-                  window.location.href = 'tela-inicio.html';
-
-                  // Alerta
-                  showAlert("Operação concluída. Você será redirecionado.");
-                }).catch((error) => {
-                  console.error("Erro ao adicionar notificação: ", error);
-                  // Em caso de erro, exibir um alerta ou lidar com a situação de outra maneira
-                });
+                )
               })
           })
 
@@ -3238,15 +3229,19 @@ function addNotify(commentID, userUID, uid, tipo) {
   const db = firebase.firestore();
   const userRef = db.collection("usuarios").doc(uid);
   const notifyRef = userRef.collection("notificações");
-  if (userUID.length < 20){
+  console.log(userUID.length)
+  if (tipo.includes('den')){
     const dados = {
       commentID: commentID,
-      motivo: userUID,
+      UID: userUID,
       timestamp: new Date(),
       type: tipo,
       lido: false,
       };
-    notifyRef.add(dados)
+    notifyRef.add(dados).then(() => {
+      showAlert('Denuncia enviada com sucesso!')
+            window.location.replace('tela-inicio.html');
+    }) 
   }else{
     const dados = {
       commentID: commentID,
@@ -3255,10 +3250,7 @@ function addNotify(commentID, userUID, uid, tipo) {
       type: tipo,
       lido: false
     };
-    notifyRef.add(dados).then(() => {
-      showAlert('Denuncia enviada com sucesso!')
-            window.location.replace('tela-inicio.html');
-    }) 
+    notifyRef.add(dados)
     
   }
   
