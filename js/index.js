@@ -3041,14 +3041,15 @@ function analiseUser(){
       </div>
   </div>
 
-  <div class="space-x-4 mt-8">
+  <div class="flex flex-row justify-between space-x-4 mt-8 border-2 border-black p-2">
   <input id="xp" type="number" class=" w-1/2 border border-gray-300 rounded-md px-3 py-2 " placeholder="Escolha um número" min='0' max="${doc.data().xp}">
   <button onclick=removexp('${doc.id}') class="bg-red-500 float-right hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Revogar XP</button>
 </div>
 
-<div class="space-x-4 mt-8">
-  <input type="date" id='intervalo' class="border border-gray-300 rounded-md px-3 py-2" placeholder="Escolha uma data" min="${hoje}">
-  <button onclick=interacaoOff('${doc.id}') class="bg-blue-500 float-right hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Impedir Interação</button>
+<div class="flex flex-row justify-between space-x-4 mt-8 border-2 border-black p-2">
+  <input type="text" id='intervalo' class="border-2 border-black rounded-md px-3 py-2" placeholder="Escolha uma data" min="${hoje}" onfocus="this.type='date'" 
+  onblur="if (!this.value) this.type='text'">
+  <button onclick=interacaoOff('${doc.id}') class="bg-blue-500 float-right hover:bg-blue-600 text-white font-bold px-5 rounded focus:outline-none focus:shadow-outline">Impedir Interação</button>
 </div>
 
 <div id="block" class="flex justify-center mt-10">
