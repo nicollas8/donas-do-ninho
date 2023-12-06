@@ -90,7 +90,7 @@ function getErrorMessage(error) {
 
 function recoverySenha() {
   "";
-  location.href = "./pages/recuperar-senha.html";
+  location.href = "recuperar-senha.html";
 }
 
 function recoverPassword() {
